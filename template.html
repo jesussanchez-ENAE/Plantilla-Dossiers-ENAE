@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENAE Dossier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Open+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link href="/styles.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body style="background:#111; margin:0; overflow-x:hidden; display:flex; flex-direction:column; align-items:center;">
+    <!-- This will be populated by app.js -->
+    <div id="dossier-preview-mount"></div>
+    <script src="/app.js"></script>
+    <script>
+        // Wait for JSON injection
+        window.addEventListener("DOMContentLoaded", () => {
+            // Ensure state and currentDossier exist before rendering
+            if (typeof state === 'undefined') {
+                window.state = { currentDossier: null };
+            }
+            const dataScript = document.getElementById("dossier-data");
+            if (dataScript) {
+                state.currentDossier = JSON.parse(dataScript.textContent);
+            }
+            if (window.renderDossierHighFidelity) {
+                window.renderDossierHighFidelity();
+            }
+        });
+    </script>
+</body>
+</html>

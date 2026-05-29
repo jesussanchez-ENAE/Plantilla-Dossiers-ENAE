@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Máster Internacional en Marketing Digital e IA — ENAE Business School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
+<style>
+
+/* ── Fuentes corporativas oficiales ENAE ─────────────────── */
+@font-face { font-family:'SFUIDisplay'; src:url('../assets/fonts/SFUIDisplay-Black.otf') format('opentype'); font-weight:900; }
+@font-face { font-family:'SFUIDisplay'; src:url('../assets/fonts/SFUIDisplay-Bold.otf')  format('opentype'); font-weight:700; }
+@font-face { font-family:'OpenSans';   src:url('../assets/fonts/OpenSans-ExtraBold.ttf') format('truetype'); font-weight:800; }
+@font-face { font-family:'OpenSans';   src:url('../assets/fonts/OpenSans-Bold.ttf')      format('truetype'); font-weight:700; }
+@font-face { font-family:'OpenSans';   src:url('../assets/fonts/OpenSans-Light.ttf')     format('truetype'); font-weight:300; }
+
+/* ── Tokens corporativos ─────────────────────────────────── */
+:root {
+  --gr:  #a91831;   /* Rojo Granate ENAE – color primario */
+  --grd: #7a1020;   /* Granate oscuro */
+  --ng:  #202221;   /* Negro ENAE */
+  --bl:  #ffffff;
+  --ag:  #dee5ec;   /* Azul gris suave */
+  --go:  #404040;
+
+  --fd: 'SFUIDisplay','Arial Black',sans-serif;   /* Display – titulares */
+  --fb: 'OpenSans','Open Sans',Arial,sans-serif;  /* Body */
+  --fs: 'Playfair Display',Georgia,serif;         /* Serif itálica editorial */
+
+  /* Escala tipográfica 16:9 – clamp(mín, preferido-vw, máx) */
+  --t-giant:  clamp(52px, 7.5vw, 140px);   /* KPI / número héroe */
+  --t-hero:   clamp(36px, 5.2vw,  96px);   /* Titular principal slide */
+  --t-title:  clamp(24px, 3.2vw,  60px);   /* Titular secundario */
+  --t-sub:    clamp(18px, 2.0vw,  36px);   /* Acento serif / subtítulo */
+  --t-lg:     clamp(14px, 1.1vw,  20px);   /* Lead / destacado */
+  --t-md:     clamp(12px, 0.85vw, 16px);   /* Eyebrow / cuerpo normal */
+  --t-sm:     clamp(10px, 0.70vw, 13px);   /* Cuerpo pequeño */
+  --t-xs:     clamp( 8px, 0.56vw, 10px);   /* Labels uppercase */
+
+  /* Espaciado */
+  --sp-xs: clamp( 4px,0.6vh, 8px);
+  --sp-sm: clamp( 8px,1.2vh,16px);
+  --sp-md: clamp(14px,2.0vh,28px);
+  --sp-lg: clamp(22px,3.2vh,48px);
+  --sp-xl: clamp(36px,5.0vh,80px);
+
+  /* Padding de slide */
+  --px: clamp(36px,5.2vw,88px);
+  --py: clamp(28px,4.4vh,64px);
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:var(--fb);}
+.msym{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:inherit;line-height:1;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;}
+
+/* ── Presentación ────────────────────────────────────────── */
+#app{width:100vw;height:100vh;position:relative;overflow:hidden;}
+
+/* ── Slides ──────────────────────────────────────────────── */
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;overflow:hidden;}
+.slide.on{opacity:1;pointer-events:all;}
+
+/* ── Barra de progreso ───────────────────────────────────── */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--gr);z-index:200;transition:width .5s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(169,24,49,.55);}
+
+/* ── Contador ────────────────────────────────────────────── */
+#ctr{position:fixed;top:2.2vh;right:2.8vw;z-index:200;font-family:var(--fb);font-weight:700;font-size:var(--t-xs);color:rgba(255,255,255,.28);letter-spacing:2px;}
+
+/* ── Navegación ──────────────────────────────────────────── */
+#nav{position:fixed;bottom:2.2vh;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;gap:.8vw;background:rgba(8,8,8,.78);backdrop-filter:blur(14px);border-radius:999px;padding:.9vh 2vw;border:1px solid rgba(255,255,255,.07);}
+.dot{width:clamp(5px,.42vw,8px);height:clamp(5px,.42vw,8px);border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:all .3s;border:none;}
+.dot.on{background:var(--gr);transform:scale(1.55);}
+.arr{background:none;border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;border-radius:50%;width:clamp(24px,2vw,36px);height:clamp(24px,2vw,36px);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,20px);transition:all .2s;}
+.arr:hover{background:var(--gr);border-color:var(--gr);}
+
+/* ── Brand pattern "E" – elemento gráfico diferenciador ─── */
+/* Bloques angulares translúcidos, escala variable, asimétrica */
+.ep{position:absolute;z-index:0;pointer-events:none;}
+
+/* ── Título mixto ENAE (recurso de marca central) ────────── */
+.tm{line-height:.93;}
+.tb{display:block;font-family:var(--fd);font-weight:900;letter-spacing:-.02em;color:var(--bl);}
+.ti{display:block;font-family:var(--fs);font-style:italic;font-weight:700;color:var(--bl);}
+.tl{display:block;font-family:var(--fb);font-weight:300;color:rgba(255,255,255,.82);}
+
+/* ── Eyebrow (serif itálica granate) ─────────────────────── */
+.ey{font-family:var(--fs);font-style:italic;font-size:var(--t-md);color:var(--gr);display:block;margin-bottom:var(--sp-xs);}
+.ey-w{font-family:var(--fs);font-style:italic;font-size:var(--t-md);color:rgba(255,255,255,.6);display:block;margin-bottom:var(--sp-xs);}
+
+/* ── Regla granate ───────────────────────────────────────── */
+.rule{width:clamp(28px,2.5vw,44px);height:3px;background:var(--gr);border-radius:2px;margin:var(--sp-sm) 0;}
+.rule-w{width:clamp(28px,2.5vw,44px);height:3px;background:rgba(255,255,255,.32);border-radius:2px;margin:var(--sp-sm) 0;}
+
+/* ── Label uppercase ─────────────────────────────────────── */
+.lbl{font-family:var(--fb);font-weight:700;font-size:var(--t-xs);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.38);}
+.lbl-gr{color:var(--gr);}
+
+/* ── Pill ────────────────────────────────────────────────── */
+.pill{display:inline-flex;align-items:center;background:rgba(169,24,49,.8);color:#fff;border-radius:4px;padding:clamp(4px,.5vh,7px) clamp(10px,1vw,16px);font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:2px;text-transform:uppercase;}
+
+/* ── Card blanca (componente editorial oficial) ──────────── */
+.cw{background:var(--bl);border-radius:clamp(8px,.7vw,14px);padding:clamp(14px,1.6vw,28px);box-shadow:0 12px 40px rgba(0,0,0,.25);}
+.cw .ce{font-family:var(--fs);font-style:italic;font-weight:700;color:var(--gr);font-size:var(--t-sm);margin-bottom:4px;}
+.cw .ct{font-family:var(--fb);font-weight:700;color:var(--ng);font-size:var(--t-sm);line-height:1.3;}
+.cw .cb{font-family:var(--fb);font-weight:300;color:var(--go);font-size:var(--t-sm);line-height:1.65;margin-top:4px;}
+
+/* ── Card glass (translúcida sobre granate) ──────────────── */
+.cg{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:clamp(6px,.6vw,12px);padding:clamp(10px,1.1vw,20px);}
+
+/* ── KPI corporativo ─────────────────────────────────────── */
+.kn{font-family:var(--fb);font-weight:800;color:var(--bl);line-height:.85;letter-spacing:-.03em;}
+.ks{font-family:var(--fs);font-style:italic;color:rgba(255,255,255,.55);line-height:1.3;}
+
+/* ── Número fantasma (ghost) ─────────────────────────────── */
+.gh{position:absolute;font-family:var(--fb);font-weight:800;color:rgba(255,255,255,.06);line-height:.8;letter-spacing:-.04em;pointer-events:none;z-index:0;}
+
+/* ── Num box granate ─────────────────────────────────────── */
+.nb{background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:clamp(11px,.85vw,15px);width:clamp(26px,2.1vw,36px);height:clamp(26px,2.1vw,36px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:4px;}
+
+/* ── Overlay de portada ──────────────────────────────────── */
+.cov-ov{position:absolute;inset:0;background:radial-gradient(60% 50% at 76% 44%,rgba(169,24,49,.5) 0%,transparent 70%),linear-gradient(130deg,rgba(28,30,29,.97) 0%,rgba(28,30,29,.58) 42%,rgba(169,24,49,.78) 100%);z-index:1;}
+
+/* ── Foto con lavado granate ─────────────────────────────── */
+.ph-wash::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,34,33,.1),rgba(169,24,49,.3));mix-blend-mode:multiply;}
+
+/* ── animatable ──────────────────────────────────────────── */
+[data-a]{opacity:0;}
+
+/* ── CTA button ──────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:.5vw;background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:var(--t-sm);letter-spacing:1px;text-transform:uppercase;padding:clamp(10px,1.3vh,18px) clamp(18px,2vw,32px);border-radius:4px;border:none;cursor:pointer;transition:all .25s;text-decoration:none;}
+.btn:hover{background:var(--grd);transform:translateY(-2px);box-shadow:0 8px 24px rgba(169,24,49,.42);}
+.btn-ol{background:transparent;border:1.5px solid rgba(255,255,255,.2);}
+.btn-ol:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.4);box-shadow:none;}
+
+/* ═══════════════════════════════════════════════════════════
+   S1 — PORTADA
+   Layout: foto sangre · overlay · logo · título masivo · KPIs
+   ═══════════════════════════════════════════════════════════ */
+#s1{background:var(--ng);}
+#s1 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:brightness(.65);}
+#s1 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:var(--py) var(--px);}
+#s1 .kpi-strip{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.12);padding-top:var(--sp-md);margin-top:var(--sp-md);}
+#s1 .kv{flex:1;text-align:center;padding:0 clamp(6px,.8vw,14px);}
+#s1 .kv:not(:last-child){border-right:1px solid rgba(255,255,255,.1);}
+#s1 .kv-n{font-family:var(--fb);font-weight:800;font-size:clamp(18px,2.2vw,38px);color:#fff;line-height:1;}
+#s1 .kv-l{font-family:var(--fs);font-style:italic;font-size:var(--t-sm);color:rgba(255,255,255,.55);margin-top:3px;}
+
+/* ═══════════════════════════════════════════════════════════
+   S2 — QUÉ ES
+   Layout: foto izquierda 40% · contenido derecho 60%
+   ═══════════════════════════════════════════════════════════ */
+#s2{background:var(--ng);}
+#s2 .photo-col{position:absolute;top:0;left:0;bottom:0;width:40%;z-index:0;}
+#s2 .photo-col img{width:100%;height:100%;object-fit:cover;display:block;}
+#s2 .photo-col::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 55%,var(--ng) 100%);}
+#s2 .content-col{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px) var(--py) calc(40% + 5.5vw);}
+
+/* ═══════════════════════════════════════════════════════════
+   S3 — PROGRAMA ACADÉMICO
+   Layout: gradiente granate · 2 columnas · módulos
+   ═══════════════════════════════════════════════════════════ */
+#s3{background:linear-gradient(152deg,#a91831 0%,#7a1020 44%,#1c1e1d 100%);}
+#s3 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.15fr .85fr;gap:3.5vw;padding:var(--py) var(--px);align-items:start;}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(4px,.4vw,8px);}
+.mc{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:clamp(5px,.5vw,9px);padding:clamp(8px,.9vw,15px);}
+.mt{font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
+.mn{font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;}
+.ia-box{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.24);border-radius:clamp(8px,.7vw,14px);padding:clamp(12px,1.4vw,24px);}
+
+/* ═══════════════════════════════════════════════════════════
+   S4 — METODOLOGÍA
+   Layout: contenido izquierdo 58% · foto sangre derecha 42%
+   ═══════════════════════════════════════════════════════════ */
+#s4{background:var(--ng);}
+#s4 .photo-r{position:absolute;top:0;right:0;bottom:0;width:42%;z-index:0;}
+#s4 .photo-r img{width:100%;height:100%;object-fit:cover;filter:brightness(.42) saturate(.7);}
+#s4 .photo-r::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to right,var(--ng) 0%,transparent 45%);}
+#s4 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);max-width:62%;}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(5px,.5vw,9px);}
+.pc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(5px,.5vw,9px);padding:clamp(9px,1vw,17px);text-align:center;}
+.pi{font-size:clamp(18px,1.8vw,30px);color:var(--gr);margin-bottom:var(--sp-xs);}
+.pw{grid-column:span 2;background:rgba(169,24,49,.14);border-color:rgba(169,24,49,.3);}
+.pw .pi{color:#fff;}
+.mr{display:flex;align-items:center;gap:clamp(8px,.8vw,14px);background:rgba(255,255,255,.04);border-radius:clamp(5px,.5vw,9px);padding:clamp(7px,.9vh,13px) clamp(12px,1.2vw,20px);margin-bottom:clamp(4px,.5vh,7px);}
+.mt-pill{font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:1.5px;text-transform:uppercase;padding:clamp(3px,.4vh,5px) clamp(6px,.6vw,10px);border-radius:3px;white-space:nowrap;}
+
+/* ═══════════════════════════════════════════════════════════
+   S5 — EMPLEABILIDAD
+   Layout: negro profundo · 3 KPIs masivos · ghost number · strip
+   ═══════════════════════════════════════════════════════════ */
+#s5{background:linear-gradient(148deg,#161817,#000);}
+.k3{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.kb{text-align:center;padding:0 clamp(8px,1vw,20px);border-right:1px solid rgba(255,255,255,.07);}
+.kb:last-child{border-right:none;}
+.kg{font-family:var(--fb);font-weight:800;font-size:var(--t-giant);color:#fff;line-height:.85;letter-spacing:-.03em;}
+.kg span{font-size:.5em;vertical-align:middle;}
+.kg.r{color:var(--gr);}
+.ctag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-sm);padding:clamp(4px,.5vh,7px) clamp(8px,.9vw,14px);border-radius:5px;}
+
+/* ═══════════════════════════════════════════════════════════
+   S6 — RANKINGS
+   Layout: granate pleno · hero #9 gigante · grid mini + badges
+   ═══════════════════════════════════════════════════════════ */
+#s6{background:var(--gr);}
+#s6 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:4vw;padding:var(--py) var(--px);align-items:center;}
+.rk-hero-n{font-family:var(--fb);font-weight:800;font-size:clamp(72px,9vw,168px);color:#fff;line-height:.82;letter-spacing:-.04em;}
+.rk-g{background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.18);}
+.badge-img{max-width:100%;max-height:clamp(38px,5.5vh,68px);object-fit:contain;filter:brightness(0) invert(1);opacity:.82;}
+
+/* ═══════════════════════════════════════════════════════════
+   S7 — CLAUSTRO
+   Layout: negro · encabezado fino · grid fotos 4+3
+   ═══════════════════════════════════════════════════════════ */
+#s7{background:var(--ng);}
+#s7 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;gap:var(--sp-sm);padding:var(--py) var(--px);}
+.pcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:clamp(6px,.6vw,12px);overflow:hidden;display:flex;flex-direction:column;}
+.pw-img{position:relative;padding-top:62%;overflow:hidden;}
+.pw-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;}
+.pw-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(to top,rgba(18,20,19,.92),transparent);}
+.pinfo{padding:clamp(7px,.8vw,13px);}
+.pname{font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.2;}
+.prole{font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.48);margin-top:2px;}
+.parea{display:inline-block;margin-top:4px;background:rgba(169,24,49,.2);border:1px solid rgba(169,24,49,.35);color:rgba(255,255,255,.8);font-family:var(--fb);font-weight:800;font-size:clamp(6px,.48vw,8px);letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:3px;}
+
+/* ═══════════════════════════════════════════════════════════
+   S8 — PERFIL + ADMISIÓN
+   Layout: gradiente dark · 50/50 · lista + steps
+   ═══════════════════════════════════════════════════════════ */
+#s8{background:linear-gradient(135deg,#161817 0%,#2c0d15 55%,#1b1d1c 100%);}
+#s8 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:5vw;padding:var(--py) var(--px);align-items:center;}
+.step{display:flex;align-items:center;gap:clamp(8px,.8vw,14px);background:rgba(255,255,255,.04);border-radius:clamp(5px,.5vw,9px);padding:clamp(7px,.9vh,13px) clamp(10px,1vw,18px);margin-bottom:clamp(4px,.5vh,7px);}
+.step.hl{background:rgba(169,24,49,.18);border:1px solid rgba(169,24,49,.36);}
+.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,.8vw,14px);}
+.sm-n{font-family:var(--fb);font-weight:800;font-size:clamp(18px,2vw,36px);color:#fff;line-height:1;}
+.sm-n span{font-size:.55em;}
+.sm-l{font-family:var(--fs);font-style:italic;font-size:var(--t-xs);color:rgba(255,255,255,.46);}
+
+/* ═══════════════════════════════════════════════════════════
+   S9 — CIERRE / CONTACTO
+   Inspirado en p-20 del dossier oficial:
+   gradiente negro→granate · "E" prominente · logo grande · contacto
+   ═══════════════════════════════════════════════════════════ */
+#s9{background:linear-gradient(150deg,#161817 0%,#3d0e1c 50%,#a91831 100%);}
+#s9 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--py) var(--px);text-align:center;}
+.ct-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;width:100%;max-width:70vw;margin-top:var(--sp-lg);}
+.ct-col{padding:0 clamp(20px,2.5vw,44px);}
+.ct-div{width:1px;background:rgba(255,255,255,.2);align-self:stretch;}
+.ct-label{font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:var(--sp-xs);}
+.ct-val{font-family:var(--fb);font-weight:300;font-size:var(--t-md);color:rgba(255,255,255,.75);}
+.ct-val strong{font-weight:700;color:#fff;}
+
+/* Brand pattern "E" (grande y visible, como en el oficial) */
+.ep-big{position:absolute;font-family:var(--fd);font-weight:900;color:rgba(255,255,255,.08);line-height:.85;letter-spacing:-.05em;pointer-events:none;z-index:0;user-select:none;}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="bar" style="width:11.11%"></div>
+  <div id="ctr">01 / 09</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S1 — PORTADA
+     ════════════════════════════════════════════════════════ -->
+<div class="slide on" id="s1">
+  <img class="bg" src="../doc/Marketing Digital/10042023-317A7390.jpg" alt="">
+  <div class="cov-ov"></div>
+
+  <!-- Brand pattern sutil -->
+  <div class="ep" style="width:38%;height:42px;top:9%;right:-4%;transform:rotate(-7deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <div class="ep" style="width:24%;height:42px;top:calc(9% + 54px);right:1%;transform:rotate(-7deg);background:rgba(255,255,255,.03);border-radius:2px;"></div>
+
+  <div class="inner">
+    <!-- Cabecera: logo + pill -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div data-a>
+        <img src="../assets/logos/LOGO_ENAE_HORIZONTAL.svg" alt="ENAE International Business School"
+             style="height:clamp(22px,2.5vh,36px);width:auto;filter:brightness(0) invert(1);">
+      </div>
+      <div data-a>
+        <span class="pill">Programa de Posgrado · Máster Internacional</span>
+      </div>
+    </div>
+
+    <!-- Título mixto principal — elemento hero -->
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="tm" data-a>
+        <span class="tl" style="font-size:var(--t-title);">Máster en</span>
+        <span class="tb" style="font-size:var(--t-hero);line-height:.9;">Marketing</span>
+        <span class="tb" style="font-size:var(--t-hero);line-height:.9;">Digital.</span>
+      </div>
+      <div data-a style="margin-top:var(--sp-sm);">
+        <span class="ti" style="font-size:var(--t-sub);color:rgba(255,255,255,.84);">Mención en Inteligencia Artificial Aplicada</span>
+      </div>
+      <div class="rule" data-a></div>
+      <div data-a style="display:inline-flex;align-items:center;gap:1vw;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:8px;padding:clamp(7px,1vh,14px) clamp(12px,1.2vw,22px);width:fit-content;">
+        <span class="lbl">Doble título con</span>
+        <span style="width:1px;height:1.4em;background:rgba(255,255,255,.2);"></span>
+        <span style="font-family:var(--fd);font-weight:900;font-size:var(--t-md);color:#fff;">Panamerican University</span>
+        <span style="font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.5);">Florida, EE.UU.</span>
+      </div>
+    </div>
+
+    <!-- Strip KPIs inferior -->
+    <div>
+      <div class="kpi-strip" data-a>
+        <div class="kv"><div class="kv-n">#9</div><div class="kv-l">QS España 2025</div></div>
+        <div class="kv"><div class="kv-n">91%</div><div class="kv-l">empleabilidad</div></div>
+        <div class="kv"><div class="kv-n">+37</div><div class="kv-l">años formando líderes</div></div>
+        <div class="kv"><div class="kv-n">1988</div><div class="kv-l">fundación ENAE</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S2 — QUÉ ES ESTE MÁSTER
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <!-- Brand pattern -->
+  <div class="ep" style="width:42%;height:40px;top:10%;right:-5%;transform:rotate(-6deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <div class="ep" style="width:28%;height:40px;top:calc(10%+52px);right:0%;transform:rotate(-6deg);background:rgba(255,255,255,.03);border-radius:2px;"></div>
+
+  <div class="photo-col ph-wash">
+    <img src="../doc/Marketing Digital/Sesion_innegociable_-61.jpg" alt="Clase ENAE">
+  </div>
+
+  <div class="content-col">
+    <span class="ey" data-a>Introducción al programa</span>
+
+    <div class="tm" data-a>
+      <span class="tb" style="font-size:var(--t-hero);">El Máster que</span>
+      <span class="ti" style="font-size:var(--t-hero);">necesitas hoy.</span>
+    </div>
+    <div class="rule" data-a></div>
+
+    <p data-a style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.78;max-width:48vw;margin-bottom:var(--sp-md);">
+      El mercado busca profesionales que dominen tanto la <strong style="color:#fff;font-weight:700;">estrategia digital</strong> como la <strong style="color:#fff;font-weight:700;">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.
+    </p>
+
+    <!-- Cadena de valor -->
+    <div data-a style="margin-bottom:var(--sp-md);">
+      <div class="lbl lbl-gr" style="margin-bottom:var(--sp-xs);">Cadena de valor del marketing digital</div>
+      <div style="display:flex;gap:.4vw;flex-wrap:wrap;align-items:center;margin-top:8px;">
+        <span style="background:rgba(169,24,49,.14);border:1px solid rgba(169,24,49,.34);color:#fff;font-family:var(--fb);font-weight:600;font-size:var(--t-sm);padding:clamp(5px,.5vh,8px) clamp(8px,.8vw,13px);border-radius:5px;">Investigación</span>
+        <span style="color:rgba(255,255,255,.2);font-size:var(--t-lg);">›</span>
+        <span style="background:rgba(169,24,49,.14);border:1px solid rgba(169,24,49,.34);color:#fff;font-family:var(--fb);font-weight:600;font-size:var(--t-sm);padding:clamp(5px,.5vh,8px) clamp(8px,.8vw,13px);border-radius:5px;">Captación</span>
+        <span style="color:rgba(255,255,255,.2);font-size:var(--t-lg);">›</span>
+        <span style="background:rgba(169,24,49,.14);border:1px solid rgba(169,24,49,.34);color:#fff;font-family:var(--fb);font-weight:600;font-size:var(--t-sm);padding:clamp(5px,.5vh,8px) clamp(8px,.8vw,13px);border-radius:5px;">Venta</span>
+        <span style="color:rgba(255,255,255,.2);font-size:var(--t-lg);">›</span>
+        <span style="background:rgba(169,24,49,.14);border:1px solid rgba(169,24,49,.34);color:#fff;font-family:var(--fb);font-weight:600;font-size:var(--t-sm);padding:clamp(5px,.5vh,8px) clamp(8px,.8vw,13px);border-radius:5px;">Fidelización</span>
+        <span style="color:rgba(255,255,255,.2);font-size:var(--t-lg);">›</span>
+        <span style="background:rgba(169,24,49,.14);border:1px solid rgba(169,24,49,.34);color:#fff;font-family:var(--fb);font-weight:600;font-size:var(--t-sm);padding:clamp(5px,.5vh,8px) clamp(8px,.8vw,13px);border-radius:5px;">Analítica IA</span>
+      </div>
+    </div>
+
+    <!-- Quote editorial -->
+    <div data-a style="border-left:3px solid var(--gr);padding-left:clamp(10px,1vw,18px);">
+      <p style="font-family:var(--fs);font-style:italic;font-size:var(--t-lg);color:rgba(255,255,255,.8);line-height:1.55;">
+        "Si no entiendes cómo funciona la inteligencia artificial, estarás compitiendo con profesionales que sí lo hacen… y perderás."
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S3 — PROGRAMA ACADÉMICO
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <!-- Brand pattern "E" – bloques angulares visibles -->
+  <div class="ep" style="width:40%;height:46px;bottom:18%;left:-5%;transform:rotate(5deg);background:rgba(255,255,255,.05);border-radius:2px;"></div>
+  <div class="ep" style="width:26%;height:46px;bottom:calc(18%+60px);left:0%;transform:rotate(5deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <div class="ep" style="width:18%;height:46px;bottom:calc(18%+120px);left:5%;transform:rotate(5deg);background:rgba(255,255,255,.03);border-radius:2px;"></div>
+
+  <div class="inner" style="display:grid;grid-template-columns:1.15fr .85fr;gap:3.5vw;padding:var(--py) var(--px);align-items:start;height:100%;position:relative;z-index:2;">
+    <!-- Columna izquierda: módulos -->
+    <div>
+      <span class="ey-w" data-a>Programa Académico</span>
+      <div class="tm" data-a>
+        <span class="tb" style="font-size:var(--t-hero);">Todo lo que</span>
+        <span class="ti" style="font-size:var(--t-hero);">aprenderás.</span>
+      </div>
+      <div class="rule-w" data-a></div>
+      <div class="lbl" data-a style="margin-bottom:var(--sp-sm);">Módulos principales del Máster</div>
+      <div class="mg">
+        <div class="mc" data-a><div class="mt">Estrategia</div><div class="mn">Dirección de Marketing Estratégico</div></div>
+        <div class="mc" data-a><div class="mt">Digital</div><div class="mn">E-Commerce & Trade Marketing</div></div>
+        <div class="mc" data-a><div class="mt">Datos</div><div class="mn">Estadística & Data Science</div></div>
+        <div class="mc" data-a><div class="mt">SEO / SEM</div><div class="mn">Posicionamiento Web & Herramientas</div></div>
+        <div class="mc" data-a><div class="mt">Global</div><div class="mn">Negocios Internacionales</div></div>
+        <div class="mc" data-a><div class="mt">Analítica</div><div class="mn">Analítica Digital & Dashboards</div></div>
+        <div class="mc" data-a><div class="mt">Redes</div><div class="mn">Marketing en Redes Sociales</div></div>
+        <div class="mc" data-a><div class="mt">Consumidor</div><div class="mn">Análisis de Mercado & Comportamiento</div></div>
+      </div>
+    </div>
+    <!-- Columna derecha: IA + datos del programa -->
+    <div style="display:flex;flex-direction:column;gap:var(--sp-sm);">
+      <div class="ia-box" data-a>
+        <div style="display:flex;align-items:center;gap:.8vw;margin-bottom:var(--sp-sm);">
+          <span style="background:#fff;color:var(--gr);padding:3px 10px;border-radius:3px;font-family:var(--fb);font-size:var(--t-xs);font-weight:800;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;">MENCIÓN EXCLUSIVA</span>
+          <span style="font-family:var(--fb);font-weight:800;font-size:var(--t-sm);color:#fff;">IA Aplicada</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(5px,.6vw,9px);">
+          <div style="display:flex;gap:7px;align-items:flex-start;"><span style="color:#fff;flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.82);line-height:1.4;">Intro a la IA</span></div>
+          <div style="display:flex;gap:7px;align-items:flex-start;"><span style="color:#fff;flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.82);line-height:1.4;">IA Aplicada al Marketing</span></div>
+          <div style="display:flex;gap:7px;align-items:flex-start;"><span style="color:#fff;flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.82);line-height:1.4;">IA para Clientes (CRM)</span></div>
+          <div style="display:flex;gap:7px;align-items:flex-start;"><span style="color:#fff;flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.82);line-height:1.4;">Publicidad Programática</span></div>
+          <div style="display:flex;gap:7px;align-items:flex-start;"><span style="color:#fff;flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.82);line-height:1.4;">Marketing Automation</span></div>
+          <div style="display:flex;gap:7px;align-items:flex-start;"><span style="color:#fff;flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.82);line-height:1.4;">Analítica Data Driven</span></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(5px,.5vw,9px);" data-a>
+        <div class="cg" style="text-align:center;padding:clamp(10px,1.2vw,20px);">
+          <div class="kn" style="font-size:clamp(22px,2.6vw,46px);">60</div>
+          <div class="lbl" style="margin-top:4px;">ECTS</div>
+        </div>
+        <div class="cg" style="text-align:center;padding:clamp(10px,1.2vw,20px);">
+          <div class="kn" style="font-size:clamp(22px,2.6vw,46px);">12</div>
+          <div class="lbl" style="margin-top:4px;">Meses</div>
+        </div>
+        <div class="cg" style="grid-column:span 2;">
+          <div class="lbl" style="margin-bottom:6px;">Modalidades</div>
+          <div style="display:flex;gap:.5vw;flex-wrap:wrap;margin-top:4px;">
+            <span style="background:rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-size:var(--t-xs);font-weight:700;padding:3px 9px;border-radius:3px;">Live Class Online</span>
+            <span style="background:rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-size:var(--t-xs);font-weight:700;padding:3px 9px;border-radius:3px;">Semipresencial</span>
+            <span style="background:rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-size:var(--t-xs);font-weight:700;padding:3px 9px;border-radius:3px;">Presencial Murcia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S4 — METODOLOGÍA
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="ep" style="width:36%;height:40px;top:14%;left:-3%;transform:rotate(-4deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <div class="photo-r">
+    <img src="../doc/Marketing Digital/10042023-317A8264.jpg" alt="Metodología ENAE">
+  </div>
+  <div class="inner">
+    <span class="ey" data-a>Cómo aprenderás</span>
+    <div class="tm" data-a>
+      <span class="tb" style="font-size:var(--t-hero);">Metodología</span>
+      <span class="ti" style="font-size:var(--t-hero);">360 Learning.</span>
+    </div>
+    <div class="rule" data-a></div>
+    <p data-a style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.70);line-height:1.75;max-width:42vw;margin-bottom:var(--sp-md);">
+      <em style="font-family:var(--fs);font-style:italic;color:#fff;">Learning by doing</em> — experiencia práctica, contacto con el mundo empresarial y apoyo tutorizado en cada paso.
+    </p>
+    <div class="pg" style="max-width:58%;margin-bottom:var(--sp-md);">
+      <div class="pc"><div class="pi"><span class="msym">analytics</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Mundo empresarial real</div></div>
+      <div class="pc"><div class="pi"><span class="msym">school</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Clases magistrales</div></div>
+      <div class="pc"><div class="pi"><span class="msym">laptop</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Campus virtual</div></div>
+      <div class="pc"><div class="pi"><span class="msym">desktop_windows</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Aulas con tecnología</div></div>
+      <div class="pc pw"><div class="pi"><span class="msym">rocket_launch</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Proyecto final: Business Plan real</div></div>
+    </div>
+    <div data-a>
+      <div class="lbl lbl-gr" style="margin-bottom:var(--sp-xs);">Elige tu modalidad</div>
+      <div class="mr"><span class="mt-pill" style="background:var(--gr);color:#fff;">LIVE CLASS</span><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:2px;">100% Online en Directo</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.55);">Sigue las clases desde cualquier lugar en tiempo real.</div></div></div>
+      <div class="mr"><span class="mt-pill" style="background:rgba(169,24,49,.5);color:#fff;">SEMIPRES.</span><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:2px;">Online + Fase Presencial en Murcia</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.55);">Clases online + 2-3 semanas de inmersión en el campus.</div></div></div>
+      <div class="mr"><span class="mt-pill" style="background:rgba(169,24,49,.25);color:#fff;">PRESENCIAL</span><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:2px;">Clases en el Campus de Murcia</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.55);">Viernes tarde y sábado mañana.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S5 — EMPLEABILIDAD
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <!-- Ghost number masivo como en p-06 -->
+  <div class="gh" style="font-size:clamp(120px,16vw,300px);top:-2%;right:-1%;opacity:.055;">91</div>
+
+  <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);gap:var(--sp-lg);">
+    <div>
+      <span class="ey" data-a>Prácticas &amp; Empleo</span>
+      <div class="tm" data-a>
+        <span class="tb" style="font-size:var(--t-hero);">Tu carrera</span>
+        <span class="ti" style="font-size:var(--t-hero);">empieza aquí.</span>
+      </div>
+      <div class="rule" data-a></div>
+    </div>
+
+    <!-- Tres KPIs masivos – Open Sans ExtraBold (estándar corporativo) -->
+    <div class="k3" data-a>
+      <div class="kb">
+        <div class="kg" id="kpi1">0<span>%</span></div>
+        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">trabajando<br>al terminar</div>
+      </div>
+      <div class="kb">
+        <div class="kg" id="kpi2">0<span>%</span></div>
+        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">mejora profesional<br>demostrada</div>
+      </div>
+      <div class="kb">
+        <div class="kg r">+1K</div>
+        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">ofertas gestionadas<br>al año</div>
+      </div>
+    </div>
+
+    <!-- Empresas -->
+    <div data-a>
+      <div class="lbl" style="margin-bottom:var(--sp-xs);">Empresas donde han hecho prácticas nuestros alumnos</div>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(5px,.5vw,8px);margin-top:8px;">
+        <span class="ctag">Hero España</span><span class="ctag">IKEA Ibérica</span>
+        <span class="ctag">Grupo HEFAME</span><span class="ctag">PC Componentes</span>
+        <span class="ctag">Himoinsa</span><span class="ctag">El Pozo</span>
+        <span class="ctag">Rapsodia</span><span class="ctag">Medina Artigas</span>
+        <span class="ctag" style="opacity:.4;">+ muchas más</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S6 — RANKINGS
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <!-- Brand pattern sobre fondo granate (más visible) -->
+  <div class="ep" style="width:45%;height:46px;top:8%;right:-6%;transform:rotate(-7deg);background:rgba(0,0,0,.12);border-radius:2px;"></div>
+  <div class="ep" style="width:30%;height:46px;top:calc(8%+60px);right:0%;transform:rotate(-7deg);background:rgba(0,0,0,.09);border-radius:2px;"></div>
+
+  <div class="inner" style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:4vw;padding:var(--py) var(--px);align-items:center;">
+    <!-- Izquierda: hero ranking + mini rankings -->
+    <div>
+      <span class="ey-w" data-a>Reconocimiento internacional</span>
+      <div class="tm" data-a>
+        <span class="tb" style="font-size:var(--t-hero);">Entre las mejores</span>
+        <span class="ti" style="font-size:var(--t-hero);">del mundo.</span>
+      </div>
+      <div class="rule-w" data-a></div>
+
+      <!-- Hero #9 -->
+      <div data-a style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:clamp(8px,.8vw,14px);padding:clamp(14px,1.6vw,28px);position:relative;overflow:hidden;margin-bottom:var(--sp-sm);">
+        <div style="position:absolute;right:-1vw;top:-1vh;font-family:var(--fb);font-weight:800;font-size:clamp(70px,9vw,168px);color:rgba(255,255,255,.09);line-height:.8;letter-spacing:-.04em;">#9</div>
+        <div style="font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.52);margin-bottom:var(--sp-xs);">QS Rankings 2025</div>
+        <div class="rk-hero-n">#9</div>
+        <div style="font-family:var(--fb);font-weight:300;font-size:var(--t-md);color:rgba(255,255,255,.80);margin-top:var(--sp-xs);">Máster en Marketing Digital con IA — <strong style="font-weight:700;">España</strong></div>
+      </div>
+
+      <!-- Mini rankings 2×2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(5px,.5vw,9px);" data-a>
+        <div class="cg rk-g" style="text-align:center;"><div style="font-family:var(--fb);font-weight:800;font-size:clamp(20px,2.4vw,42px);color:#fff;line-height:.9;">#71</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.65);margin-top:4px;">Europa · <em style="font-family:var(--fs);">QS</em></div></div>
+        <div class="cg rk-g" style="text-align:center;"><div style="font-family:var(--fb);font-weight:800;font-size:clamp(20px,2.4vw,42px);color:#fff;line-height:.9;">#6</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.65);margin-top:4px;">Forbes · <em style="font-family:var(--fs);">España</em></div></div>
+        <div class="cg rk-g" style="text-align:center;"><div style="font-family:var(--fb);font-weight:800;font-size:clamp(20px,2.4vw,42px);color:#fff;line-height:.9;">#3</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.65);margin-top:4px;">Intl. Trade · <em style="font-family:var(--fs);">España</em></div></div>
+        <div class="cg rk-g" style="text-align:center;"><div style="font-family:var(--fb);font-weight:800;font-size:clamp(20px,2.4vw,42px);color:#fff;line-height:.9;">#1</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.65);margin-top:4px;">MBA España · <em style="font-family:var(--fs);">El Mundo</em></div></div>
+      </div>
+    </div>
+
+    <!-- Derecha: badges + acreditaciones -->
+    <div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(6px,.8vw,14px);align-items:center;margin-bottom:var(--sp-md);" data-a>
+        <img class="badge-img" src="../doc/Marketing Digital/Rankings/QS Executive MBA Rankings - Europe - 2026 - Badge.png" alt="" onerror="this.style.display='none'">
+        <img class="badge-img" src="../doc/Marketing Digital/Rankings/FinancialMagazine.png" alt="" onerror="this.style.display='none'">
+        <img class="badge-img" src="../doc/Marketing Digital/Rankings/qs_international_trade.png" alt="" onerror="this.style.display='none'">
+        <img class="badge-img" src="../doc/Marketing Digital/Rankings/sello escuelas y universidades_b.png" alt="" onerror="this.style.display='none'">
+        <img class="badge-img" src="../doc/Marketing Digital/Rankings/0faf3965-9e4e-419c-a4cc-2ac0a6a48783.png" alt="" onerror="this.style.display='none'">
+        <img class="badge-img" src="../doc/Marketing Digital/Rankings/6db43692-2cf3-407f-b674-75311166e7cf.png" alt="" onerror="this.style.display='none'">
+      </div>
+      <div style="background:rgba(0,0,0,.18);border-radius:clamp(8px,.7vw,12px);padding:clamp(10px,1.2vw,22px);" data-a>
+        <div class="lbl" style="margin-bottom:var(--sp-xs);">Acreditaciones &amp; afiliaciones</div>
+        <div style="display:flex;gap:clamp(10px,1vw,18px);align-items:center;flex-wrap:wrap;margin-top:8px;">
+          <span style="color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-md);">AACSB</span><span style="color:rgba(255,255,255,.25);">·</span>
+          <span style="color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-md);">EFMD Global</span><span style="color:rgba(255,255,255,.25);">·</span>
+          <span style="color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-md);">CLADEA</span><span style="color:rgba(255,255,255,.25);">·</span>
+          <span style="color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-md);">AENOR ISO 9001</span><span style="color:rgba(255,255,255,.25);">·</span>
+          <span style="color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-md);">IQNET</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.8vw;margin-top:var(--sp-sm);" data-a>
+        <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:clamp(8px,1vw,16px);text-align:center;flex-shrink:0;">
+          <div class="kn" style="font-size:clamp(22px,2.8vw,52px);">+37</div>
+          <div class="lbl">años</div>
+        </div>
+        <p style="font-family:var(--fs);font-style:italic;font-size:var(--t-lg);color:rgba(255,255,255,.80);line-height:1.5;">formando líderes empresariales con vocación internacional desde 1988.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S7 — CLAUSTRO DOCENTE
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="ep" style="width:52%;height:42px;top:14%;right:-7%;transform:rotate(-5deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <!-- Layout S7: flex column con flex:1 en cada fila para distribuir el espacio disponible -->
+  <div class="inner" style="display:flex;flex-direction:column;gap:clamp(6px,1vh,12px);padding-bottom:calc(var(--py) + 36px);">
+
+    <!-- Encabezado compacto — sin margin-bottom extra, el gap del flex lo gestiona -->
+    <div style="flex-shrink:0;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:clamp(4px,.5vh,8px);">
+        <div>
+          <span class="ey" data-a>Claustro Docente</span>
+          <div class="tm" data-a>
+            <span class="tb" style="font-size:var(--t-title);">Aprende de</span>
+            <span class="ti" style="font-size:var(--t-title);">los mejores.</span>
+          </div>
+        </div>
+        <div data-a style="text-align:right;">
+          <div class="lbl">+150 profesores</div>
+          <div style="font-family:var(--fs);font-style:italic;font-size:var(--t-md);color:rgba(255,255,255,.55);">nacionales e internacionales</div>
+        </div>
+      </div>
+      <div class="rule" data-a></div>
+    </div>
+
+    <!-- Fila 1: 4 profesores — flex:1 para llenar el espacio proporcionalmente -->
+    <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.7vw,12px);min-height:0;">
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Pablo_Ferreiros_1500.jpg" alt="Pablo Ferreiros" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">Pablo Ferreiros</div><div class="prole">Director de Marketing Digital</div><span class="parea">Estrategia Digital</span></div>
+      </div>
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg" alt="Félix Ros" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">Félix Manuel Ros Espín</div><div class="prole">Experto en E-Commerce</div><span class="parea">E-Commerce</span></div>
+      </div>
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg" alt="Inmaculada Reinosa" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">Inmaculada Reinosa</div><div class="prole">Directora de Contenidos</div><span class="parea">Content &amp; SEO</span></div>
+      </div>
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg" alt="Rocío González" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">Rocío González</div><div class="prole">Social Media Strategy</div><span class="parea">Social Media</span></div>
+      </div>
+    </div>
+
+    <!-- Fila 2: 3 profesores -->
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(6px,.7vw,12px);min-height:0;">
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg" alt="Santiago Foulquié" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">Santiago Foulquié</div><div class="prole">Analítica &amp; Data Science</div><span class="parea">Analytics</span></div>
+      </div>
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg" alt="José Martín Bernado" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">José Martín Bernado</div><div class="prole">Negocios Internacionales</div><span class="parea">Internacional</span></div>
+      </div>
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg" alt="Lauren Kressler" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;">
+        </div>
+        <div class="pinfo"><div class="pname">Lauren Kressler</div><div class="prole">Global Marketing</div><span class="parea">Global Marketing</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S8 — PERFIL + ADMISIÓN
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s8">
+  <div class="ep" style="width:44%;height:42px;bottom:20%;left:-4%;transform:rotate(4deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <div class="inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;height:100%;">
+      <!-- Izquierda: Perfil del alumno -->
+      <div>
+        <span class="ey" data-a>¿A quién va dirigido?</span>
+        <div class="tm" data-a>
+          <span class="tb" style="font-size:var(--t-title);">Perfil del</span>
+          <span class="ti" style="font-size:var(--t-title);">alumno.</span>
+        </div>
+        <div class="rule" data-a></div>
+        <div data-a style="margin-bottom:var(--sp-md);">
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Directivos y ejecutivos de Marketing, Ventas y Agencias</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Profesionales de Innovación, I+D y Operaciones</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Emprendedores en fase de desarrollo comercial</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Profesionales en reciclaje hacia el entorno digital</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Recién graduados con vocación digital</span></div>
+        </div>
+        <div class="cg" data-a>
+          <div class="lbl" style="margin-bottom:var(--sp-sm);">Datos de la promoción</div>
+          <div class="sm-grid">
+            <div><div class="sm-n">44<span>%</span></div><div class="sm-l">mujeres</div></div>
+            <div><div class="sm-n">9</div><div class="sm-l">nacionalidades</div></div>
+            <div><div class="sm-n">33<span>%</span></div><div class="sm-l">21–26 años</div></div>
+            <div><div class="sm-n">42<span>%</span></div><div class="sm-l">mando intermedio</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Derecha: Proceso de admisión -->
+      <div>
+        <span class="ey" data-a>Proceso de admisión</span>
+        <div class="tm" data-a>
+          <span class="tb" style="font-size:var(--t-title);">5 pasos hacia</span>
+          <span class="ti" style="font-size:var(--t-title);">tu futuro.</span>
+        </div>
+        <div class="rule" data-a></div>
+        <!-- data-a en cada step individual (no en el contenedor padre) -->
+        <div class="step" data-a><div class="nb">01</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Preinscripción online</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">a través de enae.es</div></div></div>
+        <div class="step" data-a><div class="nb">02</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Envío de documentación</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Revisada por el equipo académico</div></div></div>
+        <div class="step" data-a><div class="nb">03</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Entrevista personal</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Con el equipo de admisiones</div></div></div>
+        <div class="step" data-a><div class="nb">04</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Evaluación del comité</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Decisión del comité académico</div></div></div>
+        <div class="step hl" data-a><div class="nb">05</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">¡Admisión confirmada!</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Se comunica la resolución oficial</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S9 — CIERRE / CONTACTO
+     Inspirado en p-20 del dossier oficial ENAE:
+     gradiente negro→granate · "E" grande y visible · logo central
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s9">
+  <!-- "E" brand pattern prominente (como en p-20) -->
+  <div class="ep-big" style="font-size:clamp(200px,30vw,580px);right:-4vw;top:-5vh;opacity:.09;line-height:1;">E</div>
+  <div class="ep-big" style="font-size:clamp(120px,18vw,340px);left:-2vw;bottom:-4vh;opacity:.06;line-height:1;">E</div>
+
+  <div class="inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <!-- Logo ENAE grande centrado (como p-20) -->
+    <div data-a style="margin-bottom:var(--sp-lg);">
+      <img src="../assets/logos/LOGO_ENAE_HORIZONTAL.svg" alt="ENAE International Business School"
+           style="height:clamp(36px,5.5vh,72px);width:auto;filter:brightness(0) invert(1);">
+    </div>
+
+    <!-- Título + claim -->
+    <div data-a style="margin-bottom:var(--sp-md);">
+      <div style="font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:var(--sp-sm);">CONTACTO</div>
+      <div class="tm">
+        <span class="ti" style="font-size:var(--t-sub);color:rgba(255,255,255,.55);">Lead your future</span>
+      </div>
+    </div>
+
+    <!-- Grid contacto – dos columnas separadas por línea (como p-20) -->
+    <div class="ct-grid" data-a>
+      <div class="ct-col" style="text-align:right;">
+        <div class="ct-label">Departamento de Admisiones</div>
+        <div class="ct-val"><strong>+34 968 899 899</strong></div>
+        <div class="ct-val">admisiones@enae.es</div>
+      </div>
+      <div class="ct-div"></div>
+      <div class="ct-col" style="text-align:left;">
+        <div class="ct-label">Campus ENAE</div>
+        <div class="ct-val"><strong>www.enae.es</strong></div>
+        <div class="ct-val">Espinardo, Murcia, España</div>
+      </div>
+    </div>
+
+    <!-- Botones CTA -->
+    <div data-a style="display:flex;gap:1.2vw;margin-top:var(--sp-lg);">
+      <a href="https://www.enae.es" class="btn" target="_blank" style="display:inline-flex;align-items:center;gap:.5vw;">
+        <span class="msym" style="font-size:var(--t-lg);">arrow_forward</span>Solicitar información
+      </a>
+      <a href="https://www.enae.es" class="btn btn-ol" target="_blank" style="display:inline-flex;align-items:center;gap:.5vw;">
+        <span class="msym" style="font-size:var(--t-lg);">download</span>Descargar dossier
+      </a>
+    </div>
+
+    <!-- Strip KPIs de cierre -->
+    <div data-a style="display:flex;gap:0;border-top:1px solid rgba(255,255,255,.12);padding-top:var(--sp-md);margin-top:var(--sp-md);width:100%;max-width:60vw;justify-content:center;">
+      <div style="flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.1);padding:0 clamp(8px,1vw,16px);">
+        <div class="kn" style="font-size:clamp(20px,2.4vw,42px);">91%</div>
+        <div class="ks" style="font-size:var(--t-xs);">empleabilidad</div>
+      </div>
+      <div style="flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.1);padding:0 clamp(8px,1vw,16px);">
+        <div class="kn" style="font-size:clamp(20px,2.4vw,42px);color:var(--gr);">#9</div>
+        <div class="ks" style="font-size:var(--t-xs);">QS España</div>
+      </div>
+      <div style="flex:1;text-align:center;padding:0 clamp(8px,1vw,16px);">
+        <div class="kn" style="font-size:clamp(20px,2.4vw,42px);">+37</div>
+        <div class="ks" style="font-size:var(--t-xs);">años de excelencia</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVEGACIÓN -->
+<div id="nav">
+  <button class="arr" onclick="go(cur-1)">‹</button>
+  <button class="dot on"  onclick="go(0)"></button>
+  <button class="dot"     onclick="go(1)"></button>
+  <button class="dot"     onclick="go(2)"></button>
+  <button class="dot"     onclick="go(3)"></button>
+  <button class="dot"     onclick="go(4)"></button>
+  <button class="dot"     onclick="go(5)"></button>
+  <button class="dot"     onclick="go(6)"></button>
+  <button class="dot"     onclick="go(7)"></button>
+  <button class="dot"     onclick="go(8)"></button>
+  <button class="arr" onclick="go(cur+1)">›</button>
+</div>
+</div><!-- #app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+const N = 9;
+let cur = 0, busy = false;
+const SL = document.querySelectorAll('.slide');
+const DT = document.querySelectorAll('.dot');
+
+function go(n) {
+  if (busy || n < 0 || n >= N || n === cur) return;
+  busy = true;
+  const out = SL[cur], inn = SL[n], d = n > cur ? 1 : -1;
+
+  inn.querySelectorAll('[data-a]').forEach(e => { e.style.opacity='0'; e.style.transform=''; });
+
+  anime({ targets:out, opacity:[1,0], translateX:[0,-48*d], duration:380, easing:'easeInQuart',
+    complete:()=>{ out.classList.remove('on'); out.style.cssText=''; }
+  });
+  inn.style.opacity='0'; inn.style.transform=`translateX(${48*d}px)`;
+  inn.classList.add('on');
+  anime({ targets:inn, opacity:[0,1], translateX:[48*d,0], duration:460, easing:'easeOutQuart',
+    complete:()=>{ busy=false; cur=n; ui(); anim(n); }
+  });
+}
+
+function ui() {
+  document.getElementById('ctr').textContent = String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  document.getElementById('bar').style.width = ((cur+1)/N*100)+'%';
+  DT.forEach((d,i)=>d.classList.toggle('on',i===cur));
+}
+
+/* ── Animaciones por slide ────────────────────────── */
+function anim(n) {
+  const s = SL[n], da = Array.from(s.querySelectorAll('[data-a]'));
+
+  const stg = (tgts, opts={}) => anime({ targets:tgts, opacity:[0,1], translateY:[18,0], easing:'easeOutQuart', duration:480, ...opts });
+
+  switch(n) {
+    case 0: // PORTADA
+      // foto entra primero, luego contenido escalonado
+      anime({ targets:s.querySelector('.bg'), opacity:[0,1], scale:[1.06,1], duration:900, easing:'easeOutCubic' });
+      anime.timeline({ easing:'easeOutQuart' })
+        .add({ targets:da[0], opacity:[0,1], translateY:[-12,0], duration:500 }, 200)   // logo
+        .add({ targets:da[1], opacity:[0,1], translateX:[ 16,0], duration:400 }, 320)   // pill
+        .add({ targets:da[2], opacity:[0,1], translateY:[ 30,0], duration:650 }, 500)   // título
+        .add({ targets:da[3], opacity:[0,1], translateY:[ 14,0], duration:500 }, 870)   // mención serif
+        .add({ targets:da[4], opacity:[0,1], translateY:[ 14,0], duration:500 }, 960)   // rule
+        .add({ targets:da[5], opacity:[0,1], translateY:[ 14,0], duration:500 }, 1040)  // doble título
+        .add({ targets:da[6], opacity:[0,1], translateY:[ 10,0], duration:500 }, 1160); // KPI strip
+      break;
+
+    case 1: // QUÉ ES
+      stg(da, { delay:anime.stagger(110) });
+      break;
+
+    case 2: // PROGRAMA – header → módulos → derecha
+      stg([da[0],da[1],da[2],da[3]], { delay:anime.stagger(80) });
+      // módulos: data-a en cada .mc individualmente → sin conflicto padre/hijo
+      anime({ targets:s.querySelectorAll('.mc[data-a]'), opacity:[0,1], translateY:[14,0],
+        scale:[0.97,1], delay:anime.stagger(48,{start:300}), duration:360, easing:'easeOutBack' });
+      // ia-box y facts grid entran desde la derecha
+      anime({ targets:[da[da.length-2], da[da.length-1]], opacity:[0,1], translateX:[20,0],
+        delay:anime.stagger(90,{start:340}), duration:480, easing:'easeOutQuart' });
+      break;
+
+    case 3: // METODOLOGÍA – da[] ya no incluye .pg (quitado data-a del padre)
+      stg(da, { delay:anime.stagger(100) });
+      // pillar cards entran tras el stagger del body text (~400ms)
+      anime({ targets:s.querySelectorAll('.pc'), opacity:[0,1], translateY:[16,0],
+        delay:anime.stagger(60,{start:420}), duration:360, easing:'easeOutBack' });
+      break;
+
+    case 4: // EMPLEABILIDAD – contadores animados
+      stg(da, { delay:anime.stagger(100) });
+      setTimeout(() => {
+        const count = (id, to) => anime({ targets:{v:0}, v:to, duration:1400, easing:'easeOutCubic', round:1,
+          update: a => { document.getElementById(id).innerHTML = Math.round(a.animations[0].currentValue)+'<span>%</span>'; }
+        });
+        count('kpi1', 91); count('kpi2', 82);
+      }, 350);
+      break;
+
+    case 5: // RANKINGS
+      stg(da, { delay:anime.stagger(110) });
+      // el número #9 hero anima DESPUÉS de que su tarjeta padre (da[3]) haya aparecido
+      anime({ targets:s.querySelector('.rk-hero-n'), opacity:[0,1], scale:[.78,1],
+        duration:600, easing:'easeOutBack', delay:580 });
+      break;
+
+    case 6: // CLAUSTRO – data-a en cada pcard directamente
+      // Encabezado: ey, tm, stat-derecha, rule = da[0..3]
+      stg([da[0],da[1],da[2],da[3]], { delay:anime.stagger(80) });
+      // Fotos: cada .pcard[data-a] = da[4..10]
+      anime({ targets:s.querySelectorAll('.pcard[data-a]'), opacity:[0,1], translateY:[22,0], scale:[.95,1],
+        delay:anime.stagger(52,{start:220}), duration:400, easing:'easeOutBack' });
+      break;
+
+    case 7: // PERFIL + ADMISIÓN – cada .step tiene data-a individual
+      // da[0..7] = eyebrows, títulos, reglas, lista, cg-stats
+      stg(da.slice(0,8), { delay:anime.stagger(80) });
+      // da[8..12] = los 5 steps con translateX staggered
+      anime({ targets:da.slice(8), opacity:[0,1], translateX:[-16,0],
+        delay:anime.stagger(80,{start:300}), duration:380, easing:'easeOutQuart' });
+      break;
+
+    case 8: // CIERRE – logo grande primero, luego contenido
+      anime.timeline({ easing:'easeOutQuart' })
+        .add({ targets:da[0], opacity:[0,1], scale:[.92,1], duration:600 }, 0)
+        .add({ targets:da[1], opacity:[0,1], translateY:[14,0], duration:500 }, 250)
+        .add({ targets:da[2], opacity:[0,1], translateY:[14,0], duration:500 }, 400)
+        .add({ targets:da[3], opacity:[0,1], translateY:[10,0], duration:500 }, 550);
+      setTimeout(()=>{
+        anime({ targets:s.querySelectorAll('.btn'), scale:[1,1.04,1],
+          delay:anime.stagger(60), duration:500, easing:'easeInOutSine' });
+      }, 900);
+      break;
+
+    default:
+      stg(da, { delay:anime.stagger(90) });
+  }
+}
+
+/* ── Teclado + touch ──────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); go(cur+1); }
+  if (['ArrowLeft','ArrowUp'].includes(e.key))        { e.preventDefault(); go(cur-1); }
+});
+let tx=0;
+document.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend',   e=>{ const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50) go(cur+(dx<0?1:-1)); },{passive:true});
+
+/* ── Init ──────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', ()=>{ ui(); anim(0); });
+</script>
+</body>
+</html>
