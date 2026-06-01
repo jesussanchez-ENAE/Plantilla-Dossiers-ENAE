@@ -1676,7 +1676,8 @@ let activeTestimonialIndex = 0;
 
 
 
-function renderDossierHighFidelity() {
+
+window.renderDossierHighFidelity = function() {
     const mount = document.getElementById("dossier-preview-mount") || document.getElementById("app-root");
     if (!mount) return;
     
@@ -1688,215 +1689,1170 @@ function renderDossierHighFidelity() {
     }
     
     if (!state.currentDossier) return;
-
     const d = state.currentDossier;
 
-    let modulesHtml = "";
-    if (d.modules) {
-        d.modules.forEach(m => {
-            modulesHtml += `
-            <div class="card-glass" style="padding:14px 16px;">
-                <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin-bottom:5px;">${escapeHtml(m.ects || '')} ECTS</div>
-                <div style="font-weight:700;font-size:12.5px;color:#fff;line-height:1.3;">${escapeHtml(m.title)}</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:5px;">${escapeHtml(m.desc || '')}</div>
-            </div>`;
-        });
-    }
-
-    let facultyHtml = "";
-    if (d.faculty) {
-        d.faculty.forEach(f => {
-            facultyHtml += `
-            <div style="display:flex;align-items:center;gap:12px;">
-                <img src="${escapeHtml(f.avatar)}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--granate);" />
-                <div>
-                    <div style="font-weight:700;font-size:13px;color:#fff;">${escapeHtml(f.name)}</div>
-                    <div style="font-size:11px;color:rgba(255,255,255,0.6);">${escapeHtml(f.role)}</div>
-                </div>
-            </div>`;
-        });
-    }
-
-    let testimonialsHtml = "";
-    if (d.testimonials && d.testimonials.length > 0) {
-        const t = d.testimonials[0];
-        testimonialsHtml = `
-        <div style="margin-top:40px;padding:30px;background:rgba(255,255,255,0.05);border-radius:12px;border-left:4px solid var(--granate);">
-            <div style="font-size:16px;font-style:italic;color:#fff;margin-bottom:15px;">"${escapeHtml(t.text)}"</div>
-            <div style="display:flex;align-items:center;gap:12px;">
-                <img src="${escapeHtml(t.avatar)}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
-                <div>
-                    <div style="font-weight:700;font-size:12px;color:#fff;">${escapeHtml(t.author)}</div>
-                    <div style="font-size:10px;color:rgba(255,255,255,0.5);">${escapeHtml(t.role)}</div>
-                </div>
-            </div>
-        </div>`;
-    }
-
     const html = `
-    <div class="page" style="width: 794px; min-height: 1123px; margin: 0 auto 4px; position: relative; overflow: hidden; background: var(--negro); color: var(--blanco); font-family: var(--font-body);">
-        
-        <!-- COVER -->
-        <div style="position:relative; height:1123px; padding: 60px;">
-            <div class="cover-overlay" style="position:absolute;inset:0;background:linear-gradient(140deg, rgba(32,34,33,0.97) 0%, rgba(32,34,33,0.60) 42%, rgba(169,24,49,0.82) 100%);z-index:1;"></div>
-            <img src="${escapeHtml(d.coverPhoto)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;" />
+    <div class="dossier-master-wrap">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0');
             
-            <div style="position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:center;">
-                <div style="display:inline-block; background:var(--blanco); color:var(--negro); border-radius:999px; padding:8px 20px; font-weight:700; font-size:12px; margin-bottom:20px; width:max-content;">${escapeHtml(d.category || 'Programa')}</div>
-                <h1 style="font-family:var(--font-body); font-weight:800; font-size:55px; line-height:1.0; margin:0; letter-spacing:-1px;">${escapeHtml(d.title)}</h1>
-                <div style="font-family:var(--font-serif); font-style:italic; font-size:35px; color:var(--granate); margin-top:10px;">${escapeHtml(d.subtitle || '')}</div>
-                
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:60px; padding-top:40px; border-top:1px solid rgba(255,255,255,0.2);">
-                    <div>
-                        <div style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.5);">Duración</div>
-                        <div style="font-weight:800; font-size:18px;">${escapeHtml(d.duration)}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.5);">Formato</div>
-                        <div style="font-weight:800; font-size:18px;">${escapeHtml(d.format)}</div>
-                    </div>
-                </div>
-            </div>
+
+/* ── Fuentes corporativas oficiales ENAE ─────────────────── */
+@font-face { font-family:'SFUIDisplay'; src:url('../assets/fonts/SFUIDisplay-Black.otf') format('opentype'); font-weight:900; }
+@font-face { font-family:'SFUIDisplay'; src:url('../assets/fonts/SFUIDisplay-Bold.otf')  format('opentype'); font-weight:700; }
+@font-face { font-family:'OpenSans';   src:url('../assets/fonts/OpenSans-ExtraBold.ttf') format('truetype'); font-weight:800; }
+@font-face { font-family:'OpenSans';   src:url('../assets/fonts/OpenSans-Bold.ttf')      format('truetype'); font-weight:700; }
+@font-face { font-family:'OpenSans';   src:url('../assets/fonts/OpenSans-Light.ttf')     format('truetype'); font-weight:300; }
+
+/* ── Tokens corporativos ─────────────────────────────────── */
+:root {
+  --gr:  #a91831;   /* Rojo Granate ENAE – color primario */
+  --grd: #7a1020;   /* Granate oscuro */
+  --ng:  #202221;   /* Negro ENAE */
+  --bl:  #ffffff;
+  --ag:  #dee5ec;   /* Azul gris suave */
+  --go:  #404040;
+
+  --fd: 'SFUIDisplay','Arial Black',sans-serif;   /* Display – titulares */
+  --fb: 'OpenSans','Open Sans',Arial,sans-serif;  /* Body */
+  --fs: 'Playfair Display',Georgia,serif;         /* Serif itálica editorial */
+
+  /* Escala tipográfica 16:9 – clamp(mín, preferido-vw, máx) */
+  --t-giant:  clamp(52px, 7.5vw, 140px);   /* KPI / número héroe */
+  --t-hero:   clamp(36px, 5.2vw,  96px);   /* Titular principal slide */
+  --t-title:  clamp(24px, 3.2vw,  60px);   /* Titular secundario */
+  --t-sub:    clamp(18px, 2.0vw,  36px);   /* Acento serif / subtítulo */
+  --t-lg:     clamp(14px, 1.1vw,  20px);   /* Lead / destacado */
+  --t-md:     clamp(12px, 0.85vw, 16px);   /* Eyebrow / cuerpo normal */
+  --t-sm:     clamp(10px, 0.70vw, 13px);   /* Cuerpo pequeño */
+  --t-xs:     clamp( 8px, 0.56vw, 10px);   /* Labels uppercase */
+
+  /* Espaciado */
+  --sp-xs: clamp( 4px,0.6vh, 8px);
+  --sp-sm: clamp( 8px,1.2vh,16px);
+  --sp-md: clamp(14px,2.0vh,28px);
+  --sp-lg: clamp(22px,3.2vh,48px);
+  --sp-xl: clamp(36px,5.0vh,80px);
+
+  /* Padding de slide */
+  --px: clamp(36px,5.2vw,88px);
+  --py: clamp(28px,4.4vh,64px);
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+.dossier-master-wrap *, .dossier-master-wrap *::before, .dossier-master-wrap *::after{box-sizing:border-box;margin:0;padding:0;}
+.dossier-master-wrap{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:var(--fb);}
+.msym{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:inherit;line-height:1;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;}
+
+/* ── Presentación ────────────────────────────────────────── */
+#app-dossier{width:100vw;height:100vh;position:relative;overflow:hidden;}
+
+/* ── Slides ──────────────────────────────────────────────── */
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;overflow:hidden;}
+.slide.on{opacity:1;pointer-events:all;}
+
+/* ── Barra de progreso ───────────────────────────────────── */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--gr);z-index:200;transition:width .5s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(169,24,49,.55);}
+
+/* ── Contador ────────────────────────────────────────────── */
+#ctr{position:fixed;top:2.2vh;right:2.8vw;z-index:200;font-family:var(--fb);font-weight:700;font-size:var(--t-xs);color:rgba(255,255,255,.28);letter-spacing:2px;}
+
+/* ── Navegación ──────────────────────────────────────────── */
+#nav{position:fixed;bottom:2.2vh;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;gap:.8vw;background:rgba(8,8,8,.78);backdrop-filter:blur(14px);border-radius:999px;padding:.9vh 2vw;border:1px solid rgba(255,255,255,.07);}
+.dot{width:clamp(5px,.42vw,8px);height:clamp(5px,.42vw,8px);border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:all .3s;border:none;}
+.dot.on{background:var(--gr);transform:scale(1.55);}
+.arr{background:none;border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;border-radius:50%;width:clamp(24px,2vw,36px);height:clamp(24px,2vw,36px);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,20px);transition:all .2s;}
+.arr:hover{background:var(--gr);border-color:var(--gr);}
+
+/* ── Brand pattern "E" – símbolo oficial ENAE como watermark ─ */
+/* Imagen SIMBOLO-ENAE-BLANCO.png posicionada a sangre, opacidad baja */
+/* Cada slide usa inline styles para posición/tamaño/opacidad variables */
+
+/* ── Título mixto ENAE (recurso de marca central) ────────── */
+.tm{line-height:.93;}
+.tb{display:block;font-family:var(--fd);font-weight:900;letter-spacing:-.02em;color:var(--bl);}
+.ti{display:block;font-family:var(--fs);font-style:italic;font-weight:700;color:var(--bl);}
+.tl{display:block;font-family:var(--fb);font-weight:300;color:rgba(255,255,255,.82);}
+
+/* ── Eyebrow (serif itálica granate) ─────────────────────── */
+.ey{font-family:var(--fs);font-style:italic;font-size:var(--t-md);color:var(--gr);display:block;margin-bottom:var(--sp-xs);}
+.ey-w{font-family:var(--fs);font-style:italic;font-size:var(--t-md);color:rgba(255,255,255,.6);display:block;margin-bottom:var(--sp-xs);}
+
+/* ── Regla granate ───────────────────────────────────────── */
+.rule{width:clamp(28px,2.5vw,44px);height:3px;background:var(--gr);border-radius:2px;margin:var(--sp-sm) 0;}
+.rule-w{width:clamp(28px,2.5vw,44px);height:3px;background:rgba(255,255,255,.32);border-radius:2px;margin:var(--sp-sm) 0;}
+
+/* ── Label uppercase ─────────────────────────────────────── */
+.lbl{font-family:var(--fb);font-weight:700;font-size:var(--t-xs);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.38);}
+.lbl-gr{color:var(--gr);}
+
+/* ── Pill ────────────────────────────────────────────────── */
+.pill{display:inline-flex;align-items:center;background:rgba(169,24,49,.8);color:#fff;border-radius:4px;padding:clamp(4px,.5vh,7px) clamp(10px,1vw,16px);font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:2px;text-transform:uppercase;}
+
+/* ── Card blanca (componente editorial oficial) ──────────── */
+.cw{background:var(--bl);border-radius:clamp(8px,.7vw,14px);padding:clamp(14px,1.6vw,28px);box-shadow:0 12px 40px rgba(0,0,0,.25);}
+.cw .ce{font-family:var(--fs);font-style:italic;font-weight:700;color:var(--gr);font-size:var(--t-sm);margin-bottom:4px;}
+.cw .ct{font-family:var(--fb);font-weight:700;color:var(--ng);font-size:var(--t-sm);line-height:1.3;}
+.cw .cb{font-family:var(--fb);font-weight:300;color:var(--go);font-size:var(--t-sm);line-height:1.65;margin-top:4px;}
+
+/* ── Card glass (translúcida sobre granate) ──────────────── */
+.cg{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:clamp(6px,.6vw,12px);padding:clamp(10px,1.1vw,20px);}
+
+/* ── KPI corporativo ─────────────────────────────────────── */
+.kn{font-family:var(--fb);font-weight:800;color:var(--bl);line-height:.85;letter-spacing:-.03em;}
+.ks{font-family:var(--fs);font-style:italic;color:rgba(255,255,255,.55);line-height:1.3;}
+
+/* ── Número fantasma (ghost) ─────────────────────────────── */
+.gh{position:absolute;font-family:var(--fb);font-weight:800;color:rgba(255,255,255,.06);line-height:.8;letter-spacing:-.04em;pointer-events:none;z-index:0;}
+
+/* ── Num box granate ─────────────────────────────────────── */
+.nb{background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:clamp(11px,.85vw,15px);width:clamp(26px,2.1vw,36px);height:clamp(26px,2.1vw,36px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:4px;}
+
+/* ── Overlay de portada ──────────────────────────────────── */
+.cov-ov{position:absolute;inset:0;background:radial-gradient(60% 50% at 76% 44%,rgba(169,24,49,.5) 0%,transparent 70%),linear-gradient(130deg,rgba(28,30,29,.97) 0%,rgba(28,30,29,.58) 42%,rgba(169,24,49,.78) 100%);z-index:1;}
+
+/* ── Foto con lavado granate ─────────────────────────────── */
+.ph-wash::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,34,33,.1),rgba(169,24,49,.3));mix-blend-mode:multiply;}
+
+/* ── animatable ──────────────────────────────────────────── */
+[data-a]{opacity:0;}
+
+/* ── CTA button ──────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:.5vw;background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:var(--t-sm);letter-spacing:1px;text-transform:uppercase;padding:clamp(10px,1.3vh,18px) clamp(18px,2vw,32px);border-radius:4px;border:none;cursor:pointer;transition:all .25s;text-decoration:none;}
+.btn:hover{background:var(--grd);transform:translateY(-2px);box-shadow:0 8px 24px rgba(169,24,49,.42);}
+.btn-ol{background:transparent;border:1.5px solid rgba(255,255,255,.2);}
+.btn-ol:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.4);box-shadow:none;}
+
+/* ═══════════════════════════════════════════════════════════
+   S1 — PORTADA
+   Layout: foto sangre · overlay · logo · título masivo · KPIs
+   ═══════════════════════════════════════════════════════════ */
+#s1{background:var(--ng);}
+#s1 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:brightness(.65);}
+#s1 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:var(--py) var(--px);}
+#s1 .kpi-strip{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.12);padding-top:var(--sp-md);margin-top:var(--sp-md);}
+#s1 .kv{flex:1;text-align:center;padding:0 clamp(6px,.8vw,14px);}
+#s1 .kv:not(:last-child){border-right:1px solid rgba(255,255,255,.1);}
+#s1 .kv-n{font-family:var(--fb);font-weight:800;font-size:clamp(18px,2.2vw,38px);color:#fff;line-height:1;}
+#s1 .kv-l{font-family:var(--fs);font-style:italic;font-size:var(--t-sm);color:rgba(255,255,255,.55);margin-top:3px;}
+
+/* ═══════════════════════════════════════════════════════════
+   S2 — QUÉ ES
+   Layout: foto izquierda 40% · contenido derecho 60%
+   ═══════════════════════════════════════════════════════════ */
+#s2{background:var(--ng);}
+#s2 .photo-col{position:absolute;top:0;left:0;bottom:0;width:40%;z-index:0;}
+#s2 .photo-col img{width:100%;height:100%;object-fit:cover;display:block;}
+#s2 .photo-col::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 55%,var(--ng) 100%);}
+#s2 .content-col{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px) var(--py) calc(40% + 5.5vw);}
+
+/* ═══════════════════════════════════════════════════════════
+   S3 — PROGRAMA ACADÉMICO
+   Layout: gradiente granate · 2 columnas · módulos
+   ═══════════════════════════════════════════════════════════ */
+#s3{background:linear-gradient(152deg,#a91831 0%,#7a1020 44%,#1c1e1d 100%);}
+#s3 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.15fr .85fr;gap:3.5vw;padding:var(--py) var(--px);align-items:start;}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(4px,.4vw,8px);}
+.mc{
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.14);
+  border-left:2px solid rgba(255,255,255,.22); /* acento lateral sutil */
+  border-radius:clamp(5px,.5vw,9px);
+  padding:clamp(8px,.9vw,15px);
+}
+.mt{font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:4px;}
+.mn{font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;}
+.ia-box{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.24);border-radius:clamp(8px,.7vw,14px);padding:clamp(12px,1.4vw,24px);}
+
+/* ═══════════════════════════════════════════════════════════
+   S4 — METODOLOGÍA
+   Layout: contenido izquierdo 58% · foto sangre derecha 42%
+   ═══════════════════════════════════════════════════════════ */
+#s4{background:var(--ng);}
+#s4 .photo-r{position:absolute;top:0;right:0;bottom:0;width:42%;z-index:0;}
+#s4 .photo-r img{width:100%;height:100%;object-fit:cover;filter:brightness(.42) saturate(.7);}
+#s4 .photo-r::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to right,var(--ng) 0%,transparent 45%);}
+#s4 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);max-width:62%;}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(5px,.5vw,9px);}
+.pc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(5px,.5vw,9px);padding:clamp(9px,1vw,17px);text-align:center;}
+.pi{font-size:clamp(18px,1.8vw,30px);color:var(--gr);margin-bottom:var(--sp-xs);}
+.pw{grid-column:span 2;background:rgba(169,24,49,.14);border-color:rgba(169,24,49,.3);}
+.pw .pi{color:#fff;}
+.mr{display:flex;align-items:center;gap:clamp(8px,.8vw,14px);background:rgba(255,255,255,.04);border-radius:clamp(5px,.5vw,9px);padding:clamp(7px,.9vh,13px) clamp(12px,1.2vw,20px);margin-bottom:clamp(4px,.5vh,7px);}
+.mt-pill{font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:1.5px;text-transform:uppercase;padding:clamp(3px,.4vh,5px) clamp(6px,.6vw,10px);border-radius:3px;white-space:nowrap;}
+
+/* ═══════════════════════════════════════════════════════════
+   S5 — EMPLEABILIDAD
+   Layout: negro profundo · 3 KPIs masivos · ghost number · strip
+   ═══════════════════════════════════════════════════════════ */
+#s5{background:linear-gradient(148deg,#161817,#000);}
+.k3{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.kb{text-align:center;padding:0 clamp(8px,1vw,20px);border-right:1px solid rgba(255,255,255,.07);}
+.kb:last-child{border-right:none;}
+.kg{font-family:var(--fb);font-weight:800;font-size:var(--t-giant);color:#fff;line-height:.85;letter-spacing:-.03em;}
+.kg span{font-size:.5em;vertical-align:middle;}
+.kg.r{color:var(--gr);}
+.ctag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-weight:700;font-size:var(--t-sm);padding:clamp(4px,.5vh,7px) clamp(8px,.9vw,14px);border-radius:5px;}
+
+/* ═══════════════════════════════════════════════════════════
+   S6 — RANKINGS
+   Layout: granate pleno · hero #9 gigante · grid mini + badges
+   ═══════════════════════════════════════════════════════════ */
+#s6{background:var(--gr);}
+#s6 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:4vw;padding:var(--py) var(--px);align-items:center;}
+.rk-hero-n{font-family:var(--fb);font-weight:800;font-size:clamp(72px,9vw,168px);color:#fff;line-height:.82;letter-spacing:-.04em;}
+.rk-g{background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.18);}
+.badge-img{max-width:100%;max-height:clamp(38px,5.5vh,68px);object-fit:contain;filter:brightness(0) invert(1);opacity:.82;}
+
+/* ═══════════════════════════════════════════════════════════
+   S7 — CLAUSTRO
+   Layout: negro · encabezado fino · grid fotos 4+3
+   ═══════════════════════════════════════════════════════════ */
+#s7{background:var(--ng);}
+#s7 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;gap:var(--sp-sm);padding:var(--py) var(--px);}
+.pcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:clamp(6px,.6vw,12px);overflow:hidden;display:flex;flex-direction:column;}
+.pw-img{position:relative;padding-top:62%;overflow:hidden;}
+.pw-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;}
+.pw-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(to top,rgba(18,20,19,.92),transparent);}
+.pinfo{padding:clamp(7px,.8vw,13px);}
+.pname{font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.2;}
+.prole{font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.48);margin-top:2px;}
+.parea{display:inline-block;margin-top:4px;background:rgba(169,24,49,.2);border:1px solid rgba(169,24,49,.35);color:rgba(255,255,255,.8);font-family:var(--fb);font-weight:800;font-size:clamp(6px,.48vw,8px);letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:3px;}
+
+/* ═══════════════════════════════════════════════════════════
+   S8 — PERFIL + ADMISIÓN
+   Layout: gradiente dark · 50/50 · lista + steps
+   ═══════════════════════════════════════════════════════════ */
+#s8{background:linear-gradient(135deg,#161817 0%,#2c0d15 55%,#1b1d1c 100%);}
+#s8 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:5vw;padding:var(--py) var(--px);align-items:center;}
+.step{display:flex;align-items:center;gap:clamp(8px,.8vw,14px);background:rgba(255,255,255,.04);border-radius:clamp(5px,.5vw,9px);padding:clamp(7px,.9vh,13px) clamp(10px,1vw,18px);margin-bottom:clamp(4px,.5vh,7px);}
+.step.hl{background:rgba(169,24,49,.18);border:1px solid rgba(169,24,49,.36);}
+.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,.8vw,14px);}
+.sm-n{font-family:var(--fb);font-weight:800;font-size:clamp(18px,2vw,36px);color:#fff;line-height:1;}
+.sm-n span{font-size:.55em;}
+.sm-l{font-family:var(--fs);font-style:italic;font-size:var(--t-xs);color:rgba(255,255,255,.46);}
+
+/* ═══════════════════════════════════════════════════════════
+   S9 — CIERRE / CONTACTO
+   Inspirado en p-20 del dossier oficial:
+   gradiente negro→granate · "E" prominente · logo grande · contacto
+   ═══════════════════════════════════════════════════════════ */
+#s9{background:linear-gradient(150deg,#161817 0%,#3d0e1c 50%,#a91831 100%);}
+#s9 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--py) var(--px);text-align:center;}
+.ct-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;width:100%;max-width:70vw;margin-top:var(--sp-lg);}
+.ct-col{padding:0 clamp(20px,2.5vw,44px);}
+.ct-div{width:1px;background:rgba(255,255,255,.2);align-self:stretch;}
+.ct-label{font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:var(--sp-xs);}
+.ct-val{font-family:var(--fb);font-weight:300;font-size:var(--t-md);color:rgba(255,255,255,.75);}
+.ct-val strong{font-weight:700;color:#fff;}
+
+/* Brand pattern "E" (grande y visible, como en el oficial) */
+/* .ep-big obsoleto — reemplazado por img SIMBOLO-ENAE-BLANCO.png */
+
+/* ── Arc chart SVG (KPI visual) ──────────────────────── */
+.arc-kpi-cell { position: relative; overflow: visible; }
+.arc-kpi-cell .arc-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-54%) rotate(-90deg); pointer-events: none; z-index: 0; width: clamp(130px,15vw,230px); height: clamp(130px,15vw,230px); }
+.arc-kpi-cell .kg, .arc-kpi-cell .ks { position: relative; z-index: 1; }
+
+/* ── Timeline (admisión) ─────────────────────────────── */
+.tl { position: relative; padding-left: clamp(38px,4vw,62px); }
+.tl::before { content: ''; position: absolute; left: clamp(16px,1.7vw,24px); top: clamp(20px,2.5vh,30px); bottom: clamp(20px,2.5vh,30px); width: 2px; background: linear-gradient(to bottom, var(--gr) 0%, rgba(169,24,49,.15) 100%); border-radius: 1px; }
+.tl-item { position: relative; margin-bottom: clamp(5px,.6vh,9px); display: flex; align-items: center; gap: clamp(8px,.8vw,14px); background: rgba(255,255,255,.04); border-radius: clamp(5px,.5vw,9px); padding: clamp(8px,1vh,14px) clamp(10px,1vw,18px); }
+.tl-item::before { content: ''; position: absolute; left: calc(-1 * clamp(38px,4vw,62px) + clamp(16px,1.7vw,24px) - 6px); width: 13px; height: 13px; border-radius: 50%; background: rgba(12,12,12,.8); border: 2px solid var(--gr); box-shadow: 0 0 0 3px rgba(169,24,49,.12); }
+.tl-item.hl { background: rgba(169,24,49,.18); border: 1px solid rgba(169,24,49,.36); }
+.tl-item.hl::before { background: var(--gr); box-shadow: 0 0 0 4px rgba(169,24,49,.22), 0 0 14px rgba(169,24,49,.45); }
+
+/* ── Flow chain (cadena de valor) ─────────────────────── */
+.fchain { display: flex; align-items: stretch; margin-top: 10px; }
+.fchain-node { flex: 1; background: rgba(169,24,49,.1); border: 1px solid rgba(169,24,49,.24); border-right: none; padding: clamp(7px,.8vh,12px) clamp(4px,.4vw,8px); display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; }
+.fchain-node:first-child { border-radius: 6px 0 0 6px; }
+.fchain-node:last-child { border-right: 1px solid rgba(169,24,49,.48); border-radius: 0 6px 6px 0; background: rgba(169,24,49,.22); }
+.fchain-node::after { content: '›'; position: absolute; right: -9px; top: 50%; transform: translateY(-50%); color: rgba(169,24,49,.65); font-size: var(--t-lg); font-weight: 900; z-index: 2; pointer-events: none; line-height: 1; }
+.fchain-node:last-child::after { display: none; }
+.fchain-icon { color: rgba(169,24,49,.8); line-height: 1; display: flex; }
+.fchain-node:last-child .fchain-icon { color: rgba(255,255,255,.9); }
+.fchain-label { font-family: var(--fb); font-weight: 700; font-size: var(--t-sm); color: #fff; text-align: center; line-height: 1.2; }
+.fchain-sub { font-family: var(--fs); font-style: italic; font-size: clamp(7px,.5vw,9px); color: rgba(255,255,255,.42); text-align: center; }
+.fchain-node:last-child .fchain-sub { color: rgba(255,255,255,.6); }
+
+/* ── Módulo con número de orden ──────────────────────── */
+.mc-num { font-family: var(--fb); font-weight: 800; font-size: clamp(8px,.52vw,10px); color: rgba(169,24,49,.65); letter-spacing: 1px; margin-bottom: 2px; }
+.mc { border-left: 2.5px solid rgba(169,24,49,.45) !important; }
+
+/* ── Mini barra demográfica ──────────────────────────── */
+.dbar-track { height: 3px; background: rgba(255,255,255,.1); border-radius: 2px; overflow: hidden; margin-top: 5px; }
+.dbar-fill { height: 100%; border-radius: 2px; background: linear-gradient(to right, var(--gr), rgba(169,24,49,.6)); width: 0; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+
+/* ── Faculty card hover reveal ───────────────────────── */
+.pcard { transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s; }
+.pcard:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+.pcard:hover .pw-img img { filter: brightness(1.08) saturate(1.1); transition: filter .4s; }
+.pw-img img { transition: filter .4s; }
+
+
+        </style>
+        
+<div id="app-dossier">
+  <div id="bar" style="width:11.11%"></div>
+  <div id="ctr">01 / 09</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S1 — PORTADA
+     ════════════════════════════════════════════════════════ -->
+<div class="slide on" id="s1">
+  <img class="bg" src="../doc/Marketing Digital/10042023-317A7390.jpg" alt="">
+  <div class="cov-ov"></div>
+
+  <!-- Brand pattern sutil -->
+  <!-- S1: rotación -18° — cae desde el ángulo superior derecho -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:40vw;top:-8vh;right:-10vw;opacity:.07;transform:rotate(-18deg);transform-origin:center center;" alt="">
+
+  <div class="inner">
+    <!-- Cabecera: logo + pill -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div data-a>
+        <img src="../assets/logos/LOGO_ENAE_HORIZONTAL.svg" alt="ENAE International Business School"
+             style="height:clamp(22px,2.5vh,36px);width:auto;filter:brightness(0) invert(1);">
+      </div>
+      <div data-a>
+        <span class="pill">Programa de Posgrado · Máster Internacional</span>
+      </div>
+    </div>
+
+    <!-- Título mixto principal — elemento hero -->
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="tm" data-a>
+        <span class="tb" style="font-size:var(--t-hero);line-height:.9;">${escapeHtml(d.title)}</span>
+      </div>
+      <div data-a style="margin-top:var(--sp-sm);">
+        <span class="ti" style="font-size:var(--t-sub);color:rgba(255,255,255,.84);">${escapeHtml(d.subtitle || "")}</span>
+      </div>
+      <div class="rule" data-a></div>
+      <div data-a style="display:inline-flex;align-items:center;gap:1vw;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:8px;padding:clamp(7px,1vh,14px) clamp(12px,1.2vw,22px);width:fit-content;">
+        <span class="lbl">Doble título con</span>
+        <span style="width:1px;height:1.4em;background:rgba(255,255,255,.2);"></span>
+        <span style="font-family:var(--fd);font-weight:900;font-size:var(--t-md);color:#fff;">Panamerican University</span>
+        <span style="font-family:var(--fb);font-weight:300;font-size:var(--t-xs);color:rgba(255,255,255,.5);">Florida, EE.UU.</span>
+      </div>
+    </div>
+
+    <!-- Strip KPIs inferior -->
+    <div>
+      <div class="kpi-strip" data-a>
+        <div class="kv"><div class="kv-n">#9</div><div class="kv-l">QS España 2025</div></div>
+        <div class="kv"><div class="kv-n">91%</div><div class="kv-l">empleabilidad</div></div>
+        <div class="kv"><div class="kv-n">+37</div><div class="kv-l">años formando líderes</div></div>
+        <div class="kv"><div class="kv-n">1988</div><div class="kv-l">fundación ENAE</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S2 — QUÉ ES ESTE MÁSTER
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <!-- Brand pattern -->
+  <!-- S2: rotación +14° — esquina inferior derecha, ascendente -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:34vw;bottom:-7vh;right:-8vw;opacity:.055;transform:rotate(14deg);transform-origin:center center;" alt="">
+
+  <div class="photo-col ph-wash">
+    <img src="../doc/Marketing Digital/Sesion_innegociable_-61.jpg" alt="Clase ENAE">
+  </div>
+
+  <div class="content-col">
+    <span class="ey" data-a>Introducción al programa</span>
+
+    <div class="tm" data-a>
+      <span class="tb" style="font-size:var(--t-hero);">El Máster que</span>
+      <span class="ti" style="font-size:var(--t-hero);">necesitas hoy.</span>
+    </div>
+    <div class="rule" data-a></div>
+
+    <p data-a style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.78;max-width:48vw;margin-bottom:var(--sp-md);">
+      El mercado busca profesionales que dominen tanto la <strong style="color:#fff;font-weight:700;">estrategia digital</strong> como la <strong style="color:#fff;font-weight:700;">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.
+    </p>
+
+    <!-- Cadena de valor -->
+    <div data-a style="margin-bottom:var(--sp-md);">
+      <div class="lbl lbl-gr" style="margin-bottom:var(--sp-xs);">Cadena de valor del marketing digital</div>
+      <div class="fchain">
+        <div class="fchain-node">
+          <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+          <span class="fchain-label">Investigación</span>
+          <span class="fchain-sub">Insights &amp; datos</span>
         </div>
-
-        <!-- INTRO -->
-        <div style="padding: 60px; background:var(--negro);">
-            <div style="font-size:14px; color:var(--granate); font-family:var(--font-serif); font-style:italic; margin-bottom:10px;">Introducción al programa</div>
-            <h2 style="font-size:36px; font-weight:800; line-height:1.1; margin:0 0 30px 0;">${escapeHtml(d.introTitle)}</h2>
-            <div style="font-size:16px; font-weight:700; color:#fff; line-height:1.5; margin-bottom:20px;">${escapeHtml(d.introText)}</div>
-            <div style="font-size:14px; font-weight:300; color:rgba(255,255,255,0.7); line-height:1.6;">${escapeHtml(d.introTextSecondary)}</div>
-
-            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-top:40px; margin-bottom:20px;">
-                <!-- Card 1 -->
-                <div style="background-color:#F5F970; border-radius:12px; padding:24px; color:#111; display:flex; flex-direction:column; position:relative; overflow:hidden;">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">ENGAGEMENT</div>
-                    <div style="font-size:42px; font-weight:800; line-height:1; margin-bottom:12px; letter-spacing:-1px;">+56,42%</div>
-                    <div style="font-size:11px; font-weight:500; opacity:0.7; margin-bottom:24px; line-height:1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ullamcorper eget.</div>
-                    
-                    <div style="height:120px; display:flex; align-items:flex-end; gap:8px; margin-bottom:20px; border-bottom:1px dashed rgba(0,0,0,0.1); padding-bottom:0; background: repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,0.05) 19px, rgba(0,0,0,0.05) 20px);">
-                        <div style="flex:1; background:#1A1A1A; height:47%; position:relative;">
-                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#fff;">47%</span>
-                        </div>
-                        <div style="flex:1; background:#445037; height:98%; position:relative;">
-                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#fff;">98%</span>
-                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#FF5233;"></div>
-                        </div>
-                        <div style="flex:1; background:#636B46; height:69%; position:relative;">
-                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#fff;">69%</span>
-                        </div>
-                        <div style="flex:1; background:#8E995D; height:84%; position:relative;">
-                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#111;">84%</span>
-                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#FF5233;"></div>
-                        </div>
-                        <div style="flex:1; background:#B2C264; height:56%; position:relative;">
-                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#111;">56%</span>
-                        </div>
-                        <div style="flex:1; background:#D0DD69; height:77%; position:relative;">
-                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#111;">77%</span>
-                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#FF5233;"></div>
-                        </div>
-                    </div>
-                    
-                    <button style="background:#111; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; width:fit-content; display:flex; align-items:center; gap:6px;">
-                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#fff;"></span> SEE MORE INSIGHTS
-                    </button>
-                </div>
-
-                <!-- Card 2 -->
-                <div style="background-color:#ADA1D4; border-radius:12px; padding:24px; color:#111; display:flex; flex-direction:column; position:relative; overflow:hidden;">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">GROWTH</div>
-                    <div style="font-size:42px; font-weight:800; line-height:1; margin-bottom:12px; letter-spacing:-1px;">+24,15%</div>
-                    <div style="font-size:11px; font-weight:500; opacity:0.7; margin-bottom:24px; line-height:1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ullamcorper eget.</div>
-                    
-                    <div style="height:120px; margin-bottom:20px; position:relative;">
-                        <svg width="100%" height="100%" viewBox="0 0 200 120" preserveAspectRatio="none">
-                            <path d="M0,120 L0,70 Q25,40 50,70 T100,50 T150,80 T200,60 L200,120 Z" fill="rgba(17,17,17,0.1)"/>
-                            <path d="M0,70 Q25,40 50,70 T100,50 T150,80 T200,60" fill="none" stroke="rgba(17,17,17,0.2)" stroke-width="2"/>
-                            <g stroke="rgba(17,17,17,0.2)" stroke-width="1">
-                                <line x1="10" y1="65" x2="10" y2="120" />
-                                <line x1="20" y1="58" x2="20" y2="120" />
-                                <line x1="30" y1="54" x2="30" y2="120" />
-                                <line x1="40" y1="60" x2="40" y2="120" />
-                                <line x1="50" y1="70" x2="50" y2="120" />
-                                <line x1="60" y1="78" x2="60" y2="120" />
-                                <line x1="70" y1="75" x2="70" y2="120" />
-                                <line x1="80" y1="62" x2="80" y2="120" />
-                                <line x1="90" y1="52" x2="90" y2="120" />
-                                <line x1="100" y1="50" x2="100" y2="120" />
-                                <line x1="110" y1="52" x2="110" y2="120" />
-                                <line x1="120" y1="65" x2="120" y2="120" />
-                                <line x1="130" y1="78" x2="130" y2="120" />
-                                <line x1="140" y1="85" x2="140" y2="120" />
-                                <line x1="150" y1="80" x2="150" y2="120" />
-                                <line x1="160" y1="70" x2="160" y2="120" />
-                                <line x1="170" y1="60" x2="170" y2="120" />
-                                <line x1="180" y1="58" x2="180" y2="120" />
-                                <line x1="190" y1="60" x2="190" y2="120" />
-                            </g>
-                            <line x1="100" y1="50" x2="100" y2="120" stroke="#F5F970" stroke-width="3" />
-                            <circle cx="100" cy="50" r="4" fill="#F5F970" />
-                        </svg>
-                    </div>
-                    
-                    <button style="background:#111; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; width:fit-content; display:flex; align-items:center; gap:6px;">
-                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#fff;"></span> SEE MORE INSIGHTS
-                    </button>
-                </div>
-
-                <!-- Card 3 -->
-                <div style="background-color:#CCFAA5; border-radius:12px; padding:24px; color:#111; display:flex; flex-direction:column; position:relative; overflow:hidden;">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">2022</div>
-                    <div style="font-size:42px; font-weight:800; line-height:1; margin-bottom:12px; letter-spacing:-1px;">+29,33%</div>
-                    <div style="font-size:11px; font-weight:500; opacity:0.7; margin-bottom:24px; line-height:1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ullamcorper eget.</div>
-                    
-                    <div style="height:120px; display:flex; gap:2px; margin-bottom:20px; align-items:flex-end; padding-bottom: 20px;">
-                        <div style="flex:2; background:#4A5340; height:100%; position:relative;">
-                            <div style="position:absolute; bottom:-18px; left:0; font-size:7px; color:rgba(0,0,0,0.5);">Year To Date<br><span style="color:#111;font-weight:700;font-size:9px;">+21.9%</span></div>
-                            <div style="position:absolute; bottom:0; left:0; width:100%; height:2px; background:#ADA1D4;"></div>
-                        </div>
-                        <div style="flex:1; background:#7A8E61; height:60%; position:relative;">
-                           <div style="position:absolute; inset:0; background:repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.2) 2px, rgba(255,255,255,0.2) 4px);"></div>
-                           <div style="position:absolute; bottom:-18px; left:0; font-size:7px; color:rgba(0,0,0,0.5);">Year To Date<br><span style="color:#111;font-weight:700;font-size:9px;">+21.9%</span></div>
-                        </div>
-                    </div>
-                    
-                    <button style="background:#111; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; width:fit-content; display:flex; align-items:center; gap:6px; margin-top:auto;">
-                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#fff;"></span> SEE MORE INSIGHTS
-                    </button>
-                </div>
-            </div>
-
-            ${testimonialsHtml}
+        <div class="fchain-node">
+          <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <span class="fchain-label">Captación</span>
+          <span class="fchain-sub">SEO / SEM / Ads</span>
         </div>
-
-        <!-- MODULES -->
-        <div style="padding: 60px; background:#111;">
-            <div style="font-size:14px; color:var(--granate); font-family:var(--font-serif); font-style:italic; margin-bottom:10px;">Programa Académico</div>
-            <h2 style="font-size:36px; font-weight:800; line-height:1.1; margin:0 0 30px 0;">Todo lo que aprenderás.</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                ${modulesHtml}
-            </div>
+        <div class="fchain-node">
+          <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+          <span class="fchain-label">Venta</span>
+          <span class="fchain-sub">E-commerce</span>
         </div>
-
-        <!-- FACULTY -->
-        <div style="padding: 60px; background:var(--negro);">
-            <div style="font-size:14px; color:var(--granate); font-family:var(--font-serif); font-style:italic; margin-bottom:10px;">Claustro Docente</div>
-            <h2 style="font-size:36px; font-weight:800; line-height:1.1; margin:0 0 30px 0;">Aprende de los mejores.</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
-                ${facultyHtml}
-            </div>
+        <div class="fchain-node">
+          <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <span class="fchain-label">Fidelización</span>
+          <span class="fchain-sub">CRM &amp; Email</span>
         </div>
+        <div class="fchain-node">
+          <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <span class="fchain-label">Analítica IA</span>
+          <span class="fchain-sub">Data-driven</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote editorial -->
+    <div data-a style="border-left:3px solid var(--gr);padding-left:clamp(10px,1vw,18px);">
+      <p style="font-family:var(--fs);font-style:italic;font-size:var(--t-lg);color:rgba(255,255,255,.8);line-height:1.55;">
+        "Si no entiendes cómo funciona la inteligencia artificial, estarás compitiendo con profesionales que sí lo hacen… y perderás."
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S3 — PROGRAMA ACADÉMICO
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <!-- Brand pattern E -->
+  <!-- S3 granate: rotación -22° — dramático, diagonal pronunciada -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:42vw;bottom:-10vh;left:-10vw;opacity:.11;transform:rotate(-22deg);transform-origin:center center;" alt="">
+
+  <!-- Layout: 2 columnas, ambas con altura completa del slide -->
+  <div style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:3vw;padding:var(--py) var(--px);align-items:stretch;">
+
+    <!-- ── COLUMNA IZQUIERDA: encabezado + grid de módulos que llena el espacio ── -->
+    <div style="display:flex;flex-direction:column;min-height:0;">
+
+      <!-- Encabezado compacto (flex-shrink:0) -->
+      <div style="flex-shrink:0;margin-bottom:clamp(8px,1.2vh,16px);">
+        <span class="ey-w" data-a>Programa Académico</span>
+        <div class="tm" data-a>
+          <span class="tb" style="font-size:var(--t-hero);">Todo lo que</span>
+          <span class="ti" style="font-size:var(--t-hero);">aprenderás.</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:clamp(6px,0.8vh,12px);">
+          <div class="rule-w" data-a style="margin:0;"></div>
+          <div class="lbl" data-a style="color:rgba(255,255,255,.4);">8 módulos · 60 ECTS · 12 meses</div>
+        </div>
+      </div>
+
+      <!-- Grid de módulos: flex:1 + align-content:stretch → filas llenan la altura disponible -->
+      
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:clamp(4px,.45vw,8px);">
+        ${(d.modules || []).map((m, i) => `
+        <div class="mc" data-a style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="mc-num">${String(i+1).padStart(2, '0')}</div><div class="mt">${escapeHtml(m.ects || '')} ECTS</div><div class="mn">${escapeHtml(m.title)}</div>
+        </div>
+        `).join('')}
+      </div>
+    </div><!-- ── COLUMNA DERECHA: IA (flex:1) + stats + modalidades ── -->
+    <div style="display:flex;flex-direction:column;gap:clamp(6px,.8vh,12px);min-height:0;">
+
+      <!-- Caja IA: flex:1 para ocupar el máximo espacio disponible -->
+      <div class="ia-box" data-a style="flex:1;min-height:0;display:flex;flex-direction:column;">
+        <div style="flex-shrink:0;display:flex;align-items:center;gap:.8vw;margin-bottom:clamp(8px,1.2vh,16px);">
+          <span style="background:#fff;color:var(--gr);padding:3px 10px;border-radius:3px;font-family:var(--fb);font-size:var(--t-xs);font-weight:800;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;">MENCIÓN EXCLUSIVA</span>
+          <span style="font-family:var(--fb);font-weight:800;font-size:var(--t-sm);color:#fff;">Inteligencia Artificial Aplicada</span>
+        </div>
+        <!-- Sujetos IA: flex:1 con align-content:space-around para distribuir verticalmente -->
+        <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,.7vw,12px);align-content:space-around;">
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <span style="color:rgba(255,255,255,.5);flex-shrink:0;font-size:clamp(14px,1.1vw,18px);line-height:1.2;">›</span>
+            <span style="font-family:var(--fb);font-weight:400;font-size:var(--t-md);color:rgba(255,255,255,.85);line-height:1.4;">Intro a la Inteligencia Artificial</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <span style="color:rgba(255,255,255,.5);flex-shrink:0;font-size:clamp(14px,1.1vw,18px);line-height:1.2;">›</span>
+            <span style="font-family:var(--fb);font-weight:400;font-size:var(--t-md);color:rgba(255,255,255,.85);line-height:1.4;">IA Aplicada al Marketing</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <span style="color:rgba(255,255,255,.5);flex-shrink:0;font-size:clamp(14px,1.1vw,18px);line-height:1.2;">›</span>
+            <span style="font-family:var(--fb);font-weight:400;font-size:var(--t-md);color:rgba(255,255,255,.85);line-height:1.4;">IA para Relaciones con Clientes</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <span style="color:rgba(255,255,255,.5);flex-shrink:0;font-size:clamp(14px,1.1vw,18px);line-height:1.2;">›</span>
+            <span style="font-family:var(--fb);font-weight:400;font-size:var(--t-md);color:rgba(255,255,255,.85);line-height:1.4;">Publicidad Programática</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <span style="color:rgba(255,255,255,.5);flex-shrink:0;font-size:clamp(14px,1.1vw,18px);line-height:1.2;">›</span>
+            <span style="font-family:var(--fb);font-weight:400;font-size:var(--t-md);color:rgba(255,255,255,.85);line-height:1.4;">Marketing Automation con IA</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <span style="color:rgba(255,255,255,.5);flex-shrink:0;font-size:clamp(14px,1.1vw,18px);line-height:1.2;">›</span>
+            <span style="font-family:var(--fb);font-weight:400;font-size:var(--t-md);color:rgba(255,255,255,.85);line-height:1.4;">Analítica &amp; Data Driven</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats: fila de 2 KPIs -->
+      <div style="flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,.7vw,12px);" data-a>
+        <div class="cg" style="text-align:center;padding:clamp(10px,1.3vw,22px);">
+          <div class="kn" style="font-size:clamp(24px,2.8vw,50px);">60</div>
+          <div class="lbl" style="margin-top:5px;">ECTS</div>
+        </div>
+        <div class="cg" style="text-align:center;padding:clamp(10px,1.3vw,22px);">
+          <div class="kn" style="font-size:clamp(24px,2.8vw,50px);">12</div>
+          <div class="lbl" style="margin-top:5px;">Meses</div>
+        </div>
+      </div>
+
+      <!-- Modalidades -->
+      <div class="cg" style="flex-shrink:0;" data-a>
+        <div class="lbl" style="margin-bottom:clamp(5px,.7vh,10px);">Modalidades disponibles</div>
+        <div style="display:flex;gap:clamp(4px,.5vw,8px);flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-size:var(--t-xs);font-weight:700;padding:clamp(4px,.5vh,7px) clamp(8px,.9vw,14px);border-radius:3px;">
+            <span class="msym" style="font-size:clamp(10px,.85vw,14px);">videocam</span> Live Class Online
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-size:var(--t-xs);font-weight:700;padding:clamp(4px,.5vh,7px) clamp(8px,.9vw,14px);border-radius:3px;">
+            <span class="msym" style="font-size:clamp(10px,.85vw,14px);">laptop</span> Semipresencial
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);color:#fff;font-family:var(--fb);font-size:var(--t-xs);font-weight:700;padding:clamp(4px,.5vh,7px) clamp(8px,.9vw,14px);border-radius:3px;">
+            <span class="msym" style="font-size:clamp(10px,.85vw,14px);">location_on</span> Presencial Murcia
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S4 — METODOLOGÍA
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <!-- S4: rotación +20° — esquina superior izquierda, apoyada -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:32vw;top:-6vh;left:-8vw;opacity:.055;transform:rotate(20deg);transform-origin:center center;" alt="">
+  <div class="photo-r">
+    <img src="../doc/Marketing Digital/10042023-317A8264.jpg" alt="Metodología ENAE">
+  </div>
+  <div class="inner">
+    <span class="ey" data-a>Cómo aprenderás</span>
+    <div class="tm" data-a>
+      <span class="tb" style="font-size:var(--t-hero);">Metodología</span>
+      <span class="ti" style="font-size:var(--t-hero);">360 Learning.</span>
+    </div>
+    <div class="rule" data-a></div>
+    <p data-a style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.70);line-height:1.75;max-width:42vw;margin-bottom:var(--sp-md);">
+      <em style="font-family:var(--fs);font-style:italic;color:#fff;">Learning by doing</em> — experiencia práctica, contacto con el mundo empresarial y apoyo tutorizado en cada paso.
+    </p>
+    <div class="pg" style="max-width:58%;margin-bottom:var(--sp-md);">
+      <div class="pc"><div class="pi"><span class="msym">analytics</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Mundo empresarial real</div></div>
+      <div class="pc"><div class="pi"><span class="msym">school</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Clases magistrales</div></div>
+      <div class="pc"><div class="pi"><span class="msym">laptop</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Campus virtual</div></div>
+      <div class="pc"><div class="pi"><span class="msym">desktop_windows</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Aulas con tecnología</div></div>
+      <div class="pc pw"><div class="pi"><span class="msym">rocket_launch</span></div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;">Proyecto final: Business Plan real</div></div>
+    </div>
+    <div data-a>
+      <div class="lbl lbl-gr" style="margin-bottom:var(--sp-xs);">Elige tu modalidad</div>
+      <div class="mr"><span class="mt-pill" style="background:var(--gr);color:#fff;">LIVE CLASS</span><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:2px;">100% Online en Directo</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.55);">Sigue las clases desde cualquier lugar en tiempo real.</div></div></div>
+      <div class="mr"><span class="mt-pill" style="background:rgba(169,24,49,.5);color:#fff;">SEMIPRES.</span><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:2px;">Online + Fase Presencial en Murcia</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.55);">Clases online + 2-3 semanas de inmersión en el campus.</div></div></div>
+      <div class="mr"><span class="mt-pill" style="background:rgba(169,24,49,.25);color:#fff;">PRESENCIAL</span><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-md);color:#fff;margin-bottom:2px;">Clases en el Campus de Murcia</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.55);">Viernes tarde y sábado mañana.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S5 — EMPLEABILIDAD
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <!-- Ghost number masivo como en p-06 -->
+  <div class="gh" style="font-size:clamp(120px,16vw,300px);top:-2%;right:-1%;opacity:.055;">91</div>
+
+  <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);gap:var(--sp-lg);">
+    <div>
+      <span class="ey" data-a>Prácticas &amp; Empleo</span>
+      <div class="tm" data-a>
+        <span class="tb" style="font-size:var(--t-hero);">Tu carrera</span>
+        <span class="ti" style="font-size:var(--t-hero);">empieza aquí.</span>
+      </div>
+      <div class="rule" data-a></div>
+    </div>
+
+    <!-- Tres KPIs masivos – Open Sans ExtraBold (estándar corporativo) -->
+    <div class="k3" data-a>
+      <div class="kb arc-kpi-cell">
+        <!-- Arco SVG 91%: circunferencia 2π·88 ≈ 553 -->
+        <svg class="arc-svg" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"/>
+          <circle id="arc1-fill" cx="100" cy="100" r="88" fill="none" stroke="#a91831" stroke-width="5" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553"/>
+        </svg>
+        <div class="kg" id="kpi1">0<span>%</span></div>
+        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">trabajando<br>al terminar</div>
+      </div>
+      <div class="kb arc-kpi-cell">
+        <!-- Arco SVG 82%: mismo radio -->
+        <svg class="arc-svg" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"/>
+          <circle id="arc2-fill" cx="100" cy="100" r="88" fill="none" stroke="#a91831" stroke-width="5" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553"/>
+        </svg>
+        <div class="kg" id="kpi2">0<span>%</span></div>
+        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">mejora profesional<br>demostrada</div>
+      </div>
+      <div class="kb arc-kpi-cell">
+        <!-- Arco estático decorativo para +1K -->
+        <svg class="arc-svg" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(169,24,49,.15)" stroke-width="5"/>
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(169,24,49,.35)" stroke-width="5" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="110"/>
+        </svg>
+        <div class="kg r">+1K</div>
+        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">ofertas gestionadas<br>al año</div>
+      </div>
+    </div>
+
+    <!-- Empresas -->
+    <div data-a>
+      <div class="lbl" style="margin-bottom:var(--sp-xs);">Empresas donde han hecho prácticas nuestros alumnos</div>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(5px,.5vw,8px);margin-top:8px;">
+        <span class="ctag">Hero España</span><span class="ctag">IKEA Ibérica</span>
+        <span class="ctag">Grupo HEFAME</span><span class="ctag">PC Componentes</span>
+        <span class="ctag">Himoinsa</span><span class="ctag">El Pozo</span>
+        <span class="ctag">Rapsodia</span><span class="ctag">Medina Artigas</span>
+        <span class="ctag" style="opacity:.4;">+ muchas más</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     S6 — RANKINGS (Rediseño 2-page spread folleto)
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s6" style="background:var(--grd);">
+  <div style="position:relative; z-index:2; height:100%; display:grid; grid-template-columns:1fr 1.15fr; gap:4vw; padding:var(--py) var(--px); align-items:stretch;">
+    
+    <!-- LEFT COLUMN -->
+    <div style="display:flex; flex-direction:column; gap:1.5vh;">
+      <!-- Headers -->
+      <div style="flex-shrink:0;">
+        <div style="font-family:var(--fd); font-weight:900; font-size:clamp(20px,2.5vw,40px); color:#fff; letter-spacing:-.02em; line-height:1;" data-a>>>></div>
+        <div class="tm" data-a style="margin-top:1vh;">
+          <span class="tb" style="font-size:clamp(36px,4.5vw,68px);">Rankings</span>
+        </div>
+        <div data-a style="font-family:var(--fb); font-weight:700; font-size:var(--t-lg); color:#fff; line-height:1.25; margin-top:1.5vh; max-width:85%;">
+          ENAE se encuentra entre las mejores Escuelas de Negocios
+        </div>
+      </div>
+      
+      <!-- Forbes -->
+      <div data-a style="flex:1; margin-top:1.5vh; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1vh;">
+          <div>
+            <img src="../src/Rankings/Forbes.png" alt="Forbes" style="height:clamp(22px,2.8vw,44px); filter:brightness(0) invert(1);" onerror="this.style.display='none'">
+            <div style="font-family:var(--fs); font-style:italic; font-size:var(--t-xs); color:rgba(255,255,255,.8); margin-top:2px;">Mejores Escuelas de Negocio 2025</div>
+          </div>
+          <span style="font-family:var(--fb); font-weight:700; color:rgba(255,255,255,.6); font-size:var(--t-md); padding-bottom:5px;">Ranking 2025</span>
+        </div>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:clamp(6px,.8vh,12px);">
+          <!-- Items -->
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:1.2vh; text-align:center; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.05);">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:var(--fd); font-size:clamp(45px,6vw,90px); color:rgba(255,255,255,.07); font-weight:900; line-height:1;">#06</div>
+            <div style="position:relative; z-index:1; font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; margin-bottom:2px;">Master in International Trade</div>
+            <div style="position:relative; z-index:1; font-family:var(--fs); font-style:italic; font-size:var(--t-xs); color:rgba(255,255,255,.6);">Categoría: Recién licenciados</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:1.2vh; text-align:center; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.05);">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:var(--fd); font-size:clamp(45px,6vw,90px); color:rgba(255,255,255,.07); font-weight:900; line-height:1;">#07</div>
+            <div style="position:relative; z-index:1; font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; margin-bottom:2px;">Global Executive MBA</div>
+            <div style="position:relative; z-index:1; font-family:var(--fs); font-style:italic; font-size:var(--t-xs); color:rgba(255,255,255,.6);">Categoría: Programas Ejecutivos</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:1.2vh; text-align:center; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.05);">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:var(--fd); font-size:clamp(45px,6vw,90px); color:rgba(255,255,255,.07); font-weight:900; line-height:1;">#12</div>
+            <div style="position:relative; z-index:1; font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; margin-bottom:2px;">International MBA</div>
+            <div style="position:relative; z-index:1; font-family:var(--fs); font-style:italic; font-size:var(--t-xs); color:rgba(255,255,255,.6);">Categoría: MBA</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:1.2vh; text-align:center; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.05);">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:var(--fd); font-size:clamp(45px,6vw,90px); color:rgba(255,255,255,.07); font-weight:900; line-height:1;">#04</div>
+            <div style="position:relative; z-index:1; font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; margin-bottom:2px;">Magistrae</div>
+            <div style="position:relative; z-index:1; font-family:var(--fs); font-style:italic; font-size:var(--t-xs); color:rgba(255,255,255,.6);">Categoría: Alta Dirección</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Financial Mag + El Mundo -->
+      <div data-a style="display:grid; grid-template-columns:1fr 1fr; gap:2vw; margin-top:2vh;">
+        <div style="display:flex; flex-direction:column; justify-content:center;">
+           <img src="../src/Rankings/FinancialMagazine.png" style="height:clamp(22px,2.5vw,40px); filter:brightness(0) invert(1); margin-bottom:8px; object-fit:contain; object-position:left;">
+           <div style="display:flex; align-items:center; gap:10px;">
+             <div style="font-family:var(--fd); font-size:clamp(28px,3.5vw,56px); color:rgba(255,255,255,.25); font-weight:900; line-height:.9;">#06</div>
+             <div style="font-family:var(--fb); font-size:var(--t-xs); color:#fff; font-weight:700; line-height:1.2;">Mejores Escuelas<br>de Negocios<br>en España</div>
+           </div>
+        </div>
+        <div style="display:flex; flex-direction:column; justify-content:center;">
+           <img src="../src/Rankings/El_Mundo_logo.svg.png" style="height:clamp(16px,2vw,32px); filter:brightness(0) invert(1); margin-bottom:4px; object-fit:contain; object-position:left;">
+           <div style="font-family:var(--fs); font-style:italic; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-bottom:6px;">Mejores másters Online</div>
+           <div style="display:flex; gap:1vw;">
+             <div>
+               <div style="font-family:var(--fd); font-size:clamp(20px,2.5vw,40px); color:rgba(255,255,255,.25); font-weight:900; line-height:.9;">#02</div>
+               <div style="font-family:var(--fb); font-size:var(--t-xs); color:#fff; font-weight:700; line-height:1.2; margin-top:2px;">International<br>Trade</div>
+             </div>
+             <div>
+               <div style="font-family:var(--fd); font-size:clamp(20px,2.5vw,40px); color:rgba(255,255,255,.25); font-weight:900; line-height:.9;">#04</div>
+               <div style="font-family:var(--fb); font-size:var(--t-xs); color:#fff; font-weight:700; line-height:1.2; margin-top:2px;">Dirección de<br>Agronegocios</div>
+             </div>
+           </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex; flex-direction:column; gap:1.5vh;">
+       <!-- QS STARS -->
+       <div data-a style="display:flex; align-items:center; justify-content:center; gap:1.2vw; margin-bottom:1vh;">
+         <img src="../src/Rankings/0faf3965-9e4e-419c-a4cc-2ac0a6a48783.png" style="height:clamp(45px,6vw,90px); object-fit:contain;">
+         <img src="../src/Rankings/e32d12cd-861d-4634-8b5d-ca1fbae0e4db.png" style="height:clamp(26px,3.5vw,52px); object-fit:contain;">
+         <img src="../src/Rankings/b3b7e495-1f79-4615-97b7-688792bd45fd.png" style="height:clamp(26px,3.5vw,52px); object-fit:contain;">
+         <img src="../src/Rankings/6db43692-2cf3-407f-b674-75311166e7cf.png" style="height:clamp(26px,3.5vw,52px); object-fit:contain;">
+         <img src="../src/Rankings/2950d6d7-9af8-4583-9c77-d8240f953611.png" style="height:clamp(26px,3.5vw,52px); object-fit:contain;">
+       </div>
+       
+       <!-- QS GRID -->
+       <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:clamp(6px,.8vh,12px); grid-auto-rows:1fr;">
+         <!-- 10 IA -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#10</div>
+            <img src="../src/Rankings/99f03286-f60a-47a4-8774-bccf8abcbbdb.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">Máster en<br>IA y Data Science</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 06 Logistica -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#06</div>
+            <img src="../src/Rankings/99f03286-f60a-47a4-8774-bccf8abcbbdb.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">Máster en<br>Logística y Operaciones</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 06 GEMBA -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#06</div>
+            <img src="../src/Rankings/QS Executive MBA Rankings - Europe - 2026 - Badge.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">Global<br>Executive MBA</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 09 Marketing -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#09</div>
+            <img src="../src/Rankings/99f03286-f60a-47a4-8774-bccf8abcbbdb.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">Máster en<br>Marketing Digital</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 08 Finanzas -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#08</div>
+            <img src="../src/Rankings/99f03286-f60a-47a4-8774-bccf8abcbbdb.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">Máster en<br>Finanzas y Fintech</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 03 International Trade -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#03</div>
+            <img src="../src/Rankings/qs_international_trade.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">International<br>Trade</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 13 Riesgos -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#13</div>
+            <img src="../src/Rankings/99f03286-f60a-47a4-8774-bccf8abcbbdb.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">Máster en<br>Gestión de Riesgos</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+         <!-- 09 International MBA -->
+         <div data-a style="background:rgba(0,0,0,.15); border-radius:6px; padding:1.2vh 1vw; display:flex; align-items:center; gap:1vw; position:relative; overflow:hidden; border:1px solid rgba(0,0,0,.1);">
+            <div style="position:absolute; right:8%; top:50%; transform:translateY(-50%); font-family:var(--fd); font-size:clamp(55px,7.5vw,120px); color:rgba(255,255,255,.05); font-weight:900; line-height:1; pointer-events:none; letter-spacing:-.04em;">#09</div>
+            <img src="../src/Rankings/QS Executive MBA Rankings - Europe - 2026 - Badge.png" style="height:clamp(35px,5vw,75px); object-fit:contain; z-index:1;">
+            <div style="z-index:1; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-family:var(--fb); font-weight:700; font-size:var(--t-sm); color:#fff; line-height:1.2;">International<br>MBA</div>
+              <div style="font-family:var(--fb); font-weight:400; font-size:var(--t-xs); color:rgba(255,255,255,.6); margin-top:2px;">España</div>
+            </div>
+         </div>
+       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S7 — CLAUSTRO DOCENTE
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <!-- S7: rotación -15° — arriba-derecha, suave -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:44vw;top:-8vh;right:-11vw;opacity:.065;transform:rotate(-15deg);transform-origin:center center;" alt="">
+  <!-- Layout S7: flex column con flex:1 en cada fila para distribuir el espacio disponible -->
+  <div class="inner" style="display:flex;flex-direction:column;gap:clamp(6px,1vh,12px);padding-bottom:calc(var(--py) + 36px);">
+
+    <!-- Encabezado compacto — sin margin-bottom extra, el gap del flex lo gestiona -->
+    <div style="flex-shrink:0;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:clamp(4px,.5vh,8px);">
+        <div>
+          <span class="ey" data-a>Claustro Docente</span>
+          <div class="tm" data-a>
+            <span class="tb" style="font-size:var(--t-title);">Aprende de</span>
+            <span class="ti" style="font-size:var(--t-title);">los mejores.</span>
+          </div>
+        </div>
+        <div data-a style="text-align:right;">
+          <div class="lbl">+150 profesores</div>
+          <div style="font-family:var(--fs);font-style:italic;font-size:var(--t-md);color:rgba(255,255,255,.55);">nacionales e internacionales</div>
+        </div>
+      </div>
+      <div class="rule" data-a></div>
+    </div>
+
+    
+    <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.7vw,12px);min-height:0;">
+      ${(d.faculty || []).map(f => `
+      <div class="pcard" data-a style="display:flex;flex-direction:column;">
+        <div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0;">
+          <img src="${escapeHtml(f.avatar)}" alt="${escapeHtml(f.name)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;">
+        </div>
+        <div class="pinfo"><div class="pname">${escapeHtml(f.name)}</div><div class="prole">${escapeHtml(f.role)}</div></div>
+      </div>
+      `).join('')}
+    </div>
+    
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S8 — PERFIL + ADMISIÓN
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s8">
+  <!-- S8: rotación +25° — abajo-izquierda, inclinada hacia arriba -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:36vw;bottom:-8vh;left:-9vw;opacity:.065;transform:rotate(25deg);transform-origin:center center;" alt="">
+  <div class="inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;height:100%;">
+      <!-- Izquierda: Perfil del alumno -->
+      <div>
+        <span class="ey" data-a>¿A quién va dirigido?</span>
+        <div class="tm" data-a>
+          <span class="tb" style="font-size:var(--t-title);">Perfil del</span>
+          <span class="ti" style="font-size:var(--t-title);">alumno.</span>
+        </div>
+        <div class="rule" data-a></div>
+        <div data-a style="margin-bottom:var(--sp-md);">
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Directivos y ejecutivos de Marketing, Ventas y Agencias</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Profesionales de Innovación, I+D y Operaciones</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Emprendedores en fase de desarrollo comercial</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:var(--sp-xs);"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Profesionales en reciclaje hacia el entorno digital</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--gr);font-weight:900;font-size:var(--t-lg);flex-shrink:0;margin-top:1px;">›</span><span style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.5;">Recién graduados con vocación digital</span></div>
+        </div>
+        <div class="cg" data-a>
+          <div class="lbl" style="margin-bottom:var(--sp-sm);">Datos de la promoción</div>
+          <div class="sm-grid">
+            <div>
+              <div class="sm-n">44<span>%</span></div>
+              <div class="sm-l">mujeres</div>
+              <div class="dbar-track"><div class="dbar-fill" data-pct="44"></div></div>
+            </div>
+            <div>
+              <div class="sm-n">9</div>
+              <div class="sm-l">nacionalidades</div>
+              <div class="dbar-track"><div class="dbar-fill" data-pct="90" style="background:linear-gradient(to right,rgba(169,24,49,.8),rgba(169,24,49,.4));"></div></div>
+            </div>
+            <div>
+              <div class="sm-n">33<span>%</span></div>
+              <div class="sm-l">21–26 años</div>
+              <div class="dbar-track"><div class="dbar-fill" data-pct="33"></div></div>
+            </div>
+            <div>
+              <div class="sm-n">42<span>%</span></div>
+              <div class="sm-l">mando intermedio</div>
+              <div class="dbar-track"><div class="dbar-fill" data-pct="42"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Derecha: Proceso de admisión -->
+      <div>
+        <span class="ey" data-a>Proceso de admisión</span>
+        <div class="tm" data-a>
+          <span class="tb" style="font-size:var(--t-title);">5 pasos hacia</span>
+          <span class="ti" style="font-size:var(--t-title);">tu futuro.</span>
+        </div>
+        <div class="rule" data-a></div>
+        <!-- Timeline de admisión -->
+        <div class="tl">
+          <div class="tl-item" data-a><div class="nb" style="flex-shrink:0;">01</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Preinscripción online</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">a través de enae.es</div></div></div>
+          <div class="tl-item" data-a><div class="nb" style="flex-shrink:0;">02</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Envío de documentación</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Revisada por el equipo académico</div></div></div>
+          <div class="tl-item" data-a><div class="nb" style="flex-shrink:0;">03</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Entrevista personal</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Con el equipo de admisiones</div></div></div>
+          <div class="tl-item" data-a><div class="nb" style="flex-shrink:0;">04</div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">Evaluación del comité</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Decisión del comité académico</div></div></div>
+          <div class="tl-item hl" data-a><div class="nb" style="flex-shrink:0;background:var(--gr);border:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">¡Admisión confirmada!</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Se comunica la resolución oficial</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S9 — CIERRE / CONTACTO
+     Inspirado en p-20 del dossier oficial ENAE:
+     gradiente negro→granate · "E" grande y visible · logo central
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" id="s9">
+  <!-- "E" brand pattern prominente (como en p-20) -->
+  <!-- S9 cierre: E gigante -20° arriba-derecha (como p-20 oficial) + E mediana +10° abajo-izquierda -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:54vw;top:-12vh;right:-14vw;opacity:.12;transform:rotate(-20deg);transform-origin:center center;" alt="">
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:30vw;bottom:-7vh;left:-7vw;opacity:.08;transform:rotate(10deg);transform-origin:center center;" alt="">
+
+  <div class="inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <!-- Logo ENAE grande centrado (como p-20) -->
+    <div data-a style="margin-bottom:var(--sp-lg);">
+      <img src="../assets/logos/LOGO_ENAE_HORIZONTAL.svg" alt="ENAE International Business School"
+           style="height:clamp(36px,5.5vh,72px);width:auto;filter:brightness(0) invert(1);">
+    </div>
+
+    <!-- Título + claim -->
+    <div data-a style="margin-bottom:var(--sp-md);">
+      <div style="font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:var(--sp-sm);">CONTACTO</div>
+      <div class="tm">
+        <span class="ti" style="font-size:var(--t-sub);color:rgba(255,255,255,.55);">Lead your future</span>
+      </div>
+    </div>
+
+    <!-- Grid contacto – dos columnas separadas por línea (como p-20) -->
+    <div class="ct-grid" data-a>
+      <div class="ct-col" style="text-align:right;">
+        <div class="ct-label">Departamento de Admisiones</div>
+        <div class="ct-val"><strong>+34 968 899 899</strong></div>
+        <div class="ct-val">admisiones@enae.es</div>
+      </div>
+      <div class="ct-div"></div>
+      <div class="ct-col" style="text-align:left;">
+        <div class="ct-label">Campus ENAE</div>
+        <div class="ct-val"><strong>www.enae.es</strong></div>
+        <div class="ct-val">Espinardo, Murcia, España</div>
+      </div>
+    </div>
+
+    <!-- Botones CTA -->
+    <div data-a style="display:flex;gap:1.2vw;margin-top:var(--sp-lg);">
+      <a href="https://www.enae.es" class="btn" target="_blank" style="display:inline-flex;align-items:center;gap:.5vw;">
+        <span class="msym" style="font-size:var(--t-lg);">arrow_forward</span>Solicitar información
+      </a>
+      <a href="https://www.enae.es" class="btn btn-ol" target="_blank" style="display:inline-flex;align-items:center;gap:.5vw;">
+        <span class="msym" style="font-size:var(--t-lg);">download</span>Descargar dossier
+      </a>
+    </div>
+
+    <!-- Strip KPIs de cierre -->
+    <div data-a style="display:flex;gap:0;border-top:1px solid rgba(255,255,255,.12);padding-top:var(--sp-md);margin-top:var(--sp-md);width:100%;max-width:60vw;justify-content:center;">
+      <div style="flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.1);padding:0 clamp(8px,1vw,16px);">
+        <div class="kn" style="font-size:clamp(20px,2.4vw,42px);">91%</div>
+        <div class="ks" style="font-size:var(--t-xs);">empleabilidad</div>
+      </div>
+      <div style="flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.1);padding:0 clamp(8px,1vw,16px);">
+        <div class="kn" style="font-size:clamp(20px,2.4vw,42px);color:var(--gr);">#9</div>
+        <div class="ks" style="font-size:var(--t-xs);">QS España</div>
+      </div>
+      <div style="flex:1;text-align:center;padding:0 clamp(8px,1vw,16px);">
+        <div class="kn" style="font-size:clamp(20px,2.4vw,42px);">+37</div>
+        <div class="ks" style="font-size:var(--t-xs);">años de excelencia</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVEGACIÓN -->
+<div id="nav">
+  <button class="arr" onclick="go(cur-1)">‹</button>
+  <button class="dot on"  onclick="go(0)"></button>
+  <button class="dot"     onclick="go(1)"></button>
+  <button class="dot"     onclick="go(2)"></button>
+  <button class="dot"     onclick="go(3)"></button>
+  <button class="dot"     onclick="go(4)"></button>
+  <button class="dot"     onclick="go(5)"></button>
+  <button class="dot"     onclick="go(6)"></button>
+  <button class="dot"     onclick="go(7)"></button>
+  <button class="dot"     onclick="go(8)"></button>
+  <button class="arr" onclick="go(cur+1)">›</button>
+</div>
+</div><!-- #app -->
+
 
     </div>
     `;
+
     mount.innerHTML = html;
+
+    // Execute the slider script
+    setTimeout(() => {
+        
+const N = 9;
+let cur = 0, busy = false;
+const SL = document.querySelectorAll('.slide');
+const DT = document.querySelectorAll('.dot');
+
+function go(n) {
+  if (busy || n < 0 || n >= N || n === cur) return;
+  busy = true;
+  const out = SL[cur], inn = SL[n], d = n > cur ? 1 : -1;
+
+  inn.querySelectorAll('[data-a]').forEach(e => { e.style.opacity='0'; e.style.transform=''; });
+
+  anime({ targets:out, opacity:[1,0], translateX:[0,-48*d], duration:380, easing:'easeInQuart',
+    complete:()=>{ out.classList.remove('on'); out.style.cssText=''; }
+  });
+  inn.style.opacity='0'; inn.style.transform=`translateX(${48*d}px)`;
+  inn.classList.add('on');
+  anime({ targets:inn, opacity:[0,1], translateX:[48*d,0], duration:460, easing:'easeOutQuart',
+    complete:()=>{ busy=false; cur=n; ui(); anim(n); }
+  });
 }
 
-// --- Dynamic Event: SVG placements select ---
-window.toggleSectorSelection = function(index) {
-    activeSectorIndex = index;
-    renderDossierHighFidelity();
-};
+function ui() {
+  document.getElementById('ctr').textContent = String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  document.getElementById('bar').style.width = ((cur+1)/N*100)+'%';
+  DT.forEach((d,i)=>d.classList.toggle('on',i===cur));
+}
+
+/* ── Animaciones por slide ────────────────────────── */
+function anim(n) {
+  const s = SL[n], da = Array.from(s.querySelectorAll('[data-a]'));
+
+  const stg = (tgts, opts={}) => anime({ targets:tgts, opacity:[0,1], translateY:[18,0], easing:'easeOutQuart', duration:480, ...opts });
+
+  switch(n) {
+    case 0: // PORTADA
+      // foto entra primero, luego contenido escalonado
+      anime({ targets:s.querySelector('.bg'), opacity:[0,1], scale:[1.06,1], duration:900, easing:'easeOutCubic' });
+      anime.timeline({ easing:'easeOutQuart' })
+        .add({ targets:da[0], opacity:[0,1], translateY:[-12,0], duration:500 }, 200)   // logo
+        .add({ targets:da[1], opacity:[0,1], translateX:[ 16,0], duration:400 }, 320)   // pill
+        .add({ targets:da[2], opacity:[0,1], translateY:[ 30,0], duration:650 }, 500)   // título
+        .add({ targets:da[3], opacity:[0,1], translateY:[ 14,0], duration:500 }, 870)   // mención serif
+        .add({ targets:da[4], opacity:[0,1], translateY:[ 14,0], duration:500 }, 960)   // rule
+        .add({ targets:da[5], opacity:[0,1], translateY:[ 14,0], duration:500 }, 1040)  // doble título
+        .add({ targets:da[6], opacity:[0,1], translateY:[ 10,0], duration:500 }, 1160); // KPI strip
+      break;
+
+    case 1: // QUÉ ES
+      stg(da, { delay:anime.stagger(110) });
+      break;
+
+    case 2: // PROGRAMA
+      // da[0..3] = ey, tm, rule, lbl-resumen (todos en el encabezado izquierdo)
+      stg(da.slice(0,4), { delay:anime.stagger(80) });
+      // módulos: cada .mc[data-a] entra escalonado con bounce
+      anime({ targets:s.querySelectorAll('.mc[data-a]'), opacity:[0,1], translateY:[12,0],
+        scale:[0.97,1], delay:anime.stagger(45,{start:280}), duration:340, easing:'easeOutBack' });
+      // columna derecha: ia-box, stats, modalidades entran desde la derecha
+      anime({ targets:[da[da.length-3], da[da.length-2], da[da.length-1]],
+        opacity:[0,1], translateX:[22,0],
+        delay:anime.stagger(100,{start:360}), duration:480, easing:'easeOutQuart' });
+      break;
+
+    case 3: // METODOLOGÍA – da[] ya no incluye .pg (quitado data-a del padre)
+      stg(da, { delay:anime.stagger(100) });
+      // pillar cards entran tras el stagger del body text (~400ms)
+      anime({ targets:s.querySelectorAll('.pc'), opacity:[0,1], translateY:[16,0],
+        delay:anime.stagger(60,{start:420}), duration:360, easing:'easeOutBack' });
+      break;
+
+    case 4: // EMPLEABILIDAD – contadores + arcos SVG animados
+      stg(da, { delay:anime.stagger(100) });
+      setTimeout(() => {
+        const C = 553; // circunferencia 2π·88
+        const count = (id, arcId, to) => {
+          anime({ targets:{v:0}, v:to, duration:1400, easing:'easeOutCubic', round:1,
+            update: a => { document.getElementById(id).innerHTML = Math.round(a.animations[0].currentValue)+'<span>%</span>'; }
+          });
+          anime({ targets: document.getElementById(arcId),
+            strokeDashoffset: [C, C * (1 - to / 100)],
+            duration: 1500, easing: 'easeOutCubic'
+          });
+        };
+        count('kpi1', 'arc1-fill', 91);
+        count('kpi2', 'arc2-fill', 82);
+      }, 350);
+      break;
+
+    case 5: // RANKINGS – 2 cols stretch, da[] = ey,tm,rule + hero + mini-media + 2-badge-rows + years + acred + panamerican
+      stg(da.slice(0,3), { delay:anime.stagger(80) });  // título
+      stg([da[3]], { delay:80*3, duration:500 });        // hero #9 card
+      stg([da[4]], { delay:80*4 });                      // El Mundo / FM
+      // badges entran desde arriba con un ligero scale
+      anime({ targets:[da[5],da[6]], opacity:[0,1], translateY:[-18,0], scale:[.94,1],
+        delay:anime.stagger(120,{start:80*3}), duration:480, easing:'easeOutBack' });
+      // resto: años, acreditaciones, panamerican
+      stg(da.slice(7), { delay:anime.stagger(90,{start:80*5}) });
+      // número héroe bounce — después de que la card sea visible
+      anime({ targets:s.querySelector('.rk-hero-n'), opacity:[0,1], scale:[.76,1],
+        duration:620, easing:'easeOutBack', delay:600 });
+      break;
+
+    case 6: // CLAUSTRO – data-a en cada pcard directamente
+      // Encabezado: ey, tm, stat-derecha, rule = da[0..3]
+      stg([da[0],da[1],da[2],da[3]], { delay:anime.stagger(80) });
+      // Fotos: cada .pcard[data-a] = da[4..10]
+      anime({ targets:s.querySelectorAll('.pcard[data-a]'), opacity:[0,1], translateY:[22,0], scale:[.95,1],
+        delay:anime.stagger(52,{start:220}), duration:400, easing:'easeOutBack' });
+      break;
+
+    case 7: // PERFIL + ADMISIÓN
+      stg(da.slice(0,8), { delay:anime.stagger(80) });
+      // timeline items con stagger desde la izquierda
+      anime({ targets:da.slice(8), opacity:[0,1], translateX:[-16,0],
+        delay:anime.stagger(80,{start:300}), duration:380, easing:'easeOutQuart' });
+      // barras demográficas
+      setTimeout(() => {
+        s.querySelectorAll('.dbar-fill').forEach(bar => {
+          bar.style.width = (bar.dataset.pct || 0) + '%';
+        });
+      }, 500);
+      break;
+
+    case 8: // CIERRE – logo grande primero, luego contenido
+      anime.timeline({ easing:'easeOutQuart' })
+        .add({ targets:da[0], opacity:[0,1], scale:[.92,1], duration:600 }, 0)
+        .add({ targets:da[1], opacity:[0,1], translateY:[14,0], duration:500 }, 250)
+        .add({ targets:da[2], opacity:[0,1], translateY:[14,0], duration:500 }, 400)
+        .add({ targets:da[3], opacity:[0,1], translateY:[10,0], duration:500 }, 550);
+      setTimeout(()=>{
+        anime({ targets:s.querySelectorAll('.btn'), scale:[1,1.04,1],
+          delay:anime.stagger(60), duration:500, easing:'easeInOutSine' });
+      }, 900);
+      break;
+
+    default:
+      stg(da, { delay:anime.stagger(90) });
+  }
+}
+
+/* ── Teclado + touch ──────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); go(cur+1); }
+  if (['ArrowLeft','ArrowUp'].includes(e.key))        { e.preventDefault(); go(cur-1); }
+});
+let tx=0;
+document.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend',   e=>{ const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50) go(cur+(dx<0?1:-1)); },{passive:true});
+
+/* ── Init ──────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', ()=>{ ui(); anim(0); });
+
+    }, 100);
+}
 
 // --- Testimonial slide switcher ---
 window.slideTestimonial = function(direction) {
@@ -1930,8 +2886,8 @@ window.slideTestimonial = function(direction) {
 
 // --- HTML escape utility ---
 function escapeHtml(unsafe) {
-    if (!unsafe) return "";
-    return unsafe
+    if (unsafe === null || unsafe === undefined) return "";
+    return String(unsafe)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")

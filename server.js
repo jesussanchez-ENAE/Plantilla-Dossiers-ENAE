@@ -85,42 +85,83 @@ app.post('/api/generate-dossier', upload.single('documento'), async (req, res) =
         return res.status(500).json({ error: "Configuración del servidor incompleta: falta la clave API de IA en el archivo .env." });
     }
 
-    let prompt = `Eres director de contenidos de ENAE International Business School, Murcia, España.
-Genera el dossier del programa académico con las siguientes especificaciones:
-- Tipo: ${tipo}
-- Nombre: ${nombre}
-- Área temática: ${area}
-- Duración: ${duracion}
-- Modalidad: ${modal}
-- Inversión/Precio: ${precio}
-- Próxima Convocatoria: ${fecha}
-- Notas de enfoque: ${notas}
-`;
+    // Extraer campos del body con nombres del nuevo formulario
+    const meses  = req.body.meses  || duracion || '12';
+    const ects   = req.body.ects   || '60';
 
+    // Inferir líneas del título a partir del nombre y tipo
+    const tipoLabels = {
+        master: 'Máster en', mba: 'MBA', ejecutivo: 'Programa Ejecutivo en',
+        curso: 'Curso en', directivo: 'Programa Directivo en'
+    };
+    const titulo_l_default = tipoLabels[tipo] || 'Programa en';
+
+    let prompt = `Eres director de contenidos de ENAE International Business School (Murcia, España).
+Genera el contenido académico para el siguiente programa:
+- Tipo: ${tipo || 'máster'}
+- Nombre completo: ${nombre}
+- Área temática: ${area || 'Dirección y Estrategia'}
+- Duración: ${meses} meses · ${ects} ECTS
+- Modalidad: ${modal || 'Online en directo'}
+- Precio: ${precio || 'no especificado'}
+- Notas de enfoque: ${notas || 'ninguna'}
+`;
     if (documentText) {
-        prompt += `\nInformación extraída del documento adjunto:\n${documentText.substring(0, 10000)}\n`;
+        prompt += `\nContenido del documento de referencia adjunto:\n${documentText.substring(0, 10000)}\n`;
     }
 
     prompt += `
-Responde ÚNICAMENTE con un objeto JSON válido, sin bloques de código markdown, sin introducciones ni comentarios adicionales. El formato del JSON debe ser exactamente:
+Responde ÚNICAMENTE con un objeto JSON válido, sin markdown, sin comentarios. Formato exacto:
 {
-  "descripcion": "3-4 frases describiendo el valor diferencial, rigor e impacto del programa.",
-  "dirigido": "3-4 frases detallando el perfil ideal del alumno y requisitos académicos/profesionales.",
-  "competencias": ["c1", "c2", "c3", "c4", "c5", "c6"],
-  "modulos": [
-    {"n": "01", "t": "Nombre del Módulo 1", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "02", "t": "Nombre del Módulo 2", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "03", "t": "Nombre del Módulo 3", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "04", "t": "Nombre del Módulo 4", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "05", "t": "Nombre del Módulo 5", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "06", "t": "Nombre del Módulo 6", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "07", "t": "Nombre del Módulo 7", "s": "Subtema A · Subtema B · Subtema C"},
-    {"n": "08", "t": "Nombre del Módulo 8", "s": "Subtema A · Subtema B · Subtema C"}
+  "programa": "${nombre}",
+  "titulo_l": "${titulo_l_default}",
+  "titulo_b1": "primera palabra o grupo de palabras en bold (ej: 'Marketing Digital')",
+  "titulo_b2": "segunda línea bold más corta con punto final (ej: 'e IA.')",
+  "subtitulo": "mención especial o énfasis diferenciador breve (ej: 'Mención en Inteligencia Artificial Aplicada')",
+  "descripcion": "2-3 frases impactantes describiendo el valor diferencial del programa. Puede incluir etiquetas <strong> para énfasis.",
+  "cadena_valor": [
+    { "label": "Fase 1", "sub": "descripción corta" },
+    { "label": "Fase 2", "sub": "descripción corta" },
+    { "label": "Fase 3", "sub": "descripción corta" },
+    { "label": "Fase 4", "sub": "descripción corta" },
+    { "label": "Fase 5", "sub": "descripción corta" }
   ],
-  "metodologia": "3-4 frases describiendo la metodología práctica de ENAE (método del caso, simuladores de negocio, proyectos reales y aplicación empresarial).",
-  "salidas": ["Cargo 1", "Cargo 2", "Cargo 3", "Cargo 4", "Cargo 5", "Cargo 6", "Cargo 7", "Cargo 8"],
-  "cta": "Una frase inspiradora y motivadora invitando al alumno a dar el salto a la excelencia académica junto a nosotros en ENAE."
-}`;
+  "modulos": [
+    { "num": "01", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "02", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "03", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "04", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "05", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "06", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "07", "area": "Área corta", "nombre": "Nombre completo del módulo" },
+    { "num": "08", "area": "Área corta", "nombre": "Nombre completo del módulo" }
+  ],
+  "ia_asignaturas": [
+    "Asignatura especializada 1",
+    "Asignatura especializada 2",
+    "Asignatura especializada 3",
+    "Asignatura especializada 4",
+    "Asignatura especializada 5",
+    "Asignatura especializada 6"
+  ],
+  "kpi1": { "valor": 91, "label": "trabajando<br>al terminar" },
+  "kpi2": { "valor": 82, "label": "mejora profesional<br>demostrada" },
+  "empresas": ["Empresa 1", "Empresa 2", "Empresa 3", "Empresa 4", "Empresa 5", "Empresa 6", "Empresa 7", "Empresa 8"],
+  "perfil_bullets": [
+    "Perfil de alumno objetivo 1",
+    "Perfil de alumno objetivo 2",
+    "Perfil de alumno objetivo 3",
+    "Perfil de alumno objetivo 4",
+    "Perfil de alumno objetivo 5"
+  ],
+  "demo_stats": [
+    { "n": "44<span>%</span>", "l": "mujeres",          "pct": 44 },
+    { "n": "9",                "l": "nacionalidades",    "pct": 90 },
+    { "n": "33<span>%</span>", "l": "21–26 años",       "pct": 33 },
+    { "n": "42<span>%</span>", "l": "mando intermedio", "pct": 42 }
+  ]
+}
+IMPORTANTE: los campos titulo_b1 y titulo_b2 deben ser las palabras clave más impactantes del nombre del programa, divididas en dos líneas visuales. Usa términos reales del área ${area || 'del programa'}.`;
 
     try {
         const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -176,7 +217,7 @@ function slugify(text) {
         .replace(/-+$/, '');            // Trim - from end of text
 }
 
-// Save a dossier (creates a standalone HTML file)
+// Save a dossier (creates a standalone HTML from the master template)
 app.post('/api/dossiers', (req, res) => {
     try {
         const dossierData = req.body;
@@ -187,19 +228,43 @@ app.post('/api/dossiers', (req, res) => {
         const fileName = slugify(dossierData.nombre) + '.html';
         const filePath = path.join(DOSSIERS_DIR, fileName);
 
-        // Read template.html
-        const templatePath = path.join(__dirname, 'template.html');
+        // ── Usar el dossier de marketing como template maestro ──
+        const masterTemplatePath = path.join(DOSSIERS_DIR, 'master-marketing-digital-ia.html');
+        const legacyTemplatePath = path.join(__dirname, 'template.html');
+
+        let templatePath = fs.existsSync(masterTemplatePath)
+            ? masterTemplatePath
+            : legacyTemplatePath;
+
         if (!fs.existsSync(templatePath)) {
-            return res.status(500).json({ error: "No se encuentra template.html en el servidor." });
+            return res.status(500).json({ error: "No se encuentra el template maestro." });
         }
 
         let htmlContent = fs.readFileSync(templatePath, 'utf-8');
 
-        // Inject data into the HTML as a script tag
-        const scriptInjection = `<script id="dossier-data" type="application/json">${JSON.stringify(dossierData)}</script>`;
-        htmlContent = htmlContent.replace('</head>', `    ${scriptInjection}\n</head>`);
+        // ── Reemplazar el bloque dossier-data con los nuevos datos ──
+        const newDataBlock = `<script id="dossier-data" type="application/json">\n${JSON.stringify(dossierData, null, 2)}\n</script>`;
 
-        // Save the file
+        if (htmlContent.includes('<script id="dossier-data"')) {
+            // Sustituir el bloque existente (desde la apertura hasta el cierre del </script>)
+            htmlContent = htmlContent.replace(
+                /<script id="dossier-data"[^>]*>[\s\S]*?<\/script>/,
+                newDataBlock
+            );
+        } else {
+            // Fallback: inyectar antes de </head>
+            htmlContent = htmlContent.replace('</head>', `    ${newDataBlock}\n</head>`);
+        }
+
+        // ── Actualizar el <title> con el nombre del programa ──
+        if (dossierData.programa) {
+            htmlContent = htmlContent.replace(
+                /<title>[^<]*<\/title>/,
+                `<title>${dossierData.programa} — ENAE Business School</title>`
+            );
+        }
+
+        // ── Guardar como archivo independiente ──
         fs.writeFileSync(filePath, htmlContent, 'utf-8');
 
         res.json({ success: true, fileName: fileName, path: `/dossiers/${fileName}` });
@@ -209,18 +274,63 @@ app.post('/api/dossiers', (req, res) => {
     }
 });
 
-// List all dossiers
+// Helper: derive a category label from the dossier data
+function deriveCategoria(data, fileName) {
+    if (data && data.categoria) {
+        // "Programa de Posgrado · Máster Internacional" → "Máster"
+        if (/MBA/i.test(data.categoria) || /MBA/i.test(data.programa || '')) return 'MBA';
+        if (/Máster|Master/i.test(data.categoria)) return 'Máster';
+        if (/Ejecutivo/i.test(data.categoria)) return 'Executive';
+        if (/Curso/i.test(data.categoria)) return 'Curso';
+        if (/Directivo/i.test(data.categoria)) return 'Directivo';
+    }
+    if (/mba/i.test(fileName)) return 'MBA';
+    if (/master|máster/i.test(fileName)) return 'Máster';
+    return 'Programa';
+}
+
+// Helper: build a mixed editorial title (sans + serif italic accent) from data
+function buildMixedTitle(data, fileName) {
+    if (data && (data.titulo_b1 || data.titulo_b2)) {
+        const l  = data.titulo_l  ? `<span class="mt-light">${data.titulo_l}</span> ` : '';
+        const b1 = data.titulo_b1 ? `${data.titulo_b1} ` : '';
+        const b2 = data.titulo_b2 ? `<span class="mt-accent">${data.titulo_b2}</span>` : '';
+        return (l + b1 + b2).trim();
+    }
+    if (data && data.programa) return data.programa;
+    return fileName.replace('.html', '').replace(/-/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// List all dossiers (enriched with embedded dossier-data)
 app.get('/api/dossiers', (req, res) => {
     try {
         const files = fs.readdirSync(DOSSIERS_DIR).filter(f => f.endsWith('.html'));
         const dossiers = files.map(file => {
             const filePath = path.join(DOSSIERS_DIR, file);
             const stats = fs.statSync(filePath);
+
+            // Try to read the embedded dossier-data JSON for rich metadata
+            let data = null;
+            try {
+                const html = fs.readFileSync(filePath, 'utf-8');
+                const m = html.match(/<script id="dossier-data"[^>]*>([\s\S]*?)<\/script>/);
+                if (m) data = JSON.parse(m[1]);
+            } catch (e) { /* non-fatal — fall back to filename */ }
+
+            const descripcion = data && data.descripcion
+                ? data.descripcion.replace(/<\/?[^>]+(>|$)/g, '').trim()
+                : '';
+
             return {
                 fileName: file,
                 url: `/dossiers/${file}`,
                 createdAt: stats.birthtime,
-                updatedAt: stats.mtime
+                updatedAt: stats.mtime,
+                programa: (data && data.programa) || file.replace('.html', '').replace(/-/g, ' '),
+                titleHtml: buildMixedTitle(data, file),
+                categoria: deriveCategoria(data, file),
+                descripcion: descripcion
             };
         });
 

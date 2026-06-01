@@ -1,14 +1,564 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENAE CMS - Generador de Dossiers</title>
-    <link href="styles.css" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuevo Dossier — ENAE Dossiers Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gr: #a91831; --grd: #8a1226; --ng: #202221;
+      --surface: #f4f6f9; --white: #fff;
+      --border: #e2e8f0; --muted: #64748b;
+      --r: 8px; --ff: 'Open Sans', Arial, sans-serif;
+      --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--ff); background: var(--surface); color: var(--ng); min-height: 100vh; }
+
+    /* ── Header ── */
+    .hdr { background: var(--ng); height: 58px; padding: 0 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    .hdr-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .hdr-mark { width: 30px; height: 30px; background: var(--gr); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; }
+    .hdr-brand { font-weight: 700; font-size: 14px; color: #fff; letter-spacing: .3px; }
+    .hdr-brand span { color: var(--gr); }
+    .hdr-back { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color .15s; }
+    .hdr-back:hover { color: #fff; }
+
+    /* ── Layout ── */
+    .wrap { max-width: 820px; margin: 0 auto; padding: 44px 24px 88px; }
+    .page-head { margin-bottom: 36px; }
+    .page-title { font-weight: 800; font-size: 26px; color: var(--ng); margin-bottom: 4px; }
+    .page-title em { font-style: normal; color: var(--gr); }
+    .page-sub { font-size: 13px; color: var(--muted); }
+
+    /* ── Steps ── */
+    .steps { display: flex; align-items: center; margin-bottom: 36px; }
+    .step-itm { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
+    .step-itm.active { color: var(--gr); }
+    .step-itm.done   { color: var(--ng); }
+    .step-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--muted); flex-shrink: 0; }
+    .step-itm.active .step-dot { background: var(--gr); color: #fff; }
+    .step-itm.done   .step-dot { background: var(--ng); color: #fff; }
+    .step-line { flex: 1; height: 1.5px; background: var(--border); margin: 0 10px; }
+    .step-line.done { background: var(--ng); }
+
+    /* ── Card ── */
+    .card { background: var(--white); border-radius: var(--r); box-shadow: var(--shadow); padding: 26px 30px; margin-bottom: 18px; }
+    .card-ttl { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.8px; color: var(--gr); margin-bottom: 18px; display: flex; align-items: center; gap: 7px; }
+
+    /* ── Form controls ── */
+    .row  { display: grid; gap: 14px; margin-bottom: 14px; }
+    .c2   { grid-template-columns: 1fr 1fr; }
+    .c3   { grid-template-columns: 1fr 1fr 1fr; }
+    .fg   { display: flex; flex-direction: column; gap: 4px; }
+    .lbl  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+    .lbl .req { color: var(--gr); }
+    .fc   { height: 38px; padding: 0 11px; border: 1.5px solid var(--border); border-radius: 5px; font-family: var(--ff); font-size: 13px; color: var(--ng); background: #fff; transition: border-color .15s, box-shadow .15s; outline: none; width: 100%; }
+    .fc:focus { border-color: var(--gr); box-shadow: 0 0 0 3px rgba(169,24,49,.1); }
+    textarea.fc { height: auto; min-height: 76px; padding: 9px 11px; resize: vertical; line-height: 1.55; }
+    select.fc { cursor: pointer; }
+
+    /* ── Radio pills ── */
+    .rpg { display: flex; gap: 6px; flex-wrap: wrap; }
+    .rp input { display: none; }
+    .rp label { display: inline-flex; align-items: center; padding: 6px 13px; border: 1.5px solid var(--border); border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .15s; user-select: none; }
+    .rp input:checked + label { border-color: var(--gr); background: rgba(169,24,49,.07); color: var(--gr); }
+
+    /* ── Upload ── */
+    .upz { border: 2px dashed var(--border); border-radius: var(--r); padding: 22px; text-align: center; cursor: pointer; transition: all .15s; position: relative; }
+    .upz:hover, .upz.drag { border-color: var(--gr); background: rgba(169,24,49,.03); }
+    .upz input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upz-ico { font-size: 24px; margin-bottom: 6px; }
+    .upz-txt { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .upz-txt strong { color: var(--gr); }
+    .upz-name { margin-top: 7px; font-size: 11px; font-weight: 700; color: var(--ng); }
+
+    /* ── Buttons ── */
+    .btn-ai, .btn-save { width: 100%; height: 50px; border: none; border-radius: var(--r); font-family: var(--ff); font-size: 13px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; transition: all .2s; margin-bottom: 18px; }
+    .btn-ai   { background: var(--gr); color: #fff; }
+    .btn-ai:hover   { background: var(--grd); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(169,24,49,.35); }
+    .btn-save { background: var(--ng); color: #fff; }
+    .btn-save:hover { background: #000; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.28); }
+    .btn-ai:disabled, .btn-save:disabled { background: #bbb; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .55s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Editable content ── */
+    #sec-gen { display: none; }
+    #sec-gen.on { display: block; }
+
+    .mod-list { display: flex; flex-direction: column; gap: 6px; }
+    .mod-item { display: grid; grid-template-columns: 30px 100px 1fr 28px; align-items: center; gap: 6px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 5px; padding: 7px 10px; }
+    .mod-n { font-size: 10px; font-weight: 800; color: var(--gr); text-align: center; }
+    .mod-item input { height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 4px; font-family: var(--ff); font-size: 12px; color: var(--ng); outline: none; background: #fff; }
+    .mod-item input:focus { border-color: var(--gr); }
+    .mod-del { background: none; border: none; color: #ccc; cursor: pointer; font-size: 15px; line-height: 1; transition: color .15s; }
+    .mod-del:hover { color: var(--gr); }
+    .btn-addmod { margin-top: 6px; background: none; border: 1.5px dashed var(--border); border-radius: 5px; padding: 7px; width: 100%; font-family: var(--ff); font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .15s; }
+    .btn-addmod:hover { border-color: var(--gr); color: var(--gr); }
+
+    .bul-list { display: flex; flex-direction: column; gap: 5px; }
+    .bul-item { display: flex; align-items: center; gap: 8px; }
+    .bul-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gr); flex-shrink: 0; }
+    .bul-item input { flex: 1; height: 32px; padding: 0 9px; border: 1px solid var(--border); border-radius: 4px; font-family: var(--ff); font-size: 12px; color: var(--ng); outline: none; }
+    .bul-item input:focus { border-color: var(--gr); }
+
+    /* ── Success ── */
+    #sec-ok { display: none; }
+    #sec-ok.on { display: block; }
+    .ok-card { background: #fff; border-radius: var(--r); box-shadow: var(--shadow); padding: 44px 36px; text-align: center; }
+    .ok-ico { width: 56px; height: 56px; background: rgba(169,24,49,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .ok-ttl { font-weight: 800; font-size: 20px; color: var(--ng); margin-bottom: 6px; }
+    .ok-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .ok-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-lnk { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 5px; font-size: 12px; font-weight: 700; text-decoration: none; transition: all .15s; }
+    .btn-lnk.p { background: var(--gr); color: #fff; }
+    .btn-lnk.p:hover { background: var(--grd); }
+    .btn-lnk.s { background: var(--surface); color: var(--ng); border: 1.5px solid var(--border); }
+    .btn-lnk.s:hover { border-color: var(--ng); }
+
+    /* ── Toast ── */
+    .toast { position: fixed; bottom: 22px; right: 22px; background: var(--ng); color: #fff; padding: 11px 18px; border-radius: var(--r); font-size: 12px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.22); transform: translateY(70px); opacity: 0; transition: all .28s cubic-bezier(.4,0,.2,1); z-index: 999; }
+    .toast.on  { transform: translateY(0); opacity: 1; }
+    .toast.err { background: var(--gr); }
+
+    @media (max-width: 600px) {
+      .c2, .c3 { grid-template-columns: 1fr; }
+      .wrap { padding: 24px 14px 64px; }
+      .card { padding: 18px; }
+      .mod-item { grid-template-columns: 28px 1fr 28px; }
+      .mod-item input[data-field="area"] { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <div id="app-root"></div>
-    <script src="app.js"></script>
+
+<header class="hdr">
+  <a href="/manager.html" class="hdr-logo">
+    <div class="hdr-mark">E</div>
+    <div class="hdr-brand">ENAE <span>Dossiers</span></div>
+  </a>
+  <a href="/manager.html" class="hdr-back">← Panel</a>
+</header>
+
+<div class="wrap">
+
+  <div class="page-head">
+    <h1 class="page-title" id="page-title">Nuevo <em>dossier</em></h1>
+    <p class="page-sub" id="page-sub">Completa los datos del programa. La IA generará módulos, descripción y perfil del alumno automáticamente.</p>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step-itm active" id="si1"><div class="step-dot">1</div>Información</div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-itm" id="si2"><div class="step-dot">2</div>Contenido IA</div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-itm" id="si3"><div class="step-dot">3</div>Guardar</div>
+  </div>
+
+  <!-- ═══ STEP 1: Información ═══ -->
+  <div id="sec-info">
+
+    <div class="card">
+      <div class="card-ttl">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Datos del programa
+      </div>
+
+      <div class="row">
+        <div class="fg">
+          <label class="lbl">Nombre completo del programa <span class="req">*</span></label>
+          <input id="f-nombre" type="text" class="fc" placeholder="ej. Máster en Dirección de Empresas Agroalimentarias" required>
+        </div>
+      </div>
+
+      <div class="row c2">
+        <div class="fg">
+          <label class="lbl">Tipo <span class="req">*</span></label>
+          <select id="f-tipo" class="fc">
+            <option value="master">Máster</option>
+            <option value="mba">MBA</option>
+            <option value="ejecutivo">Programa Ejecutivo</option>
+            <option value="curso">Curso</option>
+            <option value="directivo">Programa Directivo</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Área temática <span class="req">*</span></label>
+          <select id="f-area" class="fc">
+            <option>Marketing y Comercial</option>
+            <option>Dirección y Estrategia</option>
+            <option>Finanzas y Control</option>
+            <option>Operaciones y Logística</option>
+            <option>Recursos Humanos y Liderazgo</option>
+            <option>Tecnología y Business Intelligence</option>
+            <option>Agroalimentación y Medio Ambiente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row c3">
+        <div class="fg">
+          <label class="lbl">Duración (meses)</label>
+          <input id="f-meses" type="number" class="fc" value="12" min="1" max="36">
+        </div>
+        <div class="fg">
+          <label class="lbl">ECTS</label>
+          <input id="f-ects" type="number" class="fc" value="60" min="1" max="120">
+        </div>
+        <div class="fg">
+          <label class="lbl">Precio (€)</label>
+          <input id="f-precio" type="number" class="fc" placeholder="ej. 9500">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="fg">
+          <label class="lbl">Modalidad</label>
+          <div class="rpg">
+            <div class="rp"><input type="radio" name="mod" id="m1" value="Live Class Online" checked><label for="m1">Online en directo</label></div>
+            <div class="rp"><input type="radio" name="mod" id="m2" value="Semipresencial"><label for="m2">Semipresencial</label></div>
+            <div class="rp"><input type="radio" name="mod" id="m3" value="Presencial Murcia"><label for="m3">Presencial Murcia</label></div>
+            <div class="rp"><input type="radio" name="mod" id="m4" value="Híbrido"><label for="m4">Híbrido</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row c2">
+        <div class="fg">
+          <label class="lbl">Mención especial (opcional)</label>
+          <input id="f-mencion" type="text" class="fc" placeholder="ej. Mención en Inteligencia Artificial">
+        </div>
+        <div class="fg">
+          <label class="lbl">Doble título con universidad (opcional)</label>
+          <input id="f-doble" type="text" class="fc" placeholder="ej. Panamerican University, Florida EE.UU.">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Documento de referencia
+        <span style="font-weight:400;text-transform:none;font-size:9px;letter-spacing:0;margin-left:4px;color:var(--muted);">PDF, DOCX o TXT — opcional</span>
+      </div>
+      <div class="upz" id="upz">
+        <input type="file" id="f-doc" accept=".pdf,.docx,.txt">
+        <div class="upz-ico">📄</div>
+        <div class="upz-txt"><strong>Arrastra el plan de estudios</strong> o haz clic para seleccionarlo.<br>La IA lo usará para generar el contenido académico.</div>
+        <div class="upz-name" id="upz-name"></div>
+      </div>
+      <div class="fg" style="margin-top:14px;">
+        <label class="lbl">Instrucciones adicionales para la IA</label>
+        <textarea id="f-notas" class="fc" placeholder="Describe el enfoque del programa, competencias clave, público objetivo específico o cualquier detalle que quieras destacar…"></textarea>
+      </div>
+    </div>
+
+    <button class="btn-ai" id="btn-gen" onclick="generateContent()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Generar contenido con IA
+    </button>
+
+  </div>
+
+  <!-- ═══ STEP 2: Contenido generado ═══ -->
+  <div id="sec-gen">
+
+    <div class="card">
+      <div class="card-ttl">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Descripción del programa
+      </div>
+      <div class="fg">
+        <textarea id="e-desc" class="fc" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Módulos académicos
+        <span style="font-weight:400;text-transform:none;font-size:9px;letter-spacing:0;margin-left:auto;color:var(--muted);">Edita o añade módulos</span>
+      </div>
+      <div class="mod-list" id="mod-list"></div>
+      <button class="btn-addmod" onclick="addMod()">+ Añadir módulo</button>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Perfil del alumno
+      </div>
+      <div class="bul-list" id="bul-list"></div>
+    </div>
+
+    <button class="btn-save" id="btn-save" onclick="saveDossier()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Guardar dossier
+    </button>
+
+  </div>
+
+  <!-- ═══ STEP 3: Éxito ═══ -->
+  <div id="sec-ok">
+    <div class="ok-card">
+      <div class="ok-ico">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a91831" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="ok-ttl">¡Dossier creado con éxito!</h2>
+      <p class="ok-sub" id="ok-msg">El dossier se ha guardado correctamente.</p>
+      <div class="ok-actions">
+        <a href="#" id="ok-ver" class="btn-lnk p" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Ver dossier
+        </a>
+        <a href="/manager.html" class="btn-lnk s">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Panel de dossiers
+        </a>
+        <a href="/index.html" class="btn-lnk s">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo dossier
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══ State ══════════════════════════════════════════════ */
+var aiData = null;
+
+/* ══ Upload zone ════════════════════════════════════════ */
+var upz = document.getElementById('upz');
+var fDoc = document.getElementById('f-doc');
+fDoc.addEventListener('change', function() {
+  if (fDoc.files[0]) document.getElementById('upz-name').textContent = '📎 ' + fDoc.files[0].name;
+});
+upz.addEventListener('dragover',  function(e) { e.preventDefault(); upz.classList.add('drag'); });
+upz.addEventListener('dragleave', function()  { upz.classList.remove('drag'); });
+upz.addEventListener('drop', function(e) {
+  e.preventDefault(); upz.classList.remove('drag');
+  if (e.dataTransfer.files[0]) {
+    fDoc.files = e.dataTransfer.files;
+    document.getElementById('upz-name').textContent = '📎 ' + e.dataTransfer.files[0].name;
+  }
+});
+
+/* ══ Toast ══════════════════════════════════════════════ */
+function toast(msg, isErr) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast on' + (isErr ? ' err' : '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function() { el.classList.remove('on'); }, 3800);
+}
+
+/* ══ Steps ══════════════════════════════════════════════ */
+function setStep(n) {
+  [['si1',1],['si2',2],['si3',3]].forEach(function(pair) {
+    var el = document.getElementById(pair[0]), s = pair[1];
+    el.className = 'step-itm' + (s < n ? ' done' : s === n ? ' active' : '');
+  });
+  document.getElementById('sl1').className = 'step-line' + (n > 1 ? ' done' : '');
+  document.getElementById('sl2').className = 'step-line' + (n > 2 ? ' done' : '');
+}
+
+/* ══ Generate ═══════════════════════════════════════════ */
+async function generateContent() {
+  var nombre = document.getElementById('f-nombre').value.trim();
+  if (!nombre) { toast('El nombre del programa es obligatorio.', true); document.getElementById('f-nombre').focus(); return; }
+
+  var btn = document.getElementById('btn-gen');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin"></div>Generando contenido…';
+
+  var fd = new FormData();
+  fd.append('nombre',  nombre);
+  fd.append('tipo',    document.getElementById('f-tipo').value);
+  fd.append('area',    document.getElementById('f-area').value);
+  fd.append('meses',   document.getElementById('f-meses').value);
+  fd.append('ects',    document.getElementById('f-ects').value);
+  fd.append('modal',   document.querySelector('input[name="mod"]:checked').value);
+  fd.append('precio',  document.getElementById('f-precio').value);
+  fd.append('notas',   document.getElementById('f-notas').value);
+  var docFile = fDoc.files[0];
+  if (docFile) fd.append('documento', docFile);
+
+  try {
+    var res  = await fetch('/api/generate-dossier', { method: 'POST', body: fd });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error en el servidor');
+
+    aiData = data;
+    renderGenerated(data);
+    setStep(2);
+    document.getElementById('sec-gen').classList.add('on');
+    setTimeout(function() { document.getElementById('sec-gen').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+    toast('Contenido generado ✓');
+
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Generar de nuevo';
+  }
+}
+
+/* ══ Render generated content ═══════════════════════════ */
+function renderGenerated(d) {
+  var plain = function(html) { var t = document.createElement('div'); t.innerHTML = html || ''; return t.textContent; };
+  document.getElementById('e-desc').value = plain(d.descripcion || '');
+  document.getElementById('mod-list').innerHTML = '';
+  mc = 0;
+  (d.modulos || []).forEach(function(m) { addModItem(m.num || '', m.area || '', m.nombre || ''); });
+  document.getElementById('bul-list').innerHTML = '';
+  (d.perfil_bullets || []).forEach(function(b) { addBulItem(b); });
+}
+
+/* ══ Modules ════════════════════════════════════════════ */
+var mc = 0;
+function addModItem(num, area, nombre) {
+  mc++;
+  var n = num || String(mc).padStart(2, '0');
+  var div = document.createElement('div');
+  div.className = 'mod-item';
+  div.innerHTML =
+    '<div class="mod-n">' + esc(n) + '</div>' +
+    '<input type="text" data-field="area"   placeholder="Área"   value="' + esc(area)   + '">' +
+    '<input type="text" data-field="nombre" placeholder="Módulo" value="' + esc(nombre) + '">' +
+    '<button class="mod-del" onclick="this.closest(\'.mod-item\').remove();renumMods();" title="Eliminar">×</button>';
+  document.getElementById('mod-list').appendChild(div);
+}
+function addMod() { addModItem('', '', ''); renumMods(); }
+function renumMods() {
+  document.querySelectorAll('.mod-item').forEach(function(el, i) {
+    el.querySelector('.mod-n').textContent = String(i + 1).padStart(2, '0');
+  });
+}
+
+/* ══ Bullets ════════════════════════════════════════════ */
+function addBulItem(text) {
+  var div = document.createElement('div');
+  div.className = 'bul-item';
+  div.innerHTML = '<div class="bul-dot"></div><input type="text" value="' + esc(text) + '" placeholder="Perfil de alumno…">';
+  document.getElementById('bul-list').appendChild(div);
+}
+
+function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ══ Save ═══════════════════════════════════════════════ */
+async function saveDossier() {
+  if (!aiData) { toast('Genera primero el contenido con IA.', true); return; }
+
+  var btn = document.getElementById('btn-save');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin"></div>Guardando…';
+
+  var nombre = document.getElementById('f-nombre').value.trim();
+  var tipo   = document.getElementById('f-tipo').value;
+  var meses  = parseInt(document.getElementById('f-meses').value) || 12;
+  var ects   = parseInt(document.getElementById('f-ects').value)  || 60;
+
+  var modulos = Array.from(document.querySelectorAll('.mod-item')).map(function(el, i) {
+    return {
+      num:    el.querySelector('.mod-n').textContent,
+      area:   el.querySelector('[data-field="area"]').value.trim(),
+      nombre: el.querySelector('[data-field="nombre"]').value.trim()
+    };
+  });
+
+  var perfil_bullets = Array.from(document.querySelectorAll('.bul-item input'))
+    .map(function(el) { return el.value.trim(); }).filter(Boolean);
+
+  var dobleRaw = document.getElementById('f-doble').value.trim();
+  var doble_titulo = null;
+  if (dobleRaw) {
+    var parts = dobleRaw.split(',');
+    doble_titulo = { nombre: parts[0].trim(), pais: (parts[1] || '').trim() };
+  }
+
+  var tipoCategoria = {
+    master: 'Programa de Posgrado · Máster Internacional',
+    mba: 'Programa de Posgrado · MBA Internacional',
+    ejecutivo: 'Programa Ejecutivo · ENAE Business School',
+    curso: 'Curso Especializado · ENAE Business School',
+    directivo: 'Programa Directivo · ENAE Business School'
+  };
+
+  var payload = {
+    nombre:   nombre,
+    programa: aiData.programa  || nombre,
+    titulo_l: aiData.titulo_l  || 'Programa en',
+    titulo_b1:aiData.titulo_b1 || '',
+    titulo_b2:aiData.titulo_b2 || '',
+    subtitulo: document.getElementById('f-mencion').value.trim() || aiData.subtitulo || '',
+    categoria: tipoCategoria[tipo] || 'Programa Académico ENAE',
+    doble_titulo: doble_titulo,
+    foto_portada:     '../doc/default/portada.jpg',
+    foto_que_es:      '../doc/default/clase.jpg',
+    foto_metodologia: '../doc/default/metodologia.jpg',
+    kpis_portada: [
+      { n: '#9',   l: 'QS España 2025' },
+      { n: '91%',  l: 'empleabilidad' },
+      { n: '+37',  l: 'años formando líderes' },
+      { n: '1988', l: 'fundación ENAE' }
+    ],
+    descripcion:    document.getElementById('e-desc').value.trim(),
+    cadena_valor:   aiData.cadena_valor   || [],
+    modulos:        modulos,
+    ia_asignaturas: aiData.ia_asignaturas || [],
+    ects:   ects,
+    meses:  meses,
+    kpi1: aiData.kpi1 || { valor: 91, label: 'trabajando<br>al terminar' },
+    kpi2: aiData.kpi2 || { valor: 82, label: 'mejora profesional<br>demostrada' },
+    empresas:      aiData.empresas   || [],
+    profesores:    aiData.profesores || [],
+    perfil_bullets: perfil_bullets,
+    demo_stats: aiData.demo_stats || [
+      { n: '44<span>%</span>', l: 'mujeres',          pct: 44 },
+      { n: '9',                l: 'nacionalidades',    pct: 90 },
+      { n: '33<span>%</span>', l: '21–26 años',       pct: 33 },
+      { n: '42<span>%</span>', l: 'mando intermedio', pct: 42 }
+    ]
+  };
+
+  try {
+    var res    = await fetch('/api/dossiers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    var result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Error al guardar');
+
+    setStep(3);
+    document.getElementById('sec-gen').classList.remove('on');
+    document.getElementById('sec-info').style.opacity = '.4';
+    document.getElementById('ok-msg').textContent = '"' + nombre + '" guardado como ' + result.fileName;
+    document.getElementById('ok-ver').href = result.path;
+    document.getElementById('sec-ok').classList.add('on');
+    document.getElementById('sec-ok').scrollIntoView({ behavior: 'smooth' });
+
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar dossier';
+  }
+}
+
+/* ══ ?edit=fileName — Pre-fill from URL param ═══════════ */
+(function() {
+  var params   = new URLSearchParams(window.location.search);
+  var editFile = params.get('edit');
+  if (!editFile) return;
+  var label = editFile.replace('.html', '').replace(/-/g, ' ')
+    .replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+  document.getElementById('f-nombre').value = label;
+  document.getElementById('page-title').innerHTML = 'Editar <em>dossier</em>';
+  document.getElementById('page-sub').textContent = 'Genera nuevo contenido con IA y guarda. El archivo existente será sobrescrito.';
+})();
+</script>
 </body>
 </html>

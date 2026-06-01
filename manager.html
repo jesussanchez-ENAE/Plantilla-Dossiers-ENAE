@@ -1,217 +1,227 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENAE CMS - Gestor de Dossiers</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700;800&family=Playfair+Display:ital,wght@1,700;1,800&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENAE Dossiers — Panel de Gestión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Black.otf') format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Black.woff') format('woff'); font-weight:900; }
+    @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Bold.otf')  format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Bold.woff')  format('woff'); font-weight:700; }
 
-        @font-face {
-            font-family: 'SFUIDisplay';
-            src: url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Black.woff') format('woff');
-            font-weight: 900;
-        }
-        @font-face {
-            font-family: 'SFUIDisplay';
-            src: url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Bold.woff') format('woff');
-            font-weight: 700;
-        }
+    :root {
+      --enae-red: #a91831; --enae-red-hover: #8f1227; --enae-negro: #202221;
+      --app-bg: #0B0D0F; --panel-bg: #12161A; --panel-border: #1E232A;
+      --input-bg: #181D23; --input-border: #262E37;
+      --text-primary: #FFFFFF; --text-secondary: #94A3B8; --text-muted: #64748B;
+      --font-display: 'SFUIDisplay', sans-serif;
+      --font-body: 'Open Sans', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --r-md: 10px; --r-lg: 16px;
+      --shadow-soft: 0 10px 30px rgba(0,0,0,.2);
+      --tr: all .3s cubic-bezier(.4,0,.2,1);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--font-body); background:var(--app-bg); color:var(--text-primary); -webkit-font-smoothing:antialiased; min-height:100vh; }
+    h1,h2,h3,h4,h5 { font-family:var(--font-display); font-weight:700; }
 
-        :root {
-            --g: #A91831;
-            --c: #202221;
-            --c2: #404040;
-            --bg: #DEE5EC;
-            --font-head: 'SFUIDisplay', sans-serif;
-            --font-body: 'OpenSans', sans-serif;
-        }
+    .mt-accent { font-family:var(--font-serif); font-style:italic; font-weight:normal; text-transform:none; letter-spacing:0; }
+    .mt-light  { font-weight:300; font-family:var(--font-body); }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-body);
-            background: var(--bg);
-            color: var(--c);
-        }
+    /* ── Header ── */
+    .app-header { height:70px; background:var(--panel-bg); border-bottom:1px solid var(--panel-border); display:flex; justify-content:space-between; align-items:center; padding:0 24px; position:fixed; top:0; left:0; right:0; z-index:100; }
+    .logo-container { display:flex; align-items:center; gap:12px; }
+    .brand-badge { background:linear-gradient(135deg,var(--enae-red),var(--enae-negro)); width:38px; height:38px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-weight:900; font-family:var(--font-display); font-size:1.15rem; color:#fff; box-shadow:0 4px 12px rgba(169,24,49,.3); }
+    .brand-title h1 { font-size:1.15rem; font-weight:900; letter-spacing:-.5px; color:var(--text-primary); line-height:1.1; }
+    .brand-title span { font-size:.72rem; color:var(--enae-red); font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+    .header-actions { display:flex; align-items:center; gap:12px; }
 
-        header {
-            background: var(--c);
-            color: #fff;
-            padding: 24px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 18px; border-radius:var(--r-md); font-size:.9rem; font-weight:600; cursor:pointer; transition:var(--tr); border:none; outline:none; text-decoration:none; }
+    .btn svg { width:17px; height:17px; }
+    .btn-primary { background:var(--enae-red); color:#fff; }
+    .btn-primary:hover { background:var(--enae-red-hover); transform:translateY(-1px); box-shadow:0 4px 12px rgba(169,24,49,.4); }
+    .btn-secondary { background:var(--input-bg); border:1px solid var(--input-border); color:var(--text-secondary); }
+    .btn-secondary:hover { background:var(--input-border); color:var(--text-primary); }
+    .btn-accent { background:linear-gradient(135deg,var(--enae-red),#cf2844); color:#fff; }
+    .btn-accent:hover { box-shadow:0 4px 12px rgba(169,24,49,.3); transform:translateY(-1px); }
+    .btn-danger { background:rgba(239,68,68,.15); color:#ef4444; }
+    .btn-danger:hover { background:#ef4444; color:#fff; }
+    .btn-icon-only { padding:10px; border-radius:var(--r-md); }
 
-        header h1 {
-            font-family: var(--font-head);
-            margin: 0;
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        header h1 span { color: var(--g); }
+    /* ── Layout ── */
+    .main-content { margin-top:70px; min-height:calc(100vh - 70px); }
+    .dashboard-view { max-width:1200px; margin:0 auto; padding:40px 24px; }
 
-        .btn-primary {
-            background: var(--g);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
+    /* ── Welcome banner ── */
+    .welcome-banner { background:linear-gradient(135deg,rgba(32,34,33,.95) 0%,rgba(15,18,21,.98) 100%), radial-gradient(circle at top right,rgba(169,24,49,.25),transparent 400px); border:1px solid var(--panel-border); border-radius:var(--r-lg); padding:48px; margin-bottom:40px; position:relative; overflow:hidden; box-shadow:var(--shadow-soft); }
+    .welcome-banner::before { content:''; position:absolute; top:0; right:0; width:300px; height:100%; background:linear-gradient(90deg,transparent,rgba(169,24,49,.03)); pointer-events:none; }
+    .welcome-banner h2 { font-size:2.2rem; font-weight:800; margin-bottom:12px; background:linear-gradient(135deg,#fff 60%,#e2e8f0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .welcome-banner p { color:var(--text-secondary); font-size:1.05rem; max-width:620px; line-height:1.6; margin-bottom:24px; }
+    .welcome-banner p strong { color:#cbd5e1; font-weight:700; }
+    .welcome-banner p code { background:rgba(169,24,49,.18); color:#f1a8b4; padding:1px 7px; border-radius:5px; font-size:.92em; }
 
-        .btn-primary:hover {
-            background: #8a1228;
-        }
+    /* ── Sections ── */
+    .dashboard-section { margin-bottom:48px; }
+    .section-header-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+    .section-header-row h3 { font-size:1.4rem; font-weight:700; position:relative; padding-left:14px; }
+    .section-header-row h3::before { content:''; position:absolute; left:0; top:4px; bottom:4px; width:4px; background:var(--enae-red); border-radius:2px; }
+    .section-count { font-size:.8rem; color:var(--text-muted); font-weight:600; }
 
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+    /* ── Grid & cards ── */
+    .saved-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
+    .saved-card { background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:var(--r-lg); overflow:hidden; transition:var(--tr); display:flex; flex-direction:column; }
+    .saved-card:hover { transform:translateY(-6px); border-color:rgba(169,24,49,.4); box-shadow:0 12px 24px rgba(0,0,0,.3); }
 
-        .dossier-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
+    .saved-thumbnail { height:140px; background:var(--input-bg); border-top:4px solid var(--enae-red); border-bottom:1px solid var(--panel-border); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 18px; text-align:center; position:relative; }
+    .saved-thumbnail::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 70% 20%,rgba(169,24,49,.08),transparent 60%); pointer-events:none; }
+    .dossier-tag { position:absolute; top:12px; right:12px; background:var(--enae-red); color:#fff; font-size:.62rem; font-weight:800; padding:4px 9px; border-radius:20px; text-transform:uppercase; letter-spacing:.5px; z-index:1; }
+    .saved-thumbnail h5 { font-size:1.05rem; color:var(--text-primary); margin-bottom:6px; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; z-index:1; }
+    .saved-thumbnail .date { font-size:.72rem; color:var(--text-secondary); z-index:1; }
 
-        .card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--g);
-            transition: transform 0.2s;
-        }
-        
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
+    .saved-body { padding:16px 18px 18px; display:flex; flex-direction:column; flex-grow:1; }
+    .saved-desc { font-size:.8rem; color:var(--text-secondary); line-height:1.5; margin-bottom:16px; min-height:36px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .saved-actions { display:flex; gap:8px; margin-top:auto; }
+    .saved-actions .btn { flex:1; padding:8px; }
+    .saved-actions .btn span { font-size:.78rem; }
 
-        .card h3 {
-            font-family: var(--font-head);
-            font-size: 18px;
-            margin: 0 0 10px 0;
-            color: var(--c);
-        }
+    /* ── Empty / loading ── */
+    .empty-state { grid-column:1/-1; background:var(--panel-bg); border:2px dashed var(--panel-border); border-radius:var(--r-lg); padding:56px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+    .empty-state svg { width:46px; height:46px; color:var(--text-muted); margin-bottom:16px; }
+    .empty-state h4 { font-size:1.2rem; margin-bottom:8px; }
+    .empty-state p { color:var(--text-secondary); max-width:380px; margin-bottom:22px; font-size:.9rem; line-height:1.55; }
+    .loading { grid-column:1/-1; text-align:center; color:var(--text-muted); padding:48px; font-size:.9rem; }
+    .spin { display:inline-block; width:18px; height:18px; border:2px solid var(--panel-border); border-top-color:var(--enae-red); border-radius:50%; animation:sp .6s linear infinite; vertical-align:middle; margin-right:8px; }
+    @keyframes sp { to { transform:rotate(360deg); } }
 
-        .card p {
-            font-size: 12px;
-            color: var(--c2);
-            margin: 0 0 20px 0;
-        }
+    /* ── Toast ── */
+    .toast { position:fixed; bottom:22px; right:22px; background:var(--enae-negro); border:1px solid var(--panel-border); color:#fff; padding:12px 18px; border-radius:var(--r-md); font-size:.85rem; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,.4); transform:translateY(70px); opacity:0; transition:var(--tr); z-index:999; }
+    .toast.on { transform:translateY(0); opacity:1; }
+    .toast.err { border-color:var(--enae-red); }
 
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        .btn-view {
-            background: var(--bg);
-            color: var(--c);
-        }
-        .btn-view:hover { background: #cbd4de; }
-
-        .btn-edit {
-            background: var(--c);
-            color: #fff;
-        }
-        .btn-edit:hover { background: #000; }
-
-        .btn-del {
-            background: #fff;
-            color: var(--g);
-            border: 1px solid var(--g);
-        }
-        .btn-del:hover { background: rgba(169, 24, 49, 0.1); }
-
-    </style>
+    @media (max-width:600px) {
+      .welcome-banner { padding:30px 22px; }
+      .welcome-banner h2 { font-size:1.6rem; }
+      .header-actions .btn span { display:none; }
+      .dashboard-view { padding:28px 16px; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-    <h1>ENAE <span>Dossiers</span> CMS</h1>
-    <a href="/index.html" class="btn-primary">+ Nuevo Dossier</a>
+<header class="app-header">
+  <div class="logo-container">
+    <div class="brand-badge">E</div>
+    <div class="brand-title">
+      <h1>ENAE Dossiers</h1>
+      <span>Panel de Gestión</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="/index.html" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Crear Nuevo Dossier</span>
+    </a>
+  </div>
 </header>
 
-<div class="container">
-    <div class="dossier-grid" id="grid">
-        <p style="grid-column: 1/-1; text-align: center; color: var(--c2);">Cargando dossiers...</p>
+<main class="main-content">
+  <div class="dashboard-view">
+
+    <!-- Welcome banner -->
+    <div class="welcome-banner">
+      <h2>Generador de Dossiers Académicos Interactivos ENAE</h2>
+      <p>Diseña catálogos corporativos interactivos alineados al <strong>Manual de Identidad Oficial de ENAE Business School</strong> — utilizando el Rojo Granate corporativo <code>#a91831</code>, tipografía editorial mixta didone y fuentes Open Sans locales.</p>
+      <a href="/index.html" class="btn btn-accent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Diseñar desde Cero
+      </a>
     </div>
-</div>
+
+    <!-- Created dossiers -->
+    <div class="dashboard-section">
+      <div class="section-header-row">
+        <h3>Tus Dossiers Creados</h3>
+        <span class="section-count" id="count"></span>
+      </div>
+      <div class="saved-grid" id="grid">
+        <div class="loading"><span class="spin"></span>Cargando dossiers…</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
 
 <script>
-    async function loadDossiers() {
-        try {
-            const res = await fetch('/api/dossiers');
-            const data = await res.json();
-            const grid = document.getElementById('grid');
-            
-            if (data.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--c2);">No hay dossiers generados aún. ¡Crea el primero!</p>';
-                return;
-            }
+function toast(msg, isErr) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast on' + (isErr ? ' err' : '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function() { el.classList.remove('on'); }, 3500);
+}
 
-            grid.innerHTML = data.map(d => {
-                const date = new Date(d.createdAt).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                const name = d.fileName.replace('.html', '');
-                return `
-                    <div class="card">
-                        <h3>${name.toUpperCase().replace(/-/g, ' ')}</h3>
-                        <p>Creado el: ${date}</p>
-                        <div class="actions">
-                            <a href="${d.url}" target="_blank" class="btn btn-view">Ver</a>
-                            <a href="/index.html?edit=${d.fileName}" class="btn btn-edit">Editar</a>
-                            <button onclick="deleteDossier('${d.fileName}')" class="btn btn-del">Eliminar</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        } catch(e) {
-            console.error(e);
-            document.getElementById('grid').innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: red;">Error al cargar los dossiers.</p>';
-        }
+async function loadDossiers() {
+  var grid = document.getElementById('grid');
+  try {
+    var res  = await fetch('/api/dossiers');
+    var data = await res.json();
+
+    document.getElementById('count').textContent =
+      data.length + (data.length === 1 ? ' dossier' : ' dossiers');
+
+    if (!data.length) {
+      grid.innerHTML =
+        '<div class="empty-state">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' +
+        '<h4>No hay dossiers creados aún</h4>' +
+        '<p>Crea tu primer dossier interactivo con la identidad corporativa de ENAE.</p>' +
+        '<a href="/index.html" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Crear Nuevo Dossier</a>' +
+        '</div>';
+      return;
     }
 
-    async function deleteDossier(fileName) {
-        if(!confirm(`¿Estás seguro de que deseas eliminar ${fileName}?`)) return;
-        
-        try {
-            const res = await fetch(`/api/dossiers/${fileName}`, { method: 'DELETE' });
-            if (res.ok) {
-                loadDossiers();
-            } else {
-                alert("Error al eliminar el archivo.");
-            }
-        } catch(e) {
-            alert("Error de conexión.");
-        }
-    }
+    grid.innerHTML = data.map(function(d) {
+      var date = new Date(d.createdAt).toLocaleDateString('es-ES', { year:'numeric', month:'short', day:'numeric' });
+      var desc = d.descripcion || 'Dossier corporativo ENAE.';
+      return '' +
+        '<div class="saved-card">' +
+          '<div class="saved-thumbnail">' +
+            '<span class="dossier-tag">' + esc(d.categoria) + '</span>' +
+            '<h5 class="mixed-title">' + (d.titleHtml || esc(d.programa)) + '</h5>' +
+            '<span class="date">Creado: ' + date + '</span>' +
+          '</div>' +
+          '<div class="saved-body">' +
+            '<p class="saved-desc">' + esc(desc) + '</p>' +
+            '<div class="saved-actions">' +
+              '<a href="' + d.url + '" target="_blank" class="btn btn-secondary" title="Ver dossier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>Ver</span></a>' +
+              '<a href="/index.html?edit=' + encodeURIComponent(d.fileName) + '" class="btn btn-secondary" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Editar</span></a>' +
+              '<button onclick="delDossier(\'' + d.fileName + '\')" class="btn btn-danger btn-icon-only" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }).join('');
 
-    // Load on start
-    loadDossiers();
+  } catch(e) {
+    console.error(e);
+    grid.innerHTML = '<div class="loading" style="color:#ef4444;">Error al cargar los dossiers. ¿Está el servidor activo?</div>';
+  }
+}
+
+async function delDossier(fileName) {
+  if (!confirm('¿Eliminar "' + fileName + '" de forma permanente?')) return;
+  try {
+    var res = await fetch('/api/dossiers/' + encodeURIComponent(fileName), { method:'DELETE' });
+    if (res.ok) { toast('Dossier eliminado'); loadDossiers(); }
+    else toast('No se pudo eliminar el archivo.', true);
+  } catch(e) { toast('Error de conexión.', true); }
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+loadDossiers();
 </script>
-
 </body>
 </html>
