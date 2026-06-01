@@ -382,11 +382,19 @@ let activeTimelineStage = 0; // Tracks chronological stages clickable inside pre
 let activeSectorIndex = 0; // Tracks SVG placements donut selection inside preview
 
 // --- Initialization & LocalStorage ---
-function initApp() {
+async function initApp() {
     const saved = localStorage.getItem("enae_dossiers");
     if (saved) {
         try {
             state.dossiers = JSON.parse(saved);
+            // Sanitize loaded dossiers to ensure they have an ID and required fields
+            state.dossiers = state.dossiers.map(d => {
+                if (!d.id) d.id = "dos-" + Date.now() + "-" + Math.floor(Math.random()*1000);
+                d.title = d.title || d.nombre || "Dossier Sin Título";
+                d.category = d.category || "Programa";
+                d.subtitle = d.subtitle || "";
+                return d;
+            });
         } catch (e) {
             console.error("Error loading saved dossiers, resetting.", e);
             state.dossiers = [];
@@ -394,6 +402,50 @@ function initApp() {
     } else {
         state.dossiers = JSON.parse(JSON.stringify(PRESET_TEMPLATES));
         saveStateToLocalStorage();
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/dossiers');
+        if (res.ok) {
+            const data = await res.json();
+            let newDossiersAdded = false;
+            
+            for (const file of data) {
+                try {
+                    const htmlRes = await fetch('http://localhost:3000' + file.url);
+                    const htmlText = await htmlRes.text();
+                    // extract JSON payload
+                    const match = htmlText.match(/<script id="dossier-data" type="application\/json">([\s\S]*?)<\/script>/);
+                    if (match && match[1]) {
+                        const dossierData = JSON.parse(match[1]);
+                        
+                        // Assign ID if missing (critical for dashboard render)
+                        if (!dossierData.id) {
+                            dossierData.id = "gen-" + Date.now() + "-" + Math.floor(Math.random()*1000);
+                        }
+                        
+                        // Ensure it has required fields for dashboard
+                        dossierData.category = dossierData.category || "Máster";
+                        dossierData.subtitle = dossierData.subtitle || "";
+                        dossierData.title = dossierData.title || dossierData.nombre || "Dossier Sin Título";
+
+                        // Check if it already exists by ID or title
+                        const existsIndex = state.dossiers.findIndex(d => (d.id === dossierData.id) || (d.title === dossierData.title));
+                        if (existsIndex === -1) {
+                            state.dossiers.unshift(dossierData); // Add generated to the top
+                            newDossiersAdded = true;
+                        }
+                    }
+                } catch(err) {
+                    console.error("Error fetching dossier file:", file.fileName, err);
+                }
+            }
+            if (newDossiersAdded) {
+                saveStateToLocalStorage();
+            }
+        }
+    } catch(err) {
+        console.error("Error fetching from /api/dossiers", err);
     }
 
     setupGlobalEventListeners();
@@ -1713,6 +1765,107 @@ function renderDossierHighFidelity() {
             <h2 style="font-size:36px; font-weight:800; line-height:1.1; margin:0 0 30px 0;">${escapeHtml(d.introTitle)}</h2>
             <div style="font-size:16px; font-weight:700; color:#fff; line-height:1.5; margin-bottom:20px;">${escapeHtml(d.introText)}</div>
             <div style="font-size:14px; font-weight:300; color:rgba(255,255,255,0.7); line-height:1.6;">${escapeHtml(d.introTextSecondary)}</div>
+
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-top:40px; margin-bottom:20px;">
+                <!-- Card 1 -->
+                <div style="background-color:#F5F970; border-radius:12px; padding:24px; color:#111; display:flex; flex-direction:column; position:relative; overflow:hidden;">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">ENGAGEMENT</div>
+                    <div style="font-size:42px; font-weight:800; line-height:1; margin-bottom:12px; letter-spacing:-1px;">+56,42%</div>
+                    <div style="font-size:11px; font-weight:500; opacity:0.7; margin-bottom:24px; line-height:1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ullamcorper eget.</div>
+                    
+                    <div style="height:120px; display:flex; align-items:flex-end; gap:8px; margin-bottom:20px; border-bottom:1px dashed rgba(0,0,0,0.1); padding-bottom:0; background: repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,0.05) 19px, rgba(0,0,0,0.05) 20px);">
+                        <div style="flex:1; background:#1A1A1A; height:47%; position:relative;">
+                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#fff;">47%</span>
+                        </div>
+                        <div style="flex:1; background:#445037; height:98%; position:relative;">
+                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#fff;">98%</span>
+                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#FF5233;"></div>
+                        </div>
+                        <div style="flex:1; background:#636B46; height:69%; position:relative;">
+                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#fff;">69%</span>
+                        </div>
+                        <div style="flex:1; background:#8E995D; height:84%; position:relative;">
+                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#111;">84%</span>
+                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#FF5233;"></div>
+                        </div>
+                        <div style="flex:1; background:#B2C264; height:56%; position:relative;">
+                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#111;">56%</span>
+                        </div>
+                        <div style="flex:1; background:#D0DD69; height:77%; position:relative;">
+                            <span style="position:absolute; top:4px; left:4px; font-size:9px; color:#111;">77%</span>
+                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#FF5233;"></div>
+                        </div>
+                    </div>
+                    
+                    <button style="background:#111; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; width:fit-content; display:flex; align-items:center; gap:6px;">
+                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#fff;"></span> SEE MORE INSIGHTS
+                    </button>
+                </div>
+
+                <!-- Card 2 -->
+                <div style="background-color:#ADA1D4; border-radius:12px; padding:24px; color:#111; display:flex; flex-direction:column; position:relative; overflow:hidden;">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">GROWTH</div>
+                    <div style="font-size:42px; font-weight:800; line-height:1; margin-bottom:12px; letter-spacing:-1px;">+24,15%</div>
+                    <div style="font-size:11px; font-weight:500; opacity:0.7; margin-bottom:24px; line-height:1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ullamcorper eget.</div>
+                    
+                    <div style="height:120px; margin-bottom:20px; position:relative;">
+                        <svg width="100%" height="100%" viewBox="0 0 200 120" preserveAspectRatio="none">
+                            <path d="M0,120 L0,70 Q25,40 50,70 T100,50 T150,80 T200,60 L200,120 Z" fill="rgba(17,17,17,0.1)"/>
+                            <path d="M0,70 Q25,40 50,70 T100,50 T150,80 T200,60" fill="none" stroke="rgba(17,17,17,0.2)" stroke-width="2"/>
+                            <g stroke="rgba(17,17,17,0.2)" stroke-width="1">
+                                <line x1="10" y1="65" x2="10" y2="120" />
+                                <line x1="20" y1="58" x2="20" y2="120" />
+                                <line x1="30" y1="54" x2="30" y2="120" />
+                                <line x1="40" y1="60" x2="40" y2="120" />
+                                <line x1="50" y1="70" x2="50" y2="120" />
+                                <line x1="60" y1="78" x2="60" y2="120" />
+                                <line x1="70" y1="75" x2="70" y2="120" />
+                                <line x1="80" y1="62" x2="80" y2="120" />
+                                <line x1="90" y1="52" x2="90" y2="120" />
+                                <line x1="100" y1="50" x2="100" y2="120" />
+                                <line x1="110" y1="52" x2="110" y2="120" />
+                                <line x1="120" y1="65" x2="120" y2="120" />
+                                <line x1="130" y1="78" x2="130" y2="120" />
+                                <line x1="140" y1="85" x2="140" y2="120" />
+                                <line x1="150" y1="80" x2="150" y2="120" />
+                                <line x1="160" y1="70" x2="160" y2="120" />
+                                <line x1="170" y1="60" x2="170" y2="120" />
+                                <line x1="180" y1="58" x2="180" y2="120" />
+                                <line x1="190" y1="60" x2="190" y2="120" />
+                            </g>
+                            <line x1="100" y1="50" x2="100" y2="120" stroke="#F5F970" stroke-width="3" />
+                            <circle cx="100" cy="50" r="4" fill="#F5F970" />
+                        </svg>
+                    </div>
+                    
+                    <button style="background:#111; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; width:fit-content; display:flex; align-items:center; gap:6px;">
+                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#fff;"></span> SEE MORE INSIGHTS
+                    </button>
+                </div>
+
+                <!-- Card 3 -->
+                <div style="background-color:#CCFAA5; border-radius:12px; padding:24px; color:#111; display:flex; flex-direction:column; position:relative; overflow:hidden;">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">2022</div>
+                    <div style="font-size:42px; font-weight:800; line-height:1; margin-bottom:12px; letter-spacing:-1px;">+29,33%</div>
+                    <div style="font-size:11px; font-weight:500; opacity:0.7; margin-bottom:24px; line-height:1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ullamcorper eget.</div>
+                    
+                    <div style="height:120px; display:flex; gap:2px; margin-bottom:20px; align-items:flex-end; padding-bottom: 20px;">
+                        <div style="flex:2; background:#4A5340; height:100%; position:relative;">
+                            <div style="position:absolute; bottom:-18px; left:0; font-size:7px; color:rgba(0,0,0,0.5);">Year To Date<br><span style="color:#111;font-weight:700;font-size:9px;">+21.9%</span></div>
+                            <div style="position:absolute; bottom:0; left:0; width:100%; height:2px; background:#ADA1D4;"></div>
+                        </div>
+                        <div style="flex:1; background:#7A8E61; height:60%; position:relative;">
+                           <div style="position:absolute; inset:0; background:repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.2) 2px, rgba(255,255,255,0.2) 4px);"></div>
+                           <div style="position:absolute; bottom:-18px; left:0; font-size:7px; color:rgba(0,0,0,0.5);">Year To Date<br><span style="color:#111;font-weight:700;font-size:9px;">+21.9%</span></div>
+                        </div>
+                    </div>
+                    
+                    <button style="background:#111; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer; width:fit-content; display:flex; align-items:center; gap:6px; margin-top:auto;">
+                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#fff;"></span> SEE MORE INSIGHTS
+                    </button>
+                </div>
+            </div>
+
             ${testimonialsHtml}
         </div>
 
