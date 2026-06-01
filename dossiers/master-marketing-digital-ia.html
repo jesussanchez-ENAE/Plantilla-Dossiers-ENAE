@@ -75,9 +75,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 .arr{background:none;border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;border-radius:50%;width:clamp(24px,2vw,36px);height:clamp(24px,2vw,36px);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,20px);transition:all .2s;}
 .arr:hover{background:var(--gr);border-color:var(--gr);}
 
-/* ── Brand pattern "E" – elemento gráfico diferenciador ─── */
-/* Bloques angulares translúcidos, escala variable, asimétrica */
-.ep{position:absolute;z-index:0;pointer-events:none;}
+/* ── Brand pattern "E" – símbolo oficial ENAE como watermark ─ */
+/* Imagen SIMBOLO-ENAE-BLANCO.png posicionada a sangre, opacidad baja */
+/* Cada slide usa inline styles para posición/tamaño/opacidad variables */
 
 /* ── Título mixto ENAE (recurso de marca central) ────────── */
 .tm{line-height:.93;}
@@ -258,7 +258,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 .ct-val strong{font-weight:700;color:#fff;}
 
 /* Brand pattern "E" (grande y visible, como en el oficial) */
-.ep-big{position:absolute;font-family:var(--fd);font-weight:900;color:rgba(255,255,255,.08);line-height:.85;letter-spacing:-.05em;pointer-events:none;z-index:0;user-select:none;}
+/* .ep-big obsoleto — reemplazado por img SIMBOLO-ENAE-BLANCO.png */
 
 </style>
 </head>
@@ -275,8 +275,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   <div class="cov-ov"></div>
 
   <!-- Brand pattern sutil -->
-  <div class="ep" style="width:38%;height:42px;top:9%;right:-4%;transform:rotate(-7deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
-  <div class="ep" style="width:24%;height:42px;top:calc(9% + 54px);right:1%;transform:rotate(-7deg);background:rgba(255,255,255,.03);border-radius:2px;"></div>
+  <!-- S1: rotación -18° — cae desde el ángulo superior derecho -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:40vw;top:-8vh;right:-10vw;opacity:.07;transform:rotate(-18deg);transform-origin:center center;" alt="">
 
   <div class="inner">
     <!-- Cabecera: logo + pill -->
@@ -326,8 +326,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s2">
   <!-- Brand pattern -->
-  <div class="ep" style="width:42%;height:40px;top:10%;right:-5%;transform:rotate(-6deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
-  <div class="ep" style="width:28%;height:40px;top:calc(10%+52px);right:0%;transform:rotate(-6deg);background:rgba(255,255,255,.03);border-radius:2px;"></div>
+  <!-- S2: rotación +14° — esquina inferior derecha, ascendente -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:34vw;bottom:-7vh;right:-8vw;opacity:.055;transform:rotate(14deg);transform-origin:center center;" alt="">
 
   <div class="photo-col ph-wash">
     <img src="../doc/Marketing Digital/Sesion_innegociable_-61.jpg" alt="Clase ENAE">
@@ -376,8 +376,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s3">
   <!-- Brand pattern E -->
-  <div class="ep" style="width:38%;height:46px;bottom:16%;left:-5%;transform:rotate(5deg);background:rgba(255,255,255,.05);border-radius:2px;"></div>
-  <div class="ep" style="width:24%;height:46px;bottom:calc(16%+58px);left:0%;transform:rotate(5deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <!-- S3 granate: rotación -22° — dramático, diagonal pronunciada -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:42vw;bottom:-10vh;left:-10vw;opacity:.11;transform:rotate(-22deg);transform-origin:center center;" alt="">
 
   <!-- Layout: 2 columnas, ambas con altura completa del slide -->
   <div style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:3vw;padding:var(--py) var(--px);align-items:stretch;">
@@ -501,7 +501,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      S4 — METODOLOGÍA
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s4">
-  <div class="ep" style="width:36%;height:40px;top:14%;left:-3%;transform:rotate(-4deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <!-- S4: rotación +20° — esquina superior izquierda, apoyada -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:32vw;top:-6vh;left:-8vw;opacity:.055;transform:rotate(20deg);transform-origin:center center;" alt="">
   <div class="photo-r">
     <img src="../doc/Marketing Digital/10042023-317A8264.jpg" alt="Metodología ENAE">
   </div>
@@ -586,8 +587,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   <img src="../src/Rankings/rankings_bg.png"
        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.07;z-index:0;filter:grayscale(1) contrast(1.3);" alt="">
   <!-- Brand pattern oscuro sobre granate -->
-  <div class="ep" style="width:50%;height:46px;top:7%;right:-6%;transform:rotate(-7deg);background:rgba(0,0,0,.12);border-radius:2px;"></div>
-  <div class="ep" style="width:32%;height:46px;top:calc(7%+60px);right:0%;transform:rotate(-7deg);background:rgba(0,0,0,.09);border-radius:2px;"></div>
+  <!-- S6 granate: E grande -28° arriba-derecha + E pequeña +15° abajo-izquierda -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:46vw;top:-10vh;right:-12vw;opacity:.14;transform:rotate(-28deg);transform-origin:center center;" alt="">
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:24vw;bottom:-6vh;left:-6vw;opacity:.09;transform:rotate(15deg);transform-origin:center center;" alt="">
 
   <div style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:3.5vw;padding:var(--py) var(--px);align-items:stretch;">
 
@@ -701,7 +703,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      S7 — CLAUSTRO DOCENTE
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s7">
-  <div class="ep" style="width:52%;height:42px;top:14%;right:-7%;transform:rotate(-5deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <!-- S7: rotación -15° — arriba-derecha, suave -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:44vw;top:-8vh;right:-11vw;opacity:.065;transform:rotate(-15deg);transform-origin:center center;" alt="">
   <!-- Layout S7: flex column con flex:1 en cada fila para distribuir el espacio disponible -->
   <div class="inner" style="display:flex;flex-direction:column;gap:clamp(6px,1vh,12px);padding-bottom:calc(var(--py) + 36px);">
 
@@ -780,7 +783,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      S8 — PERFIL + ADMISIÓN
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s8">
-  <div class="ep" style="width:44%;height:42px;bottom:20%;left:-4%;transform:rotate(4deg);background:rgba(255,255,255,.04);border-radius:2px;"></div>
+  <!-- S8: rotación +25° — abajo-izquierda, inclinada hacia arriba -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:36vw;bottom:-8vh;left:-9vw;opacity:.065;transform:rotate(25deg);transform-origin:center center;" alt="">
   <div class="inner">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;height:100%;">
       <!-- Izquierda: Perfil del alumno -->
@@ -835,8 +839,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s9">
   <!-- "E" brand pattern prominente (como en p-20) -->
-  <div class="ep-big" style="font-size:clamp(200px,30vw,580px);right:-4vw;top:-5vh;opacity:.09;line-height:1;">E</div>
-  <div class="ep-big" style="font-size:clamp(120px,18vw,340px);left:-2vw;bottom:-4vh;opacity:.06;line-height:1;">E</div>
+  <!-- S9 cierre: E gigante -20° arriba-derecha (como p-20 oficial) + E mediana +10° abajo-izquierda -->
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:54vw;top:-12vh;right:-14vw;opacity:.12;transform:rotate(-20deg);transform-origin:center center;" alt="">
+  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:30vw;bottom:-7vh;left:-7vw;opacity:.08;transform:rotate(10deg);transform-origin:center center;" alt="">
 
   <div class="inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
     <!-- Logo ENAE grande centrado (como p-20) -->
