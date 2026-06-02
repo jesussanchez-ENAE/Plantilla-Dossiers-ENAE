@@ -3,325 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuevo Dossier — ENAE Dossiers Studio</title>
+  <title>Editor de Dossier — ENAE Dossiers Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
   <style>
+    @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Black.otf') format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Black.woff') format('woff'); font-weight:900; }
+
     :root {
       --gr: #a91831; --grd: #8a1226; --ng: #202221;
-      --surface: #f4f6f9; --white: #fff;
-      --border: #e2e8f0; --muted: #64748b;
-      --r: 8px; --ff: 'Open Sans', Arial, sans-serif;
-      --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.06);
+      --app-bg: #0B0D0F; --panel-bg: #12161A; --panel-border: #1E232A;
+      --input-bg: #181D23; --input-border: #262E37;
+      --text-primary: #FFFFFF; --text-secondary: #94A3B8; --text-muted: #64748B;
+      --font-display: 'SFUIDisplay', sans-serif;
+      --font-body: 'Open Sans', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --r: 10px; --tr: all .25s cubic-bezier(.4,0,.2,1);
+      --shadow: 0 4px 16px rgba(0,0,0,.25);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--ff); background: var(--surface); color: var(--ng); min-height: 100vh; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--font-body); background:var(--app-bg); color:var(--text-primary); min-height:100vh; -webkit-font-smoothing:antialiased; }
+    .msym{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:inherit;line-height:1;display:inline-block;}
 
     /* ── Header ── */
-    .hdr { background: var(--ng); height: 58px; padding: 0 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
-    .hdr-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .hdr-mark { width: 30px; height: 30px; background: var(--gr); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; }
-    .hdr-brand { font-weight: 700; font-size: 14px; color: #fff; letter-spacing: .3px; }
-    .hdr-brand span { color: var(--gr); }
-    .hdr-back { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color .15s; }
-    .hdr-back:hover { color: #fff; }
+    .hdr { height:64px; background:var(--panel-bg); border-bottom:1px solid var(--panel-border); display:flex; align-items:center; justify-content:space-between; padding:0 28px; position:sticky; top:0; z-index:100; }
+    .hdr-left { display:flex; align-items:center; gap:14px; }
+    .hdr-badge { width:32px; height:32px; background:linear-gradient(135deg,var(--gr),var(--ng)); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#fff; }
+    .hdr-title { font-family:var(--font-display); font-size:15px; font-weight:700; }
+    .hdr-title span { color:var(--gr); }
+    .hdr-back { font-size:11px; font-weight:700; color:var(--text-muted); text-decoration:none; letter-spacing:1px; text-transform:uppercase; transition:color .15s; }
+    .hdr-back:hover { color:#fff; }
 
     /* ── Layout ── */
-    .wrap { max-width: 820px; margin: 0 auto; padding: 44px 24px 88px; }
-    .page-head { margin-bottom: 36px; }
-    .page-title { font-weight: 800; font-size: 26px; color: var(--ng); margin-bottom: 4px; }
-    .page-title em { font-style: normal; color: var(--gr); }
-    .page-sub { font-size: 13px; color: var(--muted); }
+    .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
 
-    /* ── Steps ── */
-    .steps { display: flex; align-items: center; margin-bottom: 36px; }
-    .step-itm { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
-    .step-itm.active { color: var(--gr); }
-    .step-itm.done   { color: var(--ng); }
-    .step-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--muted); flex-shrink: 0; }
-    .step-itm.active .step-dot { background: var(--gr); color: #fff; }
-    .step-itm.done   .step-dot { background: var(--ng); color: #fff; }
-    .step-line { flex: 1; height: 1.5px; background: var(--border); margin: 0 10px; }
-    .step-line.done { background: var(--ng); }
+    /* ── Mode toggle ── */
+    .mode-bar { display:flex; align-items:center; gap:12px; margin-bottom:28px; padding:14px 18px; background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:var(--r); }
+    .mode-bar .msym { font-size:18px; color:var(--gr); }
+    .mode-bar p { font-size:12px; color:var(--text-secondary); line-height:1.5; flex:1; }
+    .mode-bar p strong { color:var(--text-primary); font-weight:700; }
 
-    /* ── Card ── */
-    .card { background: var(--white); border-radius: var(--r); box-shadow: var(--shadow); padding: 26px 30px; margin-bottom: 18px; }
-    .card-ttl { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.8px; color: var(--gr); margin-bottom: 18px; display: flex; align-items: center; gap: 7px; }
+    /* ── Sections ── */
+    .sec { background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:var(--r); margin-bottom:16px; overflow:hidden; }
+    .sec-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; cursor:pointer; user-select:none; transition:background .15s; }
+    .sec-head:hover { background:rgba(255,255,255,.02); }
+    .sec-head h3 { font-family:var(--font-display); font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px; }
+    .sec-head h3 .msym { font-size:16px; color:var(--gr); }
+    .sec-head .badge { font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:4px; }
+    .badge-manual { background:rgba(255,255,255,.08); color:var(--text-muted); }
+    .badge-ai { background:rgba(169,24,49,.15); color:var(--gr); }
+    .sec-head .chevron { font-size:18px; color:var(--text-muted); transition:transform .25s; }
+    .sec.closed .sec-body { display:none; }
+    .sec.closed .chevron { transform:rotate(-90deg); }
+    .sec-body { padding:0 20px 20px; }
 
-    /* ── Form controls ── */
-    .row  { display: grid; gap: 14px; margin-bottom: 14px; }
-    .c2   { grid-template-columns: 1fr 1fr; }
-    .c3   { grid-template-columns: 1fr 1fr 1fr; }
-    .fg   { display: flex; flex-direction: column; gap: 4px; }
-    .lbl  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
-    .lbl .req { color: var(--gr); }
-    .fc   { height: 38px; padding: 0 11px; border: 1.5px solid var(--border); border-radius: 5px; font-family: var(--ff); font-size: 13px; color: var(--ng); background: #fff; transition: border-color .15s, box-shadow .15s; outline: none; width: 100%; }
-    .fc:focus { border-color: var(--gr); box-shadow: 0 0 0 3px rgba(169,24,49,.1); }
-    textarea.fc { height: auto; min-height: 76px; padding: 9px 11px; resize: vertical; line-height: 1.55; }
-    select.fc { cursor: pointer; }
+    /* ── Form ── */
+    .row { display:grid; gap:12px; margin-bottom:12px; }
+    .c2 { grid-template-columns:1fr 1fr; }
+    .c3 { grid-template-columns:1fr 1fr 1fr; }
+    .fg { display:flex; flex-direction:column; gap:5px; }
+    .lbl { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); }
+    .fc { height:38px; padding:0 12px; background:var(--input-bg); border:1px solid var(--input-border); border-radius:6px; color:var(--text-primary); font-family:var(--font-body); font-size:13px; outline:none; transition:var(--tr); width:100%; }
+    .fc:focus { border-color:var(--gr); box-shadow:0 0 0 3px rgba(169,24,49,.15); }
+    textarea.fc { height:auto; min-height:80px; padding:10px 12px; resize:vertical; line-height:1.55; }
+    select.fc { cursor:pointer; }
 
     /* ── Radio pills ── */
-    .rpg { display: flex; gap: 6px; flex-wrap: wrap; }
-    .rp input { display: none; }
-    .rp label { display: inline-flex; align-items: center; padding: 6px 13px; border: 1.5px solid var(--border); border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .15s; user-select: none; }
-    .rp input:checked + label { border-color: var(--gr); background: rgba(169,24,49,.07); color: var(--gr); }
+    .rpg { display:flex; gap:6px; flex-wrap:wrap; }
+    .rp input { display:none; }
+    .rp label { padding:7px 14px; border:1px solid var(--input-border); border-radius:999px; font-size:11px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:var(--tr); }
+    .rp input:checked + label { border-color:var(--gr); background:rgba(169,24,49,.12); color:var(--gr); }
+
+    /* ── Module rows ── */
+    .mod-list { display:flex; flex-direction:column; gap:6px; }
+    .mod-item { display:grid; grid-template-columns:32px 1fr 1fr 28px; gap:6px; align-items:center; background:var(--input-bg); border:1px solid var(--input-border); border-radius:6px; padding:8px 10px; }
+    .mod-n { font-size:10px; font-weight:800; color:var(--gr); text-align:center; }
+    .mod-item input { height:30px; padding:0 8px; background:transparent; border:1px solid transparent; border-radius:4px; color:var(--text-primary); font-family:var(--font-body); font-size:12px; outline:none; transition:var(--tr); }
+    .mod-item input:focus { border-color:var(--gr); background:var(--input-bg); }
+    .mod-del { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:15px; transition:color .15s; }
+    .mod-del:hover { color:var(--gr); }
+    .btn-add { margin-top:8px; background:none; border:1.5px dashed var(--input-border); border-radius:6px; padding:9px; width:100%; font-family:var(--font-body); font-size:11px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:var(--tr); }
+    .btn-add:hover { border-color:var(--gr); color:var(--gr); }
+
+    /* ── Bullet rows ── */
+    .bul-list { display:flex; flex-direction:column; gap:6px; }
+    .bul-item { display:flex; align-items:center; gap:8px; }
+    .bul-dot { width:5px; height:5px; border-radius:50%; background:var(--gr); flex-shrink:0; }
+    .bul-item input { flex:1; height:32px; padding:0 10px; background:var(--input-bg); border:1px solid var(--input-border); border-radius:5px; color:var(--text-primary); font-family:var(--font-body); font-size:12px; outline:none; }
+    .bul-item input:focus { border-color:var(--gr); }
+    .bul-del { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; transition:color .15s; }
+    .bul-del:hover { color:var(--gr); }
 
     /* ── Upload ── */
-    .upz { border: 2px dashed var(--border); border-radius: var(--r); padding: 22px; text-align: center; cursor: pointer; transition: all .15s; position: relative; }
-    .upz:hover, .upz.drag { border-color: var(--gr); background: rgba(169,24,49,.03); }
-    .upz input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .upz-ico { font-size: 24px; margin-bottom: 6px; }
-    .upz-txt { font-size: 12px; color: var(--muted); line-height: 1.5; }
-    .upz-txt strong { color: var(--gr); }
-    .upz-name { margin-top: 7px; font-size: 11px; font-weight: 700; color: var(--ng); }
+    .upz { border:2px dashed var(--input-border); border-radius:var(--r); padding:20px; text-align:center; cursor:pointer; transition:var(--tr); position:relative; }
+    .upz:hover,.upz.drag { border-color:var(--gr); background:rgba(169,24,49,.04); }
+    .upz input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .upz-txt { font-size:12px; color:var(--text-muted); }
+    .upz-txt strong { color:var(--gr); }
+    .upz-name { margin-top:6px; font-size:11px; font-weight:700; color:var(--text-primary); }
 
     /* ── Buttons ── */
-    .btn-ai, .btn-save { width: 100%; height: 50px; border: none; border-radius: var(--r); font-family: var(--ff); font-size: 13px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; transition: all .2s; margin-bottom: 18px; }
-    .btn-ai   { background: var(--gr); color: #fff; }
-    .btn-ai:hover   { background: var(--grd); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(169,24,49,.35); }
-    .btn-save { background: var(--ng); color: #fff; }
-    .btn-save:hover { background: #000; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.28); }
-    .btn-ai:disabled, .btn-save:disabled { background: #bbb; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-    .spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .55s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-row { display:flex; gap:10px; margin-top:20px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 24px; border-radius:var(--r); font-family:var(--font-body); font-size:13px; font-weight:700; cursor:pointer; transition:var(--tr); border:none; outline:none; }
+    .btn svg,.btn .msym { width:16px; height:16px; }
+    .btn-primary { background:var(--gr); color:#fff; flex:1; }
+    .btn-primary:hover { background:var(--grd); transform:translateY(-1px); box-shadow:0 6px 18px rgba(169,24,49,.35); }
+    .btn-secondary { background:var(--input-bg); border:1px solid var(--input-border); color:var(--text-secondary); flex:1; }
+    .btn-secondary:hover { border-color:var(--text-muted); color:var(--text-primary); }
+    .btn:disabled { background:var(--input-border) !important; color:var(--text-muted) !important; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+    .spin { width:14px; height:14px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:sp .55s linear infinite; }
+    @keyframes sp { to { transform:rotate(360deg); } }
 
-    /* ── Editable content ── */
-    #sec-gen { display: none; }
-    #sec-gen.on { display: block; }
-
-    .mod-list { display: flex; flex-direction: column; gap: 6px; }
-    .mod-item { display: grid; grid-template-columns: 30px 100px 1fr 28px; align-items: center; gap: 6px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 5px; padding: 7px 10px; }
-    .mod-n { font-size: 10px; font-weight: 800; color: var(--gr); text-align: center; }
-    .mod-item input { height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: 4px; font-family: var(--ff); font-size: 12px; color: var(--ng); outline: none; background: #fff; }
-    .mod-item input:focus { border-color: var(--gr); }
-    .mod-del { background: none; border: none; color: #ccc; cursor: pointer; font-size: 15px; line-height: 1; transition: color .15s; }
-    .mod-del:hover { color: var(--gr); }
-    .btn-addmod { margin-top: 6px; background: none; border: 1.5px dashed var(--border); border-radius: 5px; padding: 7px; width: 100%; font-family: var(--ff); font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .15s; }
-    .btn-addmod:hover { border-color: var(--gr); color: var(--gr); }
-
-    .bul-list { display: flex; flex-direction: column; gap: 5px; }
-    .bul-item { display: flex; align-items: center; gap: 8px; }
-    .bul-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gr); flex-shrink: 0; }
-    .bul-item input { flex: 1; height: 32px; padding: 0 9px; border: 1px solid var(--border); border-radius: 4px; font-family: var(--ff); font-size: 12px; color: var(--ng); outline: none; }
-    .bul-item input:focus { border-color: var(--gr); }
+    /* ── Separator ── */
+    .sep { display:flex; align-items:center; gap:12px; margin:20px 0; }
+    .sep-line { flex:1; height:1px; background:var(--panel-border); }
+    .sep-text { font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); }
 
     /* ── Success ── */
-    #sec-ok { display: none; }
-    #sec-ok.on { display: block; }
-    .ok-card { background: #fff; border-radius: var(--r); box-shadow: var(--shadow); padding: 44px 36px; text-align: center; }
-    .ok-ico { width: 56px; height: 56px; background: rgba(169,24,49,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
-    .ok-ttl { font-weight: 800; font-size: 20px; color: var(--ng); margin-bottom: 6px; }
-    .ok-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-    .ok-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .btn-lnk { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 5px; font-size: 12px; font-weight: 700; text-decoration: none; transition: all .15s; }
-    .btn-lnk.p { background: var(--gr); color: #fff; }
-    .btn-lnk.p:hover { background: var(--grd); }
-    .btn-lnk.s { background: var(--surface); color: var(--ng); border: 1.5px solid var(--border); }
-    .btn-lnk.s:hover { border-color: var(--ng); }
+    #sec-ok { display:none; }
+    #sec-ok.on { display:block; }
+    .ok-card { background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:var(--r); padding:44px 36px; text-align:center; }
+    .ok-ico { width:56px; height:56px; background:rgba(169,24,49,.12); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+    .ok-ttl { font-family:var(--font-display); font-weight:800; font-size:20px; margin-bottom:6px; }
+    .ok-sub { font-size:13px; color:var(--text-secondary); margin-bottom:24px; }
+    .ok-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .btn-lnk { display:inline-flex; align-items:center; gap:6px; padding:10px 18px; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none; transition:var(--tr); }
+    .btn-lnk.p { background:var(--gr); color:#fff; }
+    .btn-lnk.p:hover { background:var(--grd); }
+    .btn-lnk.s { background:var(--input-bg); border:1px solid var(--input-border); color:var(--text-secondary); }
+    .btn-lnk.s:hover { border-color:var(--text-muted); color:#fff; }
 
     /* ── Toast ── */
-    .toast { position: fixed; bottom: 22px; right: 22px; background: var(--ng); color: #fff; padding: 11px 18px; border-radius: var(--r); font-size: 12px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.22); transform: translateY(70px); opacity: 0; transition: all .28s cubic-bezier(.4,0,.2,1); z-index: 999; }
-    .toast.on  { transform: translateY(0); opacity: 1; }
-    .toast.err { background: var(--gr); }
+    .toast { position:fixed; bottom:22px; right:22px; background:var(--ng); border:1px solid var(--panel-border); color:#fff; padding:12px 18px; border-radius:var(--r); font-size:12px; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,.4); transform:translateY(70px); opacity:0; transition:var(--tr); z-index:999; }
+    .toast.on { transform:translateY(0); opacity:1; }
+    .toast.err { border-color:var(--gr); }
 
-    @media (max-width: 600px) {
-      .c2, .c3 { grid-template-columns: 1fr; }
-      .wrap { padding: 24px 14px 64px; }
-      .card { padding: 18px; }
-      .mod-item { grid-template-columns: 28px 1fr 28px; }
-      .mod-item input[data-field="area"] { display: none; }
-    }
+    @media (max-width:640px) { .c2,.c3{grid-template-columns:1fr;} .mod-item{grid-template-columns:28px 1fr 28px;} .mod-item input:first-of-type{display:none;} }
   </style>
 </head>
 <body>
 
 <header class="hdr">
-  <a href="/manager.html" class="hdr-logo">
-    <div class="hdr-mark">E</div>
-    <div class="hdr-brand">ENAE <span>Dossiers</span></div>
-  </a>
+  <div class="hdr-left">
+    <a href="/manager.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
+      <div class="hdr-badge">E</div>
+      <div class="hdr-title">ENAE <span>Dossiers</span></div>
+    </a>
+  </div>
   <a href="/manager.html" class="hdr-back">← Panel</a>
 </header>
 
 <div class="wrap">
 
-  <div class="page-head">
-    <h1 class="page-title" id="page-title">Nuevo <em>dossier</em></h1>
-    <p class="page-sub" id="page-sub">Completa los datos del programa. La IA generará módulos, descripción y perfil del alumno automáticamente.</p>
+  <!-- Mode info -->
+  <div class="mode-bar">
+    <span class="msym">edit_note</span>
+    <p><strong>Editor híbrido.</strong> Rellena los campos manualmente o usa la IA para generar contenido automáticamente. Todo es editable antes de guardar.</p>
   </div>
 
-  <!-- Steps -->
-  <div class="steps">
-    <div class="step-itm active" id="si1"><div class="step-dot">1</div>Información</div>
-    <div class="step-line" id="sl1"></div>
-    <div class="step-itm" id="si2"><div class="step-dot">2</div>Contenido IA</div>
-    <div class="step-line" id="sl2"></div>
-    <div class="step-itm" id="si3"><div class="step-dot">3</div>Guardar</div>
-  </div>
-
-  <!-- ═══ STEP 1: Información ═══ -->
-  <div id="sec-info">
-
-    <div class="card">
-      <div class="card-ttl">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        Datos del programa
-      </div>
-
-      <div class="row">
-        <div class="fg">
-          <label class="lbl">Nombre completo del programa <span class="req">*</span></label>
-          <input id="f-nombre" type="text" class="fc" placeholder="ej. Máster en Dirección de Empresas Agroalimentarias" required>
-        </div>
-      </div>
-
+  <!-- ═══ SECCIÓN 1: Datos básicos ═══ -->
+  <div class="sec" id="sec-datos">
+    <div class="sec-head" onclick="toggleSec('sec-datos')">
+      <h3><span class="msym">description</span>Datos del programa</h3>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="row"><div class="fg">
+        <label class="lbl">Nombre completo del programa *</label>
+        <input id="f-nombre" type="text" class="fc" placeholder="ej. Máster en Dirección de Empresas Agroalimentarias">
+      </div></div>
       <div class="row c2">
-        <div class="fg">
-          <label class="lbl">Tipo <span class="req">*</span></label>
-          <select id="f-tipo" class="fc">
-            <option value="master">Máster</option>
-            <option value="mba">MBA</option>
-            <option value="ejecutivo">Programa Ejecutivo</option>
-            <option value="curso">Curso</option>
-            <option value="directivo">Programa Directivo</option>
-          </select>
+        <div class="fg"><label class="lbl">Tipo</label>
+          <select id="f-tipo" class="fc"><option value="master">Máster</option><option value="mba">MBA</option><option value="ejecutivo">Programa Ejecutivo</option><option value="curso">Curso</option><option value="directivo">Programa Directivo</option></select>
         </div>
-        <div class="fg">
-          <label class="lbl">Área temática <span class="req">*</span></label>
-          <select id="f-area" class="fc">
-            <option>Marketing y Comercial</option>
-            <option>Dirección y Estrategia</option>
-            <option>Finanzas y Control</option>
-            <option>Operaciones y Logística</option>
-            <option>Recursos Humanos y Liderazgo</option>
-            <option>Tecnología y Business Intelligence</option>
-            <option>Agroalimentación y Medio Ambiente</option>
-          </select>
+        <div class="fg"><label class="lbl">Área temática</label>
+          <select id="f-area" class="fc"><option>Marketing y Comercial</option><option>Dirección y Estrategia</option><option>Finanzas y Control</option><option>Operaciones y Logística</option><option>Recursos Humanos y Liderazgo</option><option>Tecnología y Business Intelligence</option><option>Agroalimentación y Medio Ambiente</option></select>
         </div>
       </div>
-
       <div class="row c3">
-        <div class="fg">
-          <label class="lbl">Duración (meses)</label>
-          <input id="f-meses" type="number" class="fc" value="12" min="1" max="36">
-        </div>
-        <div class="fg">
-          <label class="lbl">ECTS</label>
-          <input id="f-ects" type="number" class="fc" value="60" min="1" max="120">
-        </div>
-        <div class="fg">
-          <label class="lbl">Precio (€)</label>
-          <input id="f-precio" type="number" class="fc" placeholder="ej. 9500">
-        </div>
+        <div class="fg"><label class="lbl">Meses</label><input id="f-meses" type="number" class="fc" value="12" min="1" max="36"></div>
+        <div class="fg"><label class="lbl">ECTS</label><input id="f-ects" type="number" class="fc" value="60" min="1" max="120"></div>
+        <div class="fg"><label class="lbl">Precio (€)</label><input id="f-precio" type="number" class="fc" placeholder="9500"></div>
       </div>
-
-      <div class="row">
-        <div class="fg">
-          <label class="lbl">Modalidad</label>
-          <div class="rpg">
-            <div class="rp"><input type="radio" name="mod" id="m1" value="Live Class Online" checked><label for="m1">Online en directo</label></div>
-            <div class="rp"><input type="radio" name="mod" id="m2" value="Semipresencial"><label for="m2">Semipresencial</label></div>
-            <div class="rp"><input type="radio" name="mod" id="m3" value="Presencial Murcia"><label for="m3">Presencial Murcia</label></div>
-            <div class="rp"><input type="radio" name="mod" id="m4" value="Híbrido"><label for="m4">Híbrido</label></div>
-          </div>
+      <div class="row"><div class="fg"><label class="lbl">Modalidad</label>
+        <div class="rpg">
+          <div class="rp"><input type="radio" name="mod" id="m1" value="Live Class Online" checked><label for="m1">Online en directo</label></div>
+          <div class="rp"><input type="radio" name="mod" id="m2" value="Semipresencial"><label for="m2">Semipresencial</label></div>
+          <div class="rp"><input type="radio" name="mod" id="m3" value="Presencial Murcia"><label for="m3">Presencial</label></div>
+          <div class="rp"><input type="radio" name="mod" id="m4" value="Híbrido"><label for="m4">Híbrido</label></div>
         </div>
-      </div>
-
+      </div></div>
       <div class="row c2">
-        <div class="fg">
-          <label class="lbl">Mención especial (opcional)</label>
-          <input id="f-mencion" type="text" class="fc" placeholder="ej. Mención en Inteligencia Artificial">
-        </div>
-        <div class="fg">
-          <label class="lbl">Doble título con universidad (opcional)</label>
-          <input id="f-doble" type="text" class="fc" placeholder="ej. Panamerican University, Florida EE.UU.">
-        </div>
+        <div class="fg"><label class="lbl">Mención especial</label><input id="f-mencion" type="text" class="fc" placeholder="ej. Mención en Inteligencia Artificial"></div>
+        <div class="fg"><label class="lbl">Doble título</label><input id="f-doble" type="text" class="fc" placeholder="ej. Panamerican University, Florida"></div>
       </div>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="card-ttl">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Documento de referencia
-        <span style="font-weight:400;text-transform:none;font-size:9px;letter-spacing:0;margin-left:4px;color:var(--muted);">PDF, DOCX o TXT — opcional</span>
+  <!-- ═══ SECCIÓN 2: Descripción ═══ -->
+  <div class="sec" id="sec-desc">
+    <div class="sec-head" onclick="toggleSec('sec-desc')">
+      <h3><span class="msym">edit</span>Descripción del programa</h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <label class="lbl">Texto descriptivo (se muestra en el slide "Qué es")</label>
+        <textarea id="e-desc" class="fc" placeholder="Describe el valor diferencial del programa, su enfoque, competencias clave y por qué un alumno debería elegirlo…"></textarea>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 3: Módulos ═══ -->
+  <div class="sec" id="sec-mods">
+    <div class="sec-head" onclick="toggleSec('sec-mods')">
+      <h3><span class="msym">grid_view</span>Módulos académicos <span style="font-weight:400;font-size:11px;color:var(--text-muted);margin-left:6px;" id="mod-count"></span></h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="mod-list" id="mod-list"></div>
+      <button class="btn-add" onclick="addMod()">+ Añadir módulo</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 4: Temario IA ═══ -->
+  <div class="sec" id="sec-ia">
+    <div class="sec-head" onclick="toggleSec('sec-ia')">
+      <h3><span class="msym">psychology</span>Temario mención IA <span style="font-weight:400;font-size:11px;color:var(--text-muted);margin-left:6px;" id="ia-count"></span></h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="mod-list" id="ia-list"></div>
+      <button class="btn-add" onclick="addIa()">+ Añadir tema IA</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 5: Perfil del alumno ═══ -->
+  <div class="sec" id="sec-perfil">
+    <div class="sec-head" onclick="toggleSec('sec-perfil')">
+      <h3><span class="msym">people</span>Perfil del alumno</h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="bul-list" id="bul-list"></div>
+      <button class="btn-add" onclick="addBul()">+ Añadir perfil</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 6: Empresas ═══ -->
+  <div class="sec" id="sec-empresas">
+    <div class="sec-head" onclick="toggleSec('sec-empresas')">
+      <h3><span class="msym">business</span>Empresas colaboradoras</h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="bul-list" id="emp-list"></div>
+      <button class="btn-add" onclick="addEmp()">+ Añadir empresa</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 7: Documento IA ═══ -->
+  <div class="sec" id="sec-upload">
+    <div class="sec-head" onclick="toggleSec('sec-upload')">
+      <h3><span class="msym">smart_toy</span>Generación con IA</h3>
+      <span class="badge badge-ai">IA</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">Sube un plan de estudios y/o añade instrucciones. La IA rellenará automáticamente descripción, módulos, temario IA, perfil y empresas. <strong style="color:var(--text-primary);">Puedes editar todo después.</strong></p>
       <div class="upz" id="upz">
         <input type="file" id="f-doc" accept=".pdf,.docx,.txt">
-        <div class="upz-ico">📄</div>
-        <div class="upz-txt"><strong>Arrastra el plan de estudios</strong> o haz clic para seleccionarlo.<br>La IA lo usará para generar el contenido académico.</div>
+        <div style="font-size:20px;margin-bottom:4px;">📄</div>
+        <div class="upz-txt"><strong>Arrastra un documento</strong> o haz clic · PDF, DOCX, TXT</div>
         <div class="upz-name" id="upz-name"></div>
       </div>
-      <div class="fg" style="margin-top:14px;">
-        <label class="lbl">Instrucciones adicionales para la IA</label>
-        <textarea id="f-notas" class="fc" placeholder="Describe el enfoque del programa, competencias clave, público objetivo específico o cualquier detalle que quieras destacar…"></textarea>
+      <div class="fg" style="margin-top:12px;">
+        <label class="lbl">Instrucciones para la IA</label>
+        <textarea id="f-notas" class="fc" placeholder="Enfoque del programa, público objetivo, competencias clave…"></textarea>
       </div>
+      <button class="btn btn-secondary" id="btn-gen" onclick="generateContent()" style="margin-top:12px;width:100%;">
+        <span class="msym" style="font-size:16px;">smart_toy</span>
+        Autocompletar con IA
+      </button>
     </div>
-
-    <button class="btn-ai" id="btn-gen" onclick="generateContent()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Generar contenido con IA
-    </button>
-
   </div>
 
-  <!-- ═══ STEP 2: Contenido generado ═══ -->
-  <div id="sec-gen">
+  <!-- ═══ Separador ═══ -->
+  <div class="sep"><div class="sep-line"></div><span class="sep-text">Guardar</span><div class="sep-line"></div></div>
 
-    <div class="card">
-      <div class="card-ttl">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Descripción del programa
-      </div>
-      <div class="fg">
-        <textarea id="e-desc" class="fc" style="min-height:90px;"></textarea>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-ttl">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Módulos académicos
-        <span style="font-weight:400;text-transform:none;font-size:9px;letter-spacing:0;margin-left:auto;color:var(--muted);">Edita o añade módulos</span>
-      </div>
-      <div class="mod-list" id="mod-list"></div>
-      <button class="btn-addmod" onclick="addMod()">+ Añadir módulo</button>
-    </div>
-
-    <div class="card">
-      <div class="card-ttl">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Perfil del alumno
-      </div>
-      <div class="bul-list" id="bul-list"></div>
-    </div>
-
-    <button class="btn-save" id="btn-save" onclick="saveDossier()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+  <!-- ═══ Botones de acción ═══ -->
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btn-save" onclick="saveDossier()">
+      <span class="msym" style="font-size:16px;">save</span>
       Guardar dossier
     </button>
-
   </div>
 
-  <!-- ═══ STEP 3: Éxito ═══ -->
+  <!-- ═══ Éxito ═══ -->
   <div id="sec-ok">
     <div class="ok-card">
-      <div class="ok-ico">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a91831" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <h2 class="ok-ttl">¡Dossier creado con éxito!</h2>
-      <p class="ok-sub" id="ok-msg">El dossier se ha guardado correctamente.</p>
+      <div class="ok-ico"><span class="msym" style="font-size:26px;color:var(--gr);">check_circle</span></div>
+      <h2 class="ok-ttl">¡Dossier creado!</h2>
+      <p class="ok-sub" id="ok-msg"></p>
       <div class="ok-actions">
-        <a href="#" id="ok-ver" class="btn-lnk p" target="_blank">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          Ver dossier
-        </a>
-        <a href="/manager.html" class="btn-lnk s">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Panel de dossiers
-        </a>
-        <a href="/index.html" class="btn-lnk s">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nuevo dossier
-        </a>
+        <a href="#" id="ok-ver" class="btn-lnk p" target="_blank"><span class="msym" style="font-size:14px;">visibility</span>Ver dossier</a>
+        <a href="/manager.html" class="btn-lnk s"><span class="msym" style="font-size:14px;">dashboard</span>Panel</a>
+        <a href="/index.html" class="btn-lnk s"><span class="msym" style="font-size:14px;">add</span>Nuevo</a>
       </div>
     </div>
   </div>
@@ -331,233 +322,206 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══ State ══════════════════════════════════════════════ */
-var aiData = null;
+/* ══════════════════════════════════════════════════════════ */
+/* ══ Toggle sections ══════════════════════════════════════ */
+function toggleSec(id) { document.getElementById(id).classList.toggle('closed'); }
 
-/* ══ Upload zone ════════════════════════════════════════ */
-var upz = document.getElementById('upz');
+/* ══ Upload ═══════════════════════════════════════════════ */
+var upzEl = document.getElementById('upz');
 var fDoc = document.getElementById('f-doc');
-fDoc.addEventListener('change', function() {
-  if (fDoc.files[0]) document.getElementById('upz-name').textContent = '📎 ' + fDoc.files[0].name;
-});
-upz.addEventListener('dragover',  function(e) { e.preventDefault(); upz.classList.add('drag'); });
-upz.addEventListener('dragleave', function()  { upz.classList.remove('drag'); });
-upz.addEventListener('drop', function(e) {
-  e.preventDefault(); upz.classList.remove('drag');
-  if (e.dataTransfer.files[0]) {
-    fDoc.files = e.dataTransfer.files;
-    document.getElementById('upz-name').textContent = '📎 ' + e.dataTransfer.files[0].name;
-  }
-});
+fDoc.addEventListener('change', function(){ if(fDoc.files[0]) document.getElementById('upz-name').textContent='📎 '+fDoc.files[0].name; });
+upzEl.addEventListener('dragover', function(e){ e.preventDefault(); upzEl.classList.add('drag'); });
+upzEl.addEventListener('dragleave', function(){ upzEl.classList.remove('drag'); });
+upzEl.addEventListener('drop', function(e){ e.preventDefault(); upzEl.classList.remove('drag'); if(e.dataTransfer.files[0]){ fDoc.files=e.dataTransfer.files; document.getElementById('upz-name').textContent='📎 '+e.dataTransfer.files[0].name; }});
 
-/* ══ Toast ══════════════════════════════════════════════ */
-function toast(msg, isErr) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast on' + (isErr ? ' err' : '');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(function() { el.classList.remove('on'); }, 3800);
-}
+/* ══ Toast ════════════════════════════════════════════════ */
+function toast(msg,isErr){ var el=document.getElementById('toast'); el.textContent=msg; el.className='toast on'+(isErr?' err':''); clearTimeout(toast._t); toast._t=setTimeout(function(){el.classList.remove('on');},3800); }
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-/* ══ Steps ══════════════════════════════════════════════ */
-function setStep(n) {
-  [['si1',1],['si2',2],['si3',3]].forEach(function(pair) {
-    var el = document.getElementById(pair[0]), s = pair[1];
-    el.className = 'step-itm' + (s < n ? ' done' : s === n ? ' active' : '');
-  });
-  document.getElementById('sl1').className = 'step-line' + (n > 1 ? ' done' : '');
-  document.getElementById('sl2').className = 'step-line' + (n > 2 ? ' done' : '');
-}
-
-/* ══ Generate ═══════════════════════════════════════════ */
-async function generateContent() {
-  var nombre = document.getElementById('f-nombre').value.trim();
-  if (!nombre) { toast('El nombre del programa es obligatorio.', true); document.getElementById('f-nombre').focus(); return; }
-
-  var btn = document.getElementById('btn-gen');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin"></div>Generando contenido…';
-
-  var fd = new FormData();
-  fd.append('nombre',  nombre);
-  fd.append('tipo',    document.getElementById('f-tipo').value);
-  fd.append('area',    document.getElementById('f-area').value);
-  fd.append('meses',   document.getElementById('f-meses').value);
-  fd.append('ects',    document.getElementById('f-ects').value);
-  fd.append('modal',   document.querySelector('input[name="mod"]:checked').value);
-  fd.append('precio',  document.getElementById('f-precio').value);
-  fd.append('notas',   document.getElementById('f-notas').value);
-  var docFile = fDoc.files[0];
-  if (docFile) fd.append('documento', docFile);
-
-  try {
-    var res  = await fetch('/api/generate-dossier', { method: 'POST', body: fd });
-    var data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Error en el servidor');
-
-    aiData = data;
-    renderGenerated(data);
-    setStep(2);
-    document.getElementById('sec-gen').classList.add('on');
-    setTimeout(function() { document.getElementById('sec-gen').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
-    toast('Contenido generado ✓');
-
-  } catch(e) {
-    toast('Error: ' + e.message, true);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Generar de nuevo';
-  }
-}
-
-/* ══ Render generated content ═══════════════════════════ */
-function renderGenerated(d) {
-  var plain = function(html) { var t = document.createElement('div'); t.innerHTML = html || ''; return t.textContent; };
-  document.getElementById('e-desc').value = plain(d.descripcion || '');
-  document.getElementById('mod-list').innerHTML = '';
-  mc = 0;
-  (d.modulos || []).forEach(function(m) { addModItem(m.num || '', m.area || '', m.nombre || ''); });
-  document.getElementById('bul-list').innerHTML = '';
-  (d.perfil_bullets || []).forEach(function(b) { addBulItem(b); });
-}
-
-/* ══ Modules ════════════════════════════════════════════ */
-var mc = 0;
-function addModItem(num, area, nombre) {
+/* ══ Modules ══════════════════════════════════════════════ */
+var mc=0;
+function addModItem(num,area,nombre,desc){
   mc++;
-  var n = num || String(mc).padStart(2, '0');
-  var div = document.createElement('div');
-  div.className = 'mod-item';
-  div.innerHTML =
-    '<div class="mod-n">' + esc(n) + '</div>' +
-    '<input type="text" data-field="area"   placeholder="Área"   value="' + esc(area)   + '">' +
-    '<input type="text" data-field="nombre" placeholder="Módulo" value="' + esc(nombre) + '">' +
-    '<button class="mod-del" onclick="this.closest(\'.mod-item\').remove();renumMods();" title="Eliminar">×</button>';
-  document.getElementById('mod-list').appendChild(div);
+  var n=num||String(mc).padStart(2,'0');
+  var d=document.createElement('div'); d.className='mod-item';
+  d.style.gridTemplateColumns='32px 100px 1fr 1fr 28px';
+  d.innerHTML='<div class="mod-n">'+esc(n)+'</div>'+
+    '<input type="text" data-field="area" placeholder="Área" value="'+esc(area)+'">'+
+    '<input type="text" data-field="nombre" placeholder="Nombre del módulo" value="'+esc(nombre)+'">'+
+    '<input type="text" data-field="desc" placeholder="Descripción breve" value="'+esc(desc||'')+'">'+
+    '<button class="mod-del" onclick="this.closest(\'.mod-item\').remove();updCounts();" title="Eliminar">×</button>';
+  document.getElementById('mod-list').appendChild(d);
+  updCounts();
 }
-function addMod() { addModItem('', '', ''); renumMods(); }
-function renumMods() {
-  document.querySelectorAll('.mod-item').forEach(function(el, i) {
-    el.querySelector('.mod-n').textContent = String(i + 1).padStart(2, '0');
+function addMod(){ addModItem('','','',''); }
+
+/* ══ IA Topics ════════════════════════════════════════════ */
+var ic=0;
+function addIaItem(nombre,desc){
+  ic++;
+  var n=String(ic).padStart(2,'0');
+  var d=document.createElement('div'); d.className='mod-item';
+  d.style.gridTemplateColumns='32px 1fr 1fr 28px';
+  d.innerHTML='<div class="mod-n">'+n+'</div>'+
+    '<input type="text" data-field="nombre" placeholder="Nombre del tema" value="'+esc(nombre)+'">'+
+    '<input type="text" data-field="desc" placeholder="Descripción" value="'+esc(desc||'')+'">'+
+    '<button class="mod-del" onclick="this.closest(\'.mod-item\').remove();updCounts();" title="Eliminar">×</button>';
+  document.getElementById('ia-list').appendChild(d);
+  updCounts();
+}
+function addIa(){ addIaItem('',''); }
+
+/* ══ Bullets (perfil) ═════════════════════════════════════ */
+function addBulItem(text){
+  var d=document.createElement('div'); d.className='bul-item';
+  d.innerHTML='<div class="bul-dot"></div><input type="text" value="'+esc(text)+'" placeholder="Perfil de alumno…"><button class="bul-del" onclick="this.closest(\'.bul-item\').remove();">×</button>';
+  document.getElementById('bul-list').appendChild(d);
+}
+function addBul(){ addBulItem(''); }
+
+/* ══ Empresas ═════════════════════════════════════════════ */
+function addEmpItem(text){
+  var d=document.createElement('div'); d.className='bul-item';
+  d.innerHTML='<div class="bul-dot"></div><input type="text" value="'+esc(text)+'" placeholder="Nombre de empresa…"><button class="bul-del" onclick="this.closest(\'.bul-item\').remove();">×</button>';
+  document.getElementById('emp-list').appendChild(d);
+}
+function addEmp(){ addEmpItem(''); }
+
+/* ══ Counters ═════════════════════════════════════════════ */
+function updCounts(){
+  var mc=document.querySelectorAll('#mod-list .mod-item').length;
+  var ic=document.querySelectorAll('#ia-list .mod-item').length;
+  document.getElementById('mod-count').textContent=mc?mc+' módulos':'';
+  document.getElementById('ia-count').textContent=ic?ic+' temas':'';
+  // renumber
+  document.querySelectorAll('#mod-list .mod-n').forEach(function(el,i){ el.textContent=String(i+1).padStart(2,'0'); });
+  document.querySelectorAll('#ia-list .mod-n').forEach(function(el,i){ el.textContent=String(i+1).padStart(2,'0'); });
+}
+
+/* ══ AI Generate ══════════════════════════════════════════ */
+async function generateContent(){
+  var nombre=document.getElementById('f-nombre').value.trim();
+  if(!nombre){ toast('El nombre del programa es obligatorio.',true); document.getElementById('f-nombre').focus(); return; }
+  var btn=document.getElementById('btn-gen');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div>Generando…';
+  var fd=new FormData();
+  fd.append('nombre',nombre); fd.append('tipo',document.getElementById('f-tipo').value);
+  fd.append('area',document.getElementById('f-area').value); fd.append('meses',document.getElementById('f-meses').value);
+  fd.append('ects',document.getElementById('f-ects').value); fd.append('modal',document.querySelector('input[name="mod"]:checked').value);
+  fd.append('precio',document.getElementById('f-precio').value); fd.append('notas',document.getElementById('f-notas').value);
+  if(fDoc.files[0]) fd.append('documento',fDoc.files[0]);
+  try{
+    var res=await fetch('/api/generate-dossier',{method:'POST',body:fd});
+    var data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Error en el servidor');
+    // Fill description
+    var plain=function(h){var t=document.createElement('div');t.innerHTML=h||'';return t.textContent;};
+    document.getElementById('e-desc').value=plain(data.descripcion||'');
+    // Fill modules
+    document.getElementById('mod-list').innerHTML=''; mc=0;
+    (data.modulos||[]).forEach(function(m){addModItem(m.num,m.area,m.nombre,m.desc||'');});
+    // Fill IA topics
+    document.getElementById('ia-list').innerHTML=''; ic=0;
+    (data.ia_temario||data.ia_asignaturas||[]).forEach(function(t){
+      if(typeof t==='string') addIaItem(t,'');
+      else addIaItem(t.nombre||'',t.desc||'');
+    });
+    // Fill perfil
+    document.getElementById('bul-list').innerHTML='';
+    (data.perfil_bullets||[]).forEach(function(b){addBulItem(b);});
+    // Fill empresas
+    document.getElementById('emp-list').innerHTML='';
+    (data.empresas||[]).forEach(function(e){addEmpItem(e);});
+    // Mark badges as AI-generated
+    document.querySelectorAll('.badge-manual').forEach(function(b){b.className='badge badge-ai';b.textContent='IA';});
+    // Open all sections
+    document.querySelectorAll('.sec.closed').forEach(function(s){s.classList.remove('closed');});
+    toast('Contenido generado ✓ — edita lo que necesites');
+  }catch(e){ toast('Error: '+e.message,true); }
+  finally{ btn.disabled=false; btn.innerHTML='<span class="msym" style="font-size:16px;">smart_toy</span>Autocompletar con IA'; }
+}
+
+/* ══ Save ═════════════════════════════════════════════════ */
+async function saveDossier(){
+  var nombre=document.getElementById('f-nombre').value.trim();
+  if(!nombre){toast('El nombre del programa es obligatorio.',true);document.getElementById('f-nombre').focus();return;}
+  var btn=document.getElementById('btn-save');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div>Guardando…';
+  var tipo=document.getElementById('f-tipo').value;
+  var meses=parseInt(document.getElementById('f-meses').value)||12;
+  var ects=parseInt(document.getElementById('f-ects').value)||60;
+  var modulos=Array.from(document.querySelectorAll('#mod-list .mod-item')).map(function(el){
+    return{num:el.querySelector('.mod-n').textContent,area:el.querySelector('[data-field="area"]').value.trim(),nombre:el.querySelector('[data-field="nombre"]').value.trim(),desc:(el.querySelector('[data-field="desc"]')||{}).value||''};
   });
-}
-
-/* ══ Bullets ════════════════════════════════════════════ */
-function addBulItem(text) {
-  var div = document.createElement('div');
-  div.className = 'bul-item';
-  div.innerHTML = '<div class="bul-dot"></div><input type="text" value="' + esc(text) + '" placeholder="Perfil de alumno…">';
-  document.getElementById('bul-list').appendChild(div);
-}
-
-function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-/* ══ Save ═══════════════════════════════════════════════ */
-async function saveDossier() {
-  if (!aiData) { toast('Genera primero el contenido con IA.', true); return; }
-
-  var btn = document.getElementById('btn-save');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin"></div>Guardando…';
-
-  var nombre = document.getElementById('f-nombre').value.trim();
-  var tipo   = document.getElementById('f-tipo').value;
-  var meses  = parseInt(document.getElementById('f-meses').value) || 12;
-  var ects   = parseInt(document.getElementById('f-ects').value)  || 60;
-
-  var modulos = Array.from(document.querySelectorAll('.mod-item')).map(function(el, i) {
-    return {
-      num:    el.querySelector('.mod-n').textContent,
-      area:   el.querySelector('[data-field="area"]').value.trim(),
-      nombre: el.querySelector('[data-field="nombre"]').value.trim()
-    };
+  var ia_temario=Array.from(document.querySelectorAll('#ia-list .mod-item')).map(function(el){
+    return{nombre:el.querySelector('[data-field="nombre"]').value.trim(),desc:(el.querySelector('[data-field="desc"]')||{}).value||''};
   });
-
-  var perfil_bullets = Array.from(document.querySelectorAll('.bul-item input'))
-    .map(function(el) { return el.value.trim(); }).filter(Boolean);
-
-  var dobleRaw = document.getElementById('f-doble').value.trim();
-  var doble_titulo = null;
-  if (dobleRaw) {
-    var parts = dobleRaw.split(',');
-    doble_titulo = { nombre: parts[0].trim(), pais: (parts[1] || '').trim() };
-  }
-
-  var tipoCategoria = {
-    master: 'Programa de Posgrado · Máster Internacional',
-    mba: 'Programa de Posgrado · MBA Internacional',
-    ejecutivo: 'Programa Ejecutivo · ENAE Business School',
-    curso: 'Curso Especializado · ENAE Business School',
-    directivo: 'Programa Directivo · ENAE Business School'
+  var perfil_bullets=Array.from(document.querySelectorAll('#bul-list input')).map(function(el){return el.value.trim();}).filter(Boolean);
+  var empresas=Array.from(document.querySelectorAll('#emp-list input')).map(function(el){return el.value.trim();}).filter(Boolean);
+  var dobleRaw=document.getElementById('f-doble').value.trim();
+  var doble_titulo=null;
+  if(dobleRaw){var p=dobleRaw.split(',');doble_titulo={nombre:p[0].trim(),pais:(p[1]||'').trim()};}
+  var tipoLabels={master:'Máster en',mba:'MBA',ejecutivo:'Programa Ejecutivo en',curso:'Curso en',directivo:'Programa Directivo en'};
+  var tipoCat={master:'Programa de Posgrado · Máster Internacional',mba:'Programa de Posgrado · MBA Internacional',ejecutivo:'Programa Ejecutivo · ENAE',curso:'Curso Especializado · ENAE',directivo:'Programa Directivo · ENAE'};
+  // Derive title lines from nombre
+  var words=nombre.replace(/^(máster|master|mba|programa|curso)\s*(en|de|internacional)?\s*/i,'').trim().split(/\s+/);
+  var mid=Math.ceil(words.length/2);
+  var payload={
+    nombre:nombre, programa:nombre,
+    titulo_l:tipoLabels[tipo]||'Programa en',
+    titulo_b1:words.slice(0,mid).join(' '),
+    titulo_b2:words.slice(mid).join(' ')+'.',
+    subtitulo:document.getElementById('f-mencion').value.trim(),
+    categoria:tipoCat[tipo]||'Programa Académico ENAE',
+    doble_titulo:doble_titulo,
+    foto_portada:'../doc/default/portada.jpg',foto_que_es:'../doc/default/clase.jpg',foto_metodologia:'../doc/default/metodologia.jpg',
+    kpis_portada:[{n:'#9',l:'QS España 2025'},{n:'91%',l:'empleabilidad'},{n:'+37',l:'años formando líderes'},{n:'1988',l:'fundación ENAE'}],
+    descripcion:document.getElementById('e-desc').value.trim(),
+    cadena_valor:[{label:'Fase 1',sub:'Fundamentos'},{label:'Fase 2',sub:'Especialización'},{label:'Fase 3',sub:'Práctica'},{label:'Fase 4',sub:'Proyecto'},{label:'Fase 5',sub:'Inserción'}],
+    modulos:modulos, ia_temario:ia_temario,
+    ects:ects, meses:meses,
+    kpi1:{valor:91,label:'trabajando<br>al terminar'}, kpi2:{valor:82,label:'mejora profesional<br>demostrada'},
+    empresas:empresas, profesores:[], perfil_bullets:perfil_bullets,
+    demo_stats:[{n:'44<span>%</span>',l:'mujeres',pct:44},{n:'9',l:'nacionalidades',pct:90},{n:'33<span>%</span>',l:'21–26 años',pct:33},{n:'42<span>%</span>',l:'mando intermedio',pct:42}]
   };
-
-  var payload = {
-    nombre:   nombre,
-    programa: aiData.programa  || nombre,
-    titulo_l: aiData.titulo_l  || 'Programa en',
-    titulo_b1:aiData.titulo_b1 || '',
-    titulo_b2:aiData.titulo_b2 || '',
-    subtitulo: document.getElementById('f-mencion').value.trim() || aiData.subtitulo || '',
-    categoria: tipoCategoria[tipo] || 'Programa Académico ENAE',
-    doble_titulo: doble_titulo,
-    foto_portada:     '../doc/default/portada.jpg',
-    foto_que_es:      '../doc/default/clase.jpg',
-    foto_metodologia: '../doc/default/metodologia.jpg',
-    kpis_portada: [
-      { n: '#9',   l: 'QS España 2025' },
-      { n: '91%',  l: 'empleabilidad' },
-      { n: '+37',  l: 'años formando líderes' },
-      { n: '1988', l: 'fundación ENAE' }
-    ],
-    descripcion:    document.getElementById('e-desc').value.trim(),
-    cadena_valor:   aiData.cadena_valor   || [],
-    modulos:        modulos,
-    ia_asignaturas: aiData.ia_asignaturas || [],
-    ects:   ects,
-    meses:  meses,
-    kpi1: aiData.kpi1 || { valor: 91, label: 'trabajando<br>al terminar' },
-    kpi2: aiData.kpi2 || { valor: 82, label: 'mejora profesional<br>demostrada' },
-    empresas:      aiData.empresas   || [],
-    profesores:    aiData.profesores || [],
-    perfil_bullets: perfil_bullets,
-    demo_stats: aiData.demo_stats || [
-      { n: '44<span>%</span>', l: 'mujeres',          pct: 44 },
-      { n: '9',                l: 'nacionalidades',    pct: 90 },
-      { n: '33<span>%</span>', l: '21–26 años',       pct: 33 },
-      { n: '42<span>%</span>', l: 'mando intermedio', pct: 42 }
-    ]
-  };
-
-  try {
-    var res    = await fetch('/api/dossiers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    var result = await res.json();
-    if (!res.ok) throw new Error(result.error || 'Error al guardar');
-
-    setStep(3);
-    document.getElementById('sec-gen').classList.remove('on');
-    document.getElementById('sec-info').style.opacity = '.4';
-    document.getElementById('ok-msg').textContent = '"' + nombre + '" guardado como ' + result.fileName;
-    document.getElementById('ok-ver').href = result.path;
+  try{
+    var res=await fetch('/api/dossiers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var result=await res.json();
+    if(!res.ok) throw new Error(result.error||'Error al guardar');
+    document.getElementById('ok-msg').textContent='"'+nombre+'" guardado como '+result.fileName;
+    document.getElementById('ok-ver').href=result.path;
     document.getElementById('sec-ok').classList.add('on');
-    document.getElementById('sec-ok').scrollIntoView({ behavior: 'smooth' });
-
-  } catch(e) {
-    toast('Error: ' + e.message, true);
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Guardar dossier';
-  }
+    document.getElementById('sec-ok').scrollIntoView({behavior:'smooth'});
+    toast('Dossier guardado ✓');
+  }catch(e){ toast('Error: '+e.message,true); }
+  finally{ btn.disabled=false; btn.innerHTML='<span class="msym" style="font-size:16px;">save</span>Guardar dossier'; }
 }
 
-/* ══ ?edit=fileName — Pre-fill from URL param ═══════════ */
-(function() {
-  var params   = new URLSearchParams(window.location.search);
-  var editFile = params.get('edit');
-  if (!editFile) return;
-  var label = editFile.replace('.html', '').replace(/-/g, ' ')
-    .replace(/\b\w/g, function(c) { return c.toUpperCase(); });
-  document.getElementById('f-nombre').value = label;
-  document.getElementById('page-title').innerHTML = 'Editar <em>dossier</em>';
-  document.getElementById('page-sub').textContent = 'Genera nuevo contenido con IA y guarda. El archivo existente será sobrescrito.';
+/* ══ Init: defaults or edit mode ══════════════════════════ */
+(function(){
+  // Default modules
+  addModItem('01','Estrategia','Dirección Estratégica','');
+  addModItem('02','Digital','Marketing Digital','');
+  addModItem('03','Datos','Analítica y Data Science','');
+  addModItem('04','Comunicación','Comunicación Corporativa','');
+  // Default IA topics
+  addIaItem('Introducción a la IA','');
+  addIaItem('IA Aplicada','');
+  // Default perfil
+  addBulItem('Directivos y ejecutivos');
+  addBulItem('Profesionales en transición digital');
+  addBulItem('Recién graduados');
+  // Default empresas
+  addEmpItem(''); addEmpItem('');
+  // Edit mode?
+  var params=new URLSearchParams(window.location.search);
+  var editFile=params.get('edit');
+  if(editFile){
+    document.querySelector('.hdr-title').innerHTML='ENAE <span>Editor</span>';
+    document.querySelector('.mode-bar p').innerHTML='<strong>Modo edición.</strong> Modifica los campos y guarda. El archivo existente será sobrescrito.';
+    var label=editFile.replace('.html','').replace(/-/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+    document.getElementById('f-nombre').value=label;
+  }
 })();
 </script>
 </body>
