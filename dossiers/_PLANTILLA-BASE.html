@@ -1,9 +1,35 @@
 <!DOCTYPE html>
+<!--
+  ╔════════════════════════════════════════════════════════════════════════╗
+  ║  PLANTILLA BASE · DOSSIER ENAE  (16:9 · responsive móvil · export PDF A4) ║
+  ║  ─────────────────────────────────────────────────────────────────────── ║
+  ║  Base de la que se clonan TODOS los dossiers nuevos.                      ║
+  ║                                                                          ║
+  ║  CÓMO CREAR UN DOSSIER NUEVO:                                            ║
+  ║  1. Copia este archivo  →  dossiers/master-<nombre>.html                 ║
+  ║  2. Edita el bloque  <script id="dossier-data">  (JSON de abajo):        ║
+  ║     programa · titulo · subtitulo · categoria · doble_titulo (o quitar)  ║
+  ║     fotos (o null → usa las de src/img/ENAE/) · kpis · descripcion ·     ║
+  ║     cadena_valor · modulos · ia_temario · empresas · profesores ·        ║
+  ║     perfil_bullets · demo_stats · kpi1 · kpi2                            ║
+  ║  3. Revisa los textos ESTÁTICOS que el hidratador NO cubre:              ║
+  ║     · S2  cita editorial + autor                                         ║
+  ║     · S2b títulos de las 4 tarjetas de datos                             ║
+  ║     · S3b cita del panel lateral                                         ║
+  ║     · S6  nombres de los programas en las tarjetas QS                    ║
+  ║     · S9  textos de contacto                                             ║
+  ║  4. Ajusta el encuadre de portada (keyframes kenburns) y el obj_pos de   ║
+  ║     cada profesor si la foto lo necesita.                                ║
+  ║                                                                          ║
+  ║  No hay build: cada dossier es un HTML independiente. Toda mejora        ║
+  ║  estructural debe aplicarse AQUÍ y a los dossiers ya creados.            ║
+  ╚════════════════════════════════════════════════════════════════════════╝
+-->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Máster Internacional en Marketing Digital e IA — ENAE Business School</title>
+<title>Plantilla Base · Dossier ENAE Business School</title>
 <!-- ╔══════════════════════════════════════════════════════════════╗
      ║  DOSSIER DATA — edita este bloque para cambiar el programa  ║
      ║  El script de hydratación lo leerá y actualizará el DOM.    ║
