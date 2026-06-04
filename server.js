@@ -8,18 +8,53 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const fsMod = require('fs');
 
-// Set up multer for file uploads in memory
+// Set up multer for file uploads in memory (documentos para IA)
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Enable CORS and JSON parsing
+// Carpeta de imágenes subidas por el usuario
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+if (!fsMod.existsSync(UPLOADS_DIR)) fsMod.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+// Multer a disco para fotos (profesores, portada…)
+const imgStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase().replace(/[^.a-z0-9]/g, '') || '.jpg';
+        const base = (req.body.slot || 'img').toString().replace(/[^a-z0-9_-]/gi, '').slice(0, 40);
+        cb(null, base + '-' + Date.now() + '-' + Math.round(Math.random() * 1e4) + ext);
+    }
+});
+const uploadImg = multer({
+    storage: imgStorage,
+    limits: { fileSize: 8 * 1024 * 1024 }, // 8 MB
+    fileFilter: (req, file, cb) => {
+        const ok = /^image\/(jpe?g|png|webp|avif)$/i.test(file.mimetype);
+        cb(ok ? null : new Error('Solo se admiten imágenes JPG, PNG, WEBP o AVIF.'), ok);
+    }
+});
+
+// Enable CORS and JSON parsing (límite ampliado por si llegan payloads grandes)
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname)));
 app.use('/src', express.static(path.join(__dirname, 'src')));
+app.use('/uploads', express.static(UPLOADS_DIR));
+
+// ── Endpoint: subir imagen (foto profesor, portada, etc.) ──
+app.post('/api/upload-image', uploadImg.single('imagen'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No se recibió ninguna imagen.' });
+    // Ruta relativa desde un dossier (que está en /dossiers/xxx.html)
+    res.json({
+        success: true,
+        url: '/uploads/' + req.file.filename,           // ruta absoluta para el editor
+        relPath: '../uploads/' + req.file.filename        // ruta relativa para el HTML del dossier
+    });
+});
 
 // Available product types and thematic areas configuration
 const PRODUCT_CONFIG = {

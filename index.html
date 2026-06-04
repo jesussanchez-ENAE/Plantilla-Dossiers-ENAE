@@ -137,7 +137,40 @@
     .toast.on { transform:translateY(0); opacity:1; }
     .toast.err { border-color:var(--gr); }
 
-    @media (max-width:640px) { .c2,.c3{grid-template-columns:1fr;} .mod-item{grid-template-columns:28px 1fr 28px;} .mod-item input:first-of-type{display:none;} }
+    /* ── Image upload (portada) ── */
+    .img-drop { display:flex; gap:16px; align-items:center; }
+    .img-preview { width:140px; height:84px; border-radius:8px; background:var(--input-bg) center/cover no-repeat; border:1px solid var(--input-border); flex-shrink:0; position:relative; overflow:hidden; }
+    .img-preview.empty::after { content:'sin imagen'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--text-muted); }
+    .img-drop-info { flex:1; }
+    .img-drop-info .upz { padding:14px; }
+
+    /* ── Profesor cards ── */
+    .prof-list { display:flex; flex-direction:column; gap:10px; }
+    .prof-item { display:flex; gap:12px; background:var(--input-bg); border:1px solid var(--input-border); border-radius:8px; padding:10px; align-items:flex-start; }
+    .prof-photo { width:64px; height:64px; border-radius:8px; background:var(--panel-bg) center/cover no-repeat; border:1px solid var(--input-border); flex-shrink:0; position:relative; overflow:hidden; cursor:pointer; }
+    .prof-photo::after { content:'＋'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--text-muted); background:rgba(0,0,0,.3); opacity:0; transition:opacity .2s; }
+    .prof-photo:hover::after { opacity:1; }
+    .prof-photo.has::after { content:'cambiar'; font-size:9px; }
+    .prof-photo input { display:none; }
+    .prof-fields { flex:1; display:grid; gap:6px; grid-template-columns:1fr 1fr; }
+    .prof-fields input { height:32px; padding:0 9px; background:var(--panel-bg); border:1px solid var(--input-border); border-radius:5px; color:var(--text-primary); font-family:var(--font-body); font-size:12px; outline:none; }
+    .prof-fields input:focus { border-color:var(--gr); }
+    .prof-fields .full { grid-column:1/-1; }
+    .prof-del { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px; align-self:center; transition:color .15s; }
+    .prof-del:hover { color:var(--gr); }
+    .prof-up { position:absolute; bottom:2px; right:2px; width:10px; height:10px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:sp .55s linear infinite; display:none; }
+    .prof-photo.loading .prof-up { display:block; }
+
+    /* ── KPI cells ── */
+    .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .kpi-cell { display:flex; flex-direction:column; gap:6px; background:var(--input-bg); border:1px solid var(--input-border); border-radius:7px; padding:10px; }
+    .kpi-cell input { height:32px; padding:0 9px; background:var(--panel-bg); border:1px solid var(--input-border); border-radius:5px; color:var(--text-primary); font-family:var(--font-body); font-size:12px; outline:none; }
+    .kpi-cell input[data-f="n"], .kpi-cell input#kpi1-val, .kpi-cell input#kpi2-val { font-family:var(--font-display); font-weight:900; font-size:15px; color:var(--gr); }
+    .kpi-cell input:focus { border-color:var(--gr); }
+    .kpi-cell .stat-bar { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .kpi-cell .stat-bar input { height:28px; }
+
+    @media (max-width:640px) { .c2,.c3{grid-template-columns:1fr;} .kpi-grid{grid-template-columns:1fr;} .mod-item{grid-template-columns:28px 1fr 28px;} .mod-item input:first-of-type{display:none;} .prof-fields{grid-template-columns:1fr;} }
   </style>
 </head>
 <body>
@@ -266,6 +299,95 @@
     </div>
   </div>
 
+  <!-- ═══ SECCIÓN: Imagen de portada ═══ -->
+  <div class="sec" id="sec-portada">
+    <div class="sec-head" onclick="toggleSec('sec-portada')">
+      <h3><span class="msym">image</span>Imágenes del dossier</h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="fg" style="margin-bottom:14px;">
+        <label class="lbl">Foto de portada</label>
+        <div class="img-drop">
+          <div class="img-preview empty" id="prev-portada"></div>
+          <div class="img-drop-info">
+            <div class="upz" style="position:relative;">
+              <input type="file" accept="image/*" onchange="uploadHero(this,'portada','prev-portada')">
+              <div class="upz-txt"><strong>Subir foto de portada</strong> · JPG, PNG, WEBP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row c2">
+        <div class="fg">
+          <label class="lbl">Foto "Qué es" (slide 2)</label>
+          <div class="img-drop">
+            <div class="img-preview empty" id="prev-quees" style="width:90px;height:60px;"></div>
+            <div class="upz" style="flex:1;position:relative;padding:10px;"><input type="file" accept="image/*" onchange="uploadHero(this,'quees','prev-quees')"><div class="upz-txt" style="font-size:11px;">Subir foto</div></div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Foto "Metodología" (slide 4)</label>
+          <div class="img-drop">
+            <div class="img-preview empty" id="prev-metodo" style="width:90px;height:60px;"></div>
+            <div class="upz" style="flex:1;position:relative;padding:10px;"><input type="file" accept="image/*" onchange="uploadHero(this,'metodo','prev-metodo')"><div class="upz-txt" style="font-size:11px;">Subir foto</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN: Claustro docente ═══ -->
+  <div class="sec" id="sec-claustro">
+    <div class="sec-head" onclick="toggleSec('sec-claustro')">
+      <h3><span class="msym">cast_for_education</span>Claustro docente <span style="font-weight:400;font-size:11px;color:var(--text-muted);margin-left:6px;" id="prof-count"></span></h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+      <div class="prof-list" id="prof-list"></div>
+      <button class="btn-add" onclick="addProf()">+ Añadir profesor</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN: Métricas y KPIs ═══ -->
+  <div class="sec" id="sec-kpis">
+    <div class="sec-head" onclick="toggleSec('sec-kpis')">
+      <h3><span class="msym">monitoring</span>Métricas y KPIs</h3>
+      <span class="badge badge-manual">manual</span>
+      <span class="msym chevron">expand_more</span>
+    </div>
+    <div class="sec-body">
+
+      <!-- KPIs de portada -->
+      <label class="lbl" style="display:block;margin-bottom:8px;">KPIs de portada (4 cifras destacadas)</label>
+      <div class="kpi-grid" id="kpi-portada">
+        <div class="kpi-cell"><input type="text" data-f="n" value="#9" placeholder="#9"><input type="text" data-f="l" value="QS España 2025" placeholder="etiqueta"></div>
+        <div class="kpi-cell"><input type="text" data-f="n" value="91%" placeholder="91%"><input type="text" data-f="l" value="empleabilidad" placeholder="etiqueta"></div>
+        <div class="kpi-cell"><input type="text" data-f="n" value="+37" placeholder="+37"><input type="text" data-f="l" value="años formando líderes" placeholder="etiqueta"></div>
+        <div class="kpi-cell"><input type="text" data-f="n" value="1988" placeholder="1988"><input type="text" data-f="l" value="fundación ENAE" placeholder="etiqueta"></div>
+      </div>
+
+      <!-- KPIs de empleabilidad -->
+      <label class="lbl" style="display:block;margin:18px 0 8px;">KPIs de empleabilidad (con anillo animado)</label>
+      <div class="row c2">
+        <div class="kpi-cell"><input type="number" id="kpi1-val" value="91" min="0" max="100" placeholder="91"><input type="text" id="kpi1-lbl" value="trabajando al terminar" placeholder="etiqueta"></div>
+        <div class="kpi-cell"><input type="number" id="kpi2-val" value="82" min="0" max="100" placeholder="82"><input type="text" id="kpi2-lbl" value="mejora profesional demostrada" placeholder="etiqueta"></div>
+      </div>
+
+      <!-- Datos de la promoción -->
+      <label class="lbl" style="display:block;margin:18px 0 8px;">Datos de la promoción (4 estadísticas · slide admisión)</label>
+      <div class="kpi-grid" id="demo-stats">
+        <div class="kpi-cell stat"><input type="text" data-f="n" value="44%" placeholder="44%"><input type="text" data-f="l" value="mujeres" placeholder="etiqueta"><div class="stat-bar"><span class="lbl" style="font-size:9px;">Barra %</span><input type="number" data-f="pct" value="44" min="0" max="100" style="width:60px;"></div></div>
+        <div class="kpi-cell stat"><input type="text" data-f="n" value="9" placeholder="9"><input type="text" data-f="l" value="nacionalidades" placeholder="etiqueta"><div class="stat-bar"><span class="lbl" style="font-size:9px;">Barra %</span><input type="number" data-f="pct" value="90" min="0" max="100" style="width:60px;"></div></div>
+        <div class="kpi-cell stat"><input type="text" data-f="n" value="33%" placeholder="33%"><input type="text" data-f="l" value="21–26 años" placeholder="etiqueta"><div class="stat-bar"><span class="lbl" style="font-size:9px;">Barra %</span><input type="number" data-f="pct" value="33" min="0" max="100" style="width:60px;"></div></div>
+        <div class="kpi-cell stat"><input type="text" data-f="n" value="42%" placeholder="42%"><input type="text" data-f="l" value="mando intermedio" placeholder="etiqueta"><div class="stat-bar"><span class="lbl" style="font-size:9px;">Barra %</span><input type="number" data-f="pct" value="42" min="0" max="100" style="width:60px;"></div></div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ═══ SECCIÓN 7: Documento IA ═══ -->
   <div class="sec" id="sec-upload">
     <div class="sec-head" onclick="toggleSec('sec-upload')">
@@ -387,6 +509,74 @@ function addEmpItem(text){
 }
 function addEmp(){ addEmpItem(''); }
 
+/* ══ Imágenes (portada / qué es / metodología) ════════════ */
+var heroImgs = { portada:'', quees:'', metodo:'' };
+async function uploadHero(input, slot, previewId){
+  var file = input.files[0]; if(!file) return;
+  var prev = document.getElementById(previewId);
+  prev.classList.remove('empty'); prev.style.opacity='.5';
+  try {
+    var url = await uploadImage(file, slot);
+    heroImgs[slot] = url.relPath;
+    prev.style.backgroundImage = "url('"+url.url+"')";
+    prev.style.opacity='1';
+    toast('Imagen subida ✓');
+  } catch(e){ prev.style.opacity='1'; toast('Error: '+e.message, true); }
+}
+
+/* ══ Subida genérica de imagen al servidor ════════════════ */
+async function uploadImage(file, slot){
+  var fd = new FormData();
+  fd.append('slot', slot || 'img');   // slot antes del archivo para nombrarlo bien
+  fd.append('imagen', file);
+  var res = await fetch('/api/upload-image', { method:'POST', body:fd });
+  var data = await res.json();
+  if(!res.ok) throw new Error(data.error || 'Error al subir');
+  return data; // { url, relPath }
+}
+
+/* ══ Profesores ═══════════════════════════════════════════ */
+var profPhotos = []; // relPath por índice (paralelo al DOM)
+function addProfItem(nombre, rol, area, fotoUrl, fotoRel){
+  var d = document.createElement('div'); d.className='prof-item';
+  var bg = fotoUrl ? "background-image:url('"+fotoUrl+"');" : "";
+  d.innerHTML =
+    '<label class="prof-photo'+(fotoUrl?' has':'')+'" style="'+bg+'">'+
+      '<input type="file" accept="image/*" onchange="uploadProfPhoto(this)">'+
+      '<span class="prof-up"></span>'+
+    '</label>'+
+    '<div class="prof-fields">'+
+      '<input class="full" type="text" data-f="nombre" placeholder="Nombre completo" value="'+esc(nombre)+'">'+
+      '<input type="text" data-f="rol" placeholder="Cargo / rol" value="'+esc(rol)+'">'+
+      '<input type="text" data-f="area" placeholder="Área (etiqueta)" value="'+esc(area)+'">'+
+    '</div>'+
+    '<button class="prof-del" onclick="this.closest(\'.prof-item\').remove();updProfCount();" title="Eliminar">×</button>';
+  d.dataset.foto = fotoRel || '';
+  document.getElementById('prof-list').appendChild(d);
+  updProfCount();
+}
+function addProf(){ addProfItem('','','','',''); }
+
+async function uploadProfPhoto(input){
+  var file = input.files[0]; if(!file) return;
+  var photo = input.closest('.prof-photo');
+  var item = input.closest('.prof-item');
+  photo.classList.add('loading');
+  try {
+    var url = await uploadImage(file, 'prof');
+    photo.style.backgroundImage = "url('"+url.url+"')";
+    photo.classList.add('has');
+    item.dataset.foto = url.relPath;
+    toast('Foto subida ✓');
+  } catch(e){ toast('Error: '+e.message, true); }
+  finally { photo.classList.remove('loading'); }
+}
+
+function updProfCount(){
+  var n = document.querySelectorAll('#prof-list .prof-item').length;
+  document.getElementById('prof-count').textContent = n ? n+' profesores' : '';
+}
+
 /* ══ Counters ═════════════════════════════════════════════ */
 function updCounts(){
   var mc=document.querySelectorAll('#mod-list .mod-item').length;
@@ -432,6 +622,11 @@ async function generateContent(){
     // Fill empresas
     document.getElementById('emp-list').innerHTML='';
     (data.empresas||[]).forEach(function(e){addEmpItem(e);});
+    // Fill profesores (sin foto — el usuario las sube después)
+    if(data.profesores && data.profesores.length){
+      document.getElementById('prof-list').innerHTML='';
+      data.profesores.forEach(function(p){ addProfItem(p.nombre||'', p.rol||'', p.area||'', '', ''); });
+    }
     // Mark badges as AI-generated
     document.querySelectorAll('.badge-manual').forEach(function(b){b.className='badge badge-ai';b.textContent='IA';});
     // Open all sections
@@ -463,6 +658,33 @@ async function saveDossier(){
   if(dobleRaw){var p=dobleRaw.split(',');doble_titulo={nombre:p[0].trim(),pais:(p[1]||'').trim()};}
   var tipoLabels={master:'Máster en',mba:'MBA',ejecutivo:'Programa Ejecutivo en',curso:'Curso en',directivo:'Programa Directivo en'};
   var tipoCat={master:'Programa de Posgrado · Máster Internacional',mba:'Programa de Posgrado · MBA Internacional',ejecutivo:'Programa Ejecutivo · ENAE',curso:'Curso Especializado · ENAE',directivo:'Programa Directivo · ENAE'};
+  // Profesores (con sus fotos subidas)
+  var profesores=Array.from(document.querySelectorAll('#prof-list .prof-item')).map(function(el){
+    return {
+      nombre:el.querySelector('[data-f="nombre"]').value.trim(),
+      rol:el.querySelector('[data-f="rol"]').value.trim(),
+      area:el.querySelector('[data-f="area"]').value.trim(),
+      foto:el.dataset.foto || '',
+      obj_pos:'50% 18%'
+    };
+  }).filter(function(p){ return p.nombre; });
+  // Imágenes — usa las subidas o las del template por defecto (existentes)
+  var DEF_PORTADA='../doc/Marketing Digital/10042023-317A7390.jpg';
+  var DEF_QUEES='../doc/Marketing Digital/Sesion_innegociable_-61.jpg';
+  var DEF_METODO='../doc/Marketing Digital/10042023-317A8264.jpg';
+  // KPIs de portada
+  var kpis_portada=Array.from(document.querySelectorAll('#kpi-portada .kpi-cell')).map(function(c){
+    return { n:c.querySelector('[data-f="n"]').value.trim(), l:c.querySelector('[data-f="l"]').value.trim() };
+  }).filter(function(k){ return k.n; });
+  // Datos de la promoción (con <span>% para el render del dossier)
+  var demo_stats=Array.from(document.querySelectorAll('#demo-stats .kpi-cell')).map(function(c){
+    var raw=c.querySelector('[data-f="n"]').value.trim();
+    var n=raw.replace(/%/g,'<span>%</span>'); // convierte 44% → 44<span>%</span>
+    return { n:n, l:c.querySelector('[data-f="l"]').value.trim(), pct:parseInt(c.querySelector('[data-f="pct"]').value)||0 };
+  }).filter(function(s){ return s.l; });
+  // KPIs de empleabilidad
+  var kpi1={ valor:parseInt(document.getElementById('kpi1-val').value)||91, label:document.getElementById('kpi1-lbl').value.trim()||'trabajando al terminar' };
+  var kpi2={ valor:parseInt(document.getElementById('kpi2-val').value)||82, label:document.getElementById('kpi2-lbl').value.trim()||'mejora profesional demostrada' };
   // Derive title lines from nombre
   var words=nombre.replace(/^(máster|master|mba|programa|curso)\s*(en|de|internacional)?\s*/i,'').trim().split(/\s+/);
   var mid=Math.ceil(words.length/2);
@@ -474,15 +696,15 @@ async function saveDossier(){
     subtitulo:document.getElementById('f-mencion').value.trim(),
     categoria:tipoCat[tipo]||'Programa Académico ENAE',
     doble_titulo:doble_titulo,
-    foto_portada:'../doc/default/portada.jpg',foto_que_es:'../doc/default/clase.jpg',foto_metodologia:'../doc/default/metodologia.jpg',
-    kpis_portada:[{n:'#9',l:'QS España 2025'},{n:'91%',l:'empleabilidad'},{n:'+37',l:'años formando líderes'},{n:'1988',l:'fundación ENAE'}],
+    foto_portada:heroImgs.portada||DEF_PORTADA, foto_que_es:heroImgs.quees||DEF_QUEES, foto_metodologia:heroImgs.metodo||DEF_METODO,
+    kpis_portada:kpis_portada,
     descripcion:document.getElementById('e-desc').value.trim(),
     cadena_valor:[{label:'Fase 1',sub:'Fundamentos'},{label:'Fase 2',sub:'Especialización'},{label:'Fase 3',sub:'Práctica'},{label:'Fase 4',sub:'Proyecto'},{label:'Fase 5',sub:'Inserción'}],
     modulos:modulos, ia_temario:ia_temario,
     ects:ects, meses:meses,
-    kpi1:{valor:91,label:'trabajando<br>al terminar'}, kpi2:{valor:82,label:'mejora profesional<br>demostrada'},
-    empresas:empresas, profesores:[], perfil_bullets:perfil_bullets,
-    demo_stats:[{n:'44<span>%</span>',l:'mujeres',pct:44},{n:'9',l:'nacionalidades',pct:90},{n:'33<span>%</span>',l:'21–26 años',pct:33},{n:'42<span>%</span>',l:'mando intermedio',pct:42}]
+    kpi1:kpi1, kpi2:kpi2,
+    empresas:empresas, profesores:profesores, perfil_bullets:perfil_bullets,
+    demo_stats:demo_stats
   };
   try{
     var res=await fetch('/api/dossiers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -513,6 +735,8 @@ async function saveDossier(){
   addBulItem('Recién graduados');
   // Default empresas
   addEmpItem(''); addEmpItem('');
+  // Default profesores (2 vacíos para empezar)
+  addProfItem('','','','',''); addProfItem('','','','','');
   // Edit mode?
   var params=new URLSearchParams(window.location.search);
   var editFile=params.get('edit');
