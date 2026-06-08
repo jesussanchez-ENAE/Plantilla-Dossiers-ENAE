@@ -103,7 +103,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
-<style>
+<style type="text/tailwindcss">
 
 /* ── Fuentes corporativas oficiales ENAE ─────────────────── */
 @font-face { font-family:'SFUIDisplay'; src:url('../assets/fonts/SFUIDisplay-Black.otf') format('opentype'); font-weight:900; }
@@ -138,7 +138,7 @@
   /* Espaciado — respira: mínimos generosos para legibilidad a 720p */
   --sp-xs: clamp( 6px, 0.85vh, 12px);
   --sp-sm: clamp(10px, 1.4vh,  20px);
-  --sp-md: clamp(16px, 2.2vh,  32px);
+  --sp-md: clamp(16px, 10vh, 50px);
   --sp-lg: clamp(24px, 3.5vh,  52px);
   --sp-xl: clamp(38px, 5.2vh,  84px);
 
@@ -169,10 +169,8 @@
 /* Footer firmado — marca editorial discreta abajo */
 .sig { position: fixed; bottom: 2.4vh; left: 3vw; z-index: 200; font-family: var(--fb); font-style: normal; font-size: clamp(9px,.6vw,11px); color: rgba(255,255,255,.22); letter-spacing: .3px; pointer-events: none; }
 
-/* Eyebrow rediseñado — con marca de punto granate al inicio */
+/* Eyebrow rediseñado — sin marca de punto */
 .ey, .ey-w { position: relative; padding-left: 0; }
-.ey::before, .ey-w::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--gr); margin-right: 9px; vertical-align: middle; transform: translateY(-2px); }
-.ey-w::before { background: rgba(255,255,255,.45); }
 
 /* Drop cap — primera letra grande estilo revista */
 .drop-cap::first-letter { font-family: var(--fs); font-style: italic; font-size: clamp(54px,5.5vw,86px); line-height: .85; float: left; margin: clamp(2px,.4vh,6px) clamp(10px,1vw,16px) 0 0; color: var(--gr); font-weight: 700; }
@@ -304,7 +302,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 #s1 .kv{flex:1;text-align:center;padding:0 clamp(6px,.8vw,14px);}
 #s1 .kv:not(:last-child){border-right:1px solid rgba(255,255,255,.1);}
 #s1 .kv-n{font-family:var(--fb);font-weight:800;font-size:clamp(18px,2.2vw,38px);color:#fff;line-height:1;}
-#s1 .kv-l{font-family:var(--fs);font-style:italic;font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.62);margin-top:clamp(4px,.6vh,8px);}
+#s1 .kv-l{font-family:var(--fb);font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.62);margin-top:clamp(4px,.6vh,8px);}
 
 /* ═══════════════════════════════════════════════════════════
    S2 — QUÉ ES
@@ -323,7 +321,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 #s3{background:#0a0c0e;}
 #s3b{background:#0a0c0e;}
 #s3 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.15fr .85fr;gap:3.5vw;padding:var(--in-py) var(--in-px);align-items:start;}
-.mg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(4px,.4vw,8px);}
+.mg{ @apply grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-[clamp(4px,.4vw,8px)]; }
 .mc{
   background:rgba(255,255,255,.09);
   border:1px solid rgba(255,255,255,.14);
@@ -348,7 +346,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 #s4 .m-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 28%;}
 #s4 .m-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(155deg,rgba(32,34,33,.12) 0%,rgba(169,24,49,.34) 100%);mix-blend-mode:multiply;}
 #s4 .m-mods{flex-shrink:0;}
-.pg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,.7vw,13px);}
+.pg{ @apply grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-[clamp(8px,.7vw,13px)]; }
 .pc{display:flex;align-items:center;gap:clamp(9px,.9vw,15px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(6px,.5vw,10px);padding:clamp(11px,1.2vw,18px) clamp(12px,1.2vw,18px);text-align:left;}
 .pi{font-size:clamp(18px,1.7vw,28px);color:var(--gr);line-height:1;flex-shrink:0;display:flex;}
 .pw{grid-column:span 2;background:rgba(169,24,49,.14);border-color:rgba(169,24,49,.3);}
@@ -361,7 +359,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
    Layout: negro profundo · 3 KPIs masivos · ghost number · strip
    ═══════════════════════════════════════════════════════════ */
 #s5{background:#0a0c0e;}
-.k3{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.k3{ @apply grid grid-cols-3; }
 .kb{text-align:center;padding:clamp(8px,1.2vh,18px) clamp(10px,1.2vw,24px);border-right:1px solid rgba(255,255,255,.07);}
 .kb:last-child{border-right:none;}
 .kg{font-family:var(--fb);font-weight:800;font-size:var(--t-giant);color:#fff;line-height:.85;letter-spacing:-.03em;}
@@ -403,7 +401,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
    Layout: gradiente dark · 50/50 · lista + steps
    ═══════════════════════════════════════════════════════════ */
 #s8{background:linear-gradient(135deg,#161817 0%,#2c0d15 55%,#1b1d1c 100%);}
-#s8 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:5vw;padding:var(--in-py) var(--in-px);align-items:center;}
+#s8 .inner{position:relative;z-index:2;min-height:100%;height:auto;padding:var(--in-py) var(--in-px);align-items:center;overflow-y:visible;}
 .step{display:flex;align-items:center;gap:clamp(8px,.8vw,14px);background:rgba(255,255,255,.04);border-radius:clamp(5px,.5vw,9px);padding:clamp(7px,.9vh,13px) clamp(10px,1vw,18px);margin-bottom:clamp(4px,.5vh,7px);}
 .step.hl{background:rgba(169,24,49,.18);border:1px solid rgba(169,24,49,.36);}
 .sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,.8vw,14px);}
@@ -518,7 +516,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 .dv-card.gr .dv-note, .dv-card.dk .dv-note { color: rgba(255,255,255,.4); }
 .dv-card.lt .dv-note { color: rgba(32,34,33,.5); }
 /* Barras animadas */
-.dv-bar { transition: height 1.2s cubic-bezier(.4,0,.2,1); }
+.dv-bar { transition: height 1.2s cubic-bezier(.4,0,.2,1); opacity: 0.4; }
 /* Línea animada */
 .dv-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 2s cubic-bezier(.4,0,.2,1); }
 .dv-line.on { stroke-dashoffset: 0; }
@@ -888,9 +886,106 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
     min-height: 297mm !important;
     justify-content: center !important;
   }
+
+  /* ── Espaciados específicos para A4 (PDF) ── */
+  :root {
+    --px: 48px !important;
+    --py: 48px !important;
+    --sp-xl: 40px !important;
+    --sp-lg: 32px !important;
+    --sp-md: 24px !important;
+    --sp-sm: 16px !important;
+  }
+  
+  /* Llenar espacios vacíos y más aire */
+  #modulos-grid { gap: 18px !important; }
+  .mcd { padding: 16px !important; }
+  #s3 > div { padding-top: 60px !important; padding-bottom: 60px !important; }
+  
+  .fchain-node { padding: 14px 16px !important; }
+  .fchain { gap: 8px !important; }
+  
+  #s1 .kpi-strip { padding-top: 20px; }
+  .kv { padding: 12px !important; }
+}
+
+/* ── Responsive adjustments for mobile ── */
+@media (max-width: 768px) {
+  /* Common adjustments */
+  .inner { padding: var(--py) 6vw !important; }
+  .tm .tb { font-size: clamp(36px, 10vw, 48px) !important; }
+  .lbl { font-size: 10px !important; }
+  .btn { padding: 10px 16px !important; font-size: 11px !important; }
+  
+  /* S2 */
+  #s2 { display: flex; flex-direction: column; overflow-y: auto; }
+  
+  /* S2b */
+  #s2b > div { grid-template-columns: 1fr !important; height: auto !important; overflow-y: visible; }
+  #s2b > div > div:first-child { max-width: 100% !important; margin-bottom: 20px; }
+  .dv-grid { display: flex !important; flex-direction: column !important; gap: 16px !important; height: auto !important; }
+  .dv-card { padding: 20px !important; min-height: 250px; }
+  .dv-chart { display: block !important; flex: 1; min-height: 120px; }
+  #s2 .photo-col { position: relative; width: 100%; height: 35vh; flex-shrink: 0; }
+  #s2 .photo-col::after { background: linear-gradient(to bottom, transparent 55%, var(--ng) 100%); }
+  #s2 .content-col { padding: 5vw 6vw; align-items: flex-start; justify-content: flex-start; max-width: 100%; }
+  
+  /* S3 */
+  #s3 .inner { grid-template-columns: 1fr; gap: 24px; display: flex; flex-direction: column; overflow-y: auto; }
+  /* .mg media query eliminada por Tailwind */
+  
+  /* S4 */
+  #s4 { display: flex; flex-direction: column; overflow-y: auto; }
+  #s4 .photo-r { position: relative; width: 100%; height: 25vh; flex-shrink: 0; }
+  #s4 .photo-r::before { background: linear-gradient(to bottom, var(--ng) 0%, transparent 45%); }
+  #s4 .inner { max-width: 100%; padding: 5vw 6vw; }
+  /* .pg media query eliminada por Tailwind */
+  .pw { grid-column: span 1; }
+  
+  /* S5 */
+  /* .k3 se mantiene en 3 columnas siempre, gestionado arriba */
+  .kb { border-bottom: none !important; border-right: none !important; padding-bottom: 0 !important; }
+  .arc-kpi-cell .arc-svg { width: 90px !important; height: 90px !important; }
+  .arc-kpi-cell .kg { font-size: 28px !important; }
+  .arc-kpi-cell .ks { font-size: 10px !important; line-height: 1.2 !important; margin-top: 8px !important; }
+  
+  /* S6 */
+  #s6 .inner { grid-template-columns: 1fr; gap: 24px; text-align: center; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+  .rk-hero-n { font-size: clamp(60px, 15vw, 120px); }
+  
+  /* S7 */
+  #s7 .inner { overflow-y: auto; }
+  .pcard { flex-direction: row; align-items: center; }
+  .pw-img { width: 90px !important; padding-top: 0 !important; height: 90px !important; flex-shrink: 0; border-radius: 50% !important; margin: 10px; }
+  .pw-img img { object-position: center top !important; }
+  .pw-img::after { display: none !important; }
+  .pw-name { font-size: 16px !important; }
+  .pw-role { font-size: 13px !important; }
+  .pw-desc { font-size: 12px !important; display: block !important; margin-top: 4px; }
+  
+  /* S8 */
+  #s8 .inner { grid-template-columns: 1fr !important; gap: 32px !important; display: flex !important; flex-direction: column !important; justify-content: center !important; overflow-y: auto; }
+  #s8 .inner > div { max-width: 100% !important; min-height: auto !important; }
+  #demo-stats { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  
+  /* S9 */
+  #s9 .inner { overflow-y: auto; justify-content: center !important; padding-top: 0 !important; }
+  .ct-grid { grid-template-columns: 1fr !important; gap: 32px !important; max-width: 100% !important; }
+  .ct-div { display: none !important; }
+  .ct-col { padding: 0 16px !important; text-align: center !important; }
+  
+  /* Nav controls */
+  #nav { flex-wrap: wrap; justify-content: center; bottom: 10px; padding: 8px 12px; }
+  #ctr { top: 10px; right: 10px; }
 }
 
 </style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    corePlugins: { preflight: false }
+  }
+</script>
 </head>
 <body>
 <!-- Loading screen -->
@@ -1239,21 +1334,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
      Layout: gradiente granate · temario IA con descripción + stats
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s3b">
-  <!-- Fondo imagen: futurism como textura atmosférica muy sutil -->
-  <img src="../src/img/marketing/futurism-perspective-digital-nomads-lifestyle.jpg"
-       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.08;z-index:0;filter:grayscale(.4) blur(1px);" alt="">
-  <!-- Overlay principal: granate a la izquierda, oscuro a la derecha -->
+  <!-- Fondo imagen: imagen principal cubriendo toda la pantalla -->
+  <img src="../src/img/marketing/side-view-of-hands-using-laptop-with-communication-2026-03-26-05-23-02-utc.jpg"
+       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;z-index:0;" alt="">
+  
+  <!-- Overlay principal: degradado de izquierda a derecha para fundido -->
   <div style="position:absolute;inset:0;z-index:1;background:
-    radial-gradient(ellipse 50% 70% at -5% 50%, rgba(169,24,49,.28) 0%, transparent 60%),
-    linear-gradient(135deg, rgba(10,12,14,.94) 0%, rgba(15,5,10,.96) 100%);"></div>
+    radial-gradient(ellipse 50% 70% at -5% 50%, rgba(169,24,49,.35) 0%, transparent 60%),
+    linear-gradient(to right, rgba(10,12,14,1) 0%, rgba(10,12,14,.92) 45%, rgba(10,12,14,.15) 100%);"></div>
+
   <!-- Watermark E -->
   <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:1;pointer-events:none;width:36vw;top:-8vh;right:-9vw;opacity:.06;transform:rotate(-18deg);" alt="">
 
-  <!-- Layout: contenido izquierda (60%) + panel decorativo derecha (40%) -->
-  <div style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr clamp(280px,38vw,500px);gap:clamp(20px,3vw,52px);padding:var(--py) var(--px);align-items:stretch;">
+  <!-- Layout: 2 columnas, izquierda contenido, derecha stats -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-[5vw]" style="position:relative;z-index:2;height:100%;padding:var(--py) var(--px);align-items:stretch;">
 
     <!-- ── IZQUIERDA: título + 5 temas ── -->
-    <div style="display:flex;flex-direction:column;min-height:0;">
+    <div style="display:flex;flex-direction:column;min-height:0;padding-right:2vw;">
 
       <!-- Header compacto -->
       <div style="flex-shrink:0;margin-bottom:clamp(8px,1.2vh,18px);">
@@ -1267,89 +1364,71 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
         <div class="rule" style="margin-top:clamp(5px,.7vh,9px);" data-a></div>
       </div>
 
-      <!-- 5 temas editoriales (solo separador + número + nombre + desc, sin bg de imagen) -->
+      <!-- 5 temas editoriales -->
       <div id="ia-temario-grid" style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;">
-
         <div class="iat-row" data-a>
           <div style="display:flex;align-items:baseline;gap:clamp(11px,1.3vw,22px);">
             <span class="iat-n-big">01</span>
             <div><div class="iat-name">People Analytics: de la métrica al insight</div><div class="iat-desc">Framework de decisión basada en datos, los cuatro niveles de la analítica y gobernanza de datos de RRHH.</div></div>
           </div>
         </div>
-
         <div class="iat-row" data-a>
           <div style="display:flex;align-items:baseline;gap:clamp(11px,1.3vw,22px);">
             <span class="iat-n-big">02</span>
             <div><div class="iat-name">IA Generativa para RRHH</div><div class="iat-desc">Uso de ChatGPT e IA generativa para automatizar procesos de RRHH y potenciar la eficiencia.</div></div>
           </div>
         </div>
-
         <div class="iat-row" data-a>
           <div style="display:flex;align-items:baseline;gap:clamp(11px,1.3vw,22px);">
             <span class="iat-n-big">03</span>
             <div><div class="iat-name">Potenciando las Relaciones con el Cliente</div><div class="iat-desc">Chatbots, asistentes virtuales y análisis predictivo para mejorar la experiencia del cliente.</div></div>
           </div>
         </div>
-
         <div class="iat-row" data-a>
           <div style="display:flex;align-items:baseline;gap:clamp(11px,1.3vw,22px);">
             <span class="iat-n-big">04</span>
             <div><div class="iat-name">Publicidad Programática</div><div class="iat-desc">Automatización de la compra de anuncios basada en datos y segmentación avanzada.</div></div>
           </div>
         </div>
-
         <div class="iat-row" data-a>
           <div style="display:flex;align-items:baseline;gap:clamp(11px,1.3vw,22px);">
             <span class="iat-n-big">05</span>
             <div><div class="iat-name">Analítica y Data Driven</div><div class="iat-desc">Decisiones estratégicas en marketing basadas en datos y modelos de analítica avanzada.</div></div>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ── DERECHA: panel decorativo con imagen desvanecida + stats ── -->
-    <div style="position:relative;overflow:hidden;border-radius:clamp(10px,.9vw,16px);display:flex;flex-direction:column;justify-content:center;">
+    <!-- ── DERECHA: stats y modalidades sobre el fondo desvanecido ── -->
+    <div style="display:flex;flex-direction:column;justify-content:center;gap:clamp(14px,2vh,28px);">
 
-      <!-- Imagen side-view con desvanecimiento fuerte por todos los bordes -->
-      <img src="../src/img/marketing/side-view-of-hands-using-laptop-with-communication-2026-03-26-05-23-02-utc.jpg"
-           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:.28;" alt="">
-      <!-- Vignette: oscurece bordes, imagen solo visible en el centro -->
-      <div style="position:absolute;inset:0;background:
-        linear-gradient(to right,  rgba(10,12,14,.92) 0%, rgba(10,12,14,.5) 35%, rgba(10,12,14,.5) 65%, rgba(10,12,14,.92) 100%),
-        linear-gradient(to bottom, rgba(10,12,14,.85) 0%, transparent 30%, transparent 65%, rgba(10,12,14,.95) 100%);"></div>
-
-      <!-- Contenido sobre la imagen: stats + quote + modalidades -->
-      <div style="position:relative;z-index:1;padding:clamp(18px,2.2vw,36px);display:flex;flex-direction:column;gap:clamp(10px,1.4vh,20px);">
-
-        <!-- Quote editorial -->
-        <div data-a style="border-left:2px solid var(--gr);padding-left:clamp(10px,1.1vw,18px);">
-          <p style="font-family:var(--fs);font-style:italic;font-size:var(--t-lg);color:rgba(255,255,255,.85);line-height:1.5;">Los datos transforman RRHH en un socio estratégico del negocio.</p>
-        </div>
-
-        <!-- Stats ECTS / Meses -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(7px,.8vw,13px);" data-a>
-          <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:clamp(6px,.6vw,10px);padding:clamp(10px,1.1vw,18px);text-align:center;">
-            <div id="prog-ects" class="kn" style="font-size:clamp(26px,3vw,52px);">60</div>
-            <div class="lbl" style="margin-top:5px;">ECTS</div>
-          </div>
-          <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:clamp(6px,.6vw,10px);padding:clamp(10px,1.1vw,18px);text-align:center;">
-            <div id="prog-meses" class="kn" style="font-size:clamp(26px,3vw,52px);">12</div>
-            <div class="lbl" style="margin-top:5px;">Meses</div>
-          </div>
-        </div>
-
-        <!-- Modalidades -->
-        <div data-a>
-          <div class="lbl" style="margin-bottom:clamp(8px,1vh,14px);">Modalidades disponibles</div>
-          <div style="display:flex;flex-direction:column;gap:clamp(7px,.9vh,13px);">
-            <span style="display:flex;align-items:center;gap:9px;font-family:var(--fb);font-size:clamp(12px,.84vw,15px);font-weight:700;color:rgba(255,255,255,.88);"><span class="msym" style="color:var(--gr);font-size:clamp(14px,1.1vw,18px);">videocam</span>Live Class Online</span>
-            <span style="display:flex;align-items:center;gap:9px;font-family:var(--fb);font-size:clamp(12px,.84vw,15px);font-weight:700;color:rgba(255,255,255,.88);"><span class="msym" style="color:var(--gr);font-size:clamp(14px,1.1vw,18px);">laptop</span>Semipresencial</span>
-            <span style="display:flex;align-items:center;gap:9px;font-family:var(--fb);font-size:clamp(12px,.84vw,15px);font-weight:700;color:rgba(255,255,255,.88);"><span class="msym" style="color:var(--gr);font-size:clamp(14px,1.1vw,18px);">location_on</span>Presencial Murcia</span>
-          </div>
-        </div>
-
+      <!-- Quote editorial -->
+      <div data-a style="border-left:2px solid var(--gr);padding-left:clamp(10px,1.1vw,18px);">
+        <p style="font-family:var(--fs);font-style:italic;font-size:var(--t-lg);color:rgba(255,255,255,.95);line-height:1.5;text-shadow:0 2px 10px rgba(0,0,0,.6);">Los datos transforman RRHH en un socio estratégico del negocio.</p>
       </div>
+
+      <!-- Stats ECTS / Meses -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.5vw,20px);" data-a>
+        <div style="background:rgba(10,12,14,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:clamp(6px,.6vw,10px);padding:clamp(12px,1.5vw,24px);text-align:center;">
+          <div id="prog-ects" class="kn" style="font-size:clamp(32px,4vw,60px);text-shadow:0 2px 8px rgba(0,0,0,.5);">60</div>
+          <div class="lbl" style="margin-top:5px;text-shadow:0 1px 4px rgba(0,0,0,.5);">ECTS</div>
+        </div>
+        <div style="background:rgba(10,12,14,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:clamp(6px,.6vw,10px);padding:clamp(12px,1.5vw,24px);text-align:center;">
+          <div id="prog-meses" class="kn" style="font-size:clamp(32px,4vw,60px);text-shadow:0 2px 8px rgba(0,0,0,.5);">12</div>
+          <div class="lbl" style="margin-top:5px;text-shadow:0 1px 4px rgba(0,0,0,.5);">Meses</div>
+        </div>
+      </div>
+
+      <!-- Modalidades -->
+      <div data-a style="background:rgba(10,12,14,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:clamp(6px,.6vw,10px);padding:clamp(12px,1.5vw,24px);">
+        <div class="lbl" style="margin-bottom:clamp(8px,1vh,14px);text-shadow:0 1px 4px rgba(0,0,0,.5);">Modalidades disponibles</div>
+        <div style="display:flex;flex-direction:column;gap:clamp(7px,.9vh,13px);">
+          <span style="display:flex;align-items:center;gap:9px;font-family:var(--fb);font-size:clamp(12px,.84vw,15px);font-weight:700;color:rgba(255,255,255,.95);text-shadow:0 1px 4px rgba(0,0,0,.5);"><span class="msym" style="color:var(--gr);font-size:clamp(14px,1.1vw,18px);">videocam</span>Live Class Online</span>
+          <span style="display:flex;align-items:center;gap:9px;font-family:var(--fb);font-size:clamp(12px,.84vw,15px);font-weight:700;color:rgba(255,255,255,.95);text-shadow:0 1px 4px rgba(0,0,0,.5);"><span class="msym" style="color:var(--gr);font-size:clamp(14px,1.1vw,18px);">laptop</span>Semipresencial</span>
+          <span style="display:flex;align-items:center;gap:9px;font-family:var(--fb);font-size:clamp(12px,.84vw,15px);font-weight:700;color:rgba(255,255,255,.95);text-shadow:0 1px 4px rgba(0,0,0,.5);"><span class="msym" style="color:var(--gr);font-size:clamp(14px,1.1vw,18px);">location_on</span>Presencial Murcia</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1702,7 +1781,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:1;pointer-events:none;width:34vw;bottom:-7vh;left:-8vw;opacity:.05;transform:rotate(25deg);" alt="">
 
   <!-- Layout: 3 columnas — perfil | stats | admisión -->
-  <div class="inner" style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:.95fr .55fr 1fr;gap:clamp(16px,2vw,36px);padding:var(--py) var(--px);align-items:stretch;">
+  <div class="inner grid grid-cols-1 md:grid-cols-3 gap-[clamp(16px,2vw,36px)] items-stretch" style="position:relative;z-index:2;min-height:100%;height:auto;padding:var(--py) var(--px);overflow-y:visible;">
 
     <!-- ── COL 1: Perfil del alumno ── -->
     <div style="display:flex;flex-direction:column;justify-content:center;min-height:0;">
@@ -1743,7 +1822,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 
       <div class="lbl" data-a style="text-align:center;">Datos de la promoción</div>
 
-      <div id="demo-stats" style="display:flex;flex-direction:column;gap:clamp(8px,1vh,14px);">
+      <div id="demo-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1vh,14px);">
         <div data-a style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:clamp(8px,.7vw,13px);padding:clamp(14px,1.6vw,24px);text-align:center;">
           <div class="sm-n" style="font-size:clamp(28px,3.4vw,54px);">44<span>%</span></div>
           <div class="sm-l" style="margin-top:clamp(3px,.4vh,6px);">mujeres</div>

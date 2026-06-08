@@ -1693,7 +1693,7 @@ window.renderDossierHighFidelity = function() {
 
     const html = `
     <div class="dossier-master-wrap">
-        <style>
+        <style type="text/tailwindcss">
             @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&display=swap');
             @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0');
             
@@ -1731,7 +1731,7 @@ window.renderDossierHighFidelity = function() {
   /* Espaciado */
   --sp-xs: clamp( 4px,0.6vh, 8px);
   --sp-sm: clamp( 8px,1.2vh,16px);
-  --sp-md: clamp(14px,2.0vh,28px);
+  --sp-md: clamp(16px, 10vh, 50px);
   --sp-lg: clamp(22px,3.2vh,48px);
   --sp-xl: clamp(36px,5.0vh,80px);
 
@@ -1835,7 +1835,7 @@ window.renderDossierHighFidelity = function() {
 #s1 .kv{flex:1;text-align:center;padding:0 clamp(6px,.8vw,14px);}
 #s1 .kv:not(:last-child){border-right:1px solid rgba(255,255,255,.1);}
 #s1 .kv-n{font-family:var(--fb);font-weight:800;font-size:clamp(18px,2.2vw,38px);color:#fff;line-height:1;}
-#s1 .kv-l{font-family:var(--fs);font-style:italic;font-size:var(--t-sm);color:rgba(255,255,255,.55);margin-top:3px;}
+#s1 .kv-l{font-family:var(--fb);font-size:var(--t-sm);color:rgba(255,255,255,.55);margin-top:3px;}
 
 /* ═══════════════════════════════════════════════════════════
    S2 — QUÉ ES
@@ -1853,7 +1853,7 @@ window.renderDossierHighFidelity = function() {
    ═══════════════════════════════════════════════════════════ */
 #s3{background:linear-gradient(152deg,#a91831 0%,#7a1020 44%,#1c1e1d 100%);}
 #s3 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.15fr .85fr;gap:3.5vw;padding:var(--py) var(--px);align-items:start;}
-.mg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(4px,.4vw,8px);}
+.mg{ @apply grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-[clamp(4px,.4vw,8px)]; }
 .mc{
   background:rgba(255,255,255,.09);
   border:1px solid rgba(255,255,255,.14);
@@ -1874,7 +1874,7 @@ window.renderDossierHighFidelity = function() {
 #s4 .photo-r img{width:100%;height:100%;object-fit:cover;filter:brightness(.42) saturate(.7);}
 #s4 .photo-r::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to right,var(--ng) 0%,transparent 45%);}
 #s4 .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);max-width:62%;}
-.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(5px,.5vw,9px);}
+.pg{ @apply grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-[clamp(5px,.5vw,9px)]; }
 .pc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(5px,.5vw,9px);padding:clamp(9px,1vw,17px);text-align:center;}
 .pi{font-size:clamp(18px,1.8vw,30px);color:var(--gr);margin-bottom:var(--sp-xs);}
 .pw{grid-column:span 2;background:rgba(169,24,49,.14);border-color:rgba(169,24,49,.3);}
@@ -1887,7 +1887,7 @@ window.renderDossierHighFidelity = function() {
    Layout: negro profundo · 3 KPIs masivos · ghost number · strip
    ═══════════════════════════════════════════════════════════ */
 #s5{background:linear-gradient(148deg,#161817,#000);}
-.k3{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.k3{ @apply grid grid-cols-3; }
 .kb{text-align:center;padding:0 clamp(8px,1vw,20px);border-right:1px solid rgba(255,255,255,.07);}
 .kb:last-child{border-right:none;}
 .kg{font-family:var(--fb);font-weight:800;font-size:var(--t-giant);color:#fff;line-height:.85;letter-spacing:-.03em;}
@@ -1925,7 +1925,7 @@ window.renderDossierHighFidelity = function() {
    Layout: gradiente dark · 50/50 · lista + steps
    ═══════════════════════════════════════════════════════════ */
 #s8{background:linear-gradient(135deg,#161817 0%,#2c0d15 55%,#1b1d1c 100%);}
-#s8 .inner{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1fr 1fr;gap:5vw;padding:var(--py) var(--px);align-items:center;}
+#s8 .inner{position:relative;z-index:2;min-height:100%;height:auto;padding:var(--py) var(--px);align-items:center;overflow-y:visible;}
 .step{display:flex;align-items:center;gap:clamp(8px,.8vw,14px);background:rgba(255,255,255,.04);border-radius:clamp(5px,.5vw,9px);padding:clamp(7px,.9vh,13px) clamp(10px,1vw,18px);margin-bottom:clamp(4px,.5vh,7px);}
 .step.hl{background:rgba(169,24,49,.18);border:1px solid rgba(169,24,49,.36);}
 .sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,.8vw,14px);}
@@ -1989,6 +1989,76 @@ window.renderDossierHighFidelity = function() {
 .pcard:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.45); }
 .pcard:hover .pw-img img { filter: brightness(1.08) saturate(1.1); transition: filter .4s; }
 .pw-img img { transition: filter .4s; }
+
+/* ── Responsive adjustments for mobile ── */
+@media (max-width: 768px) {
+  /* Common adjustments */
+  .inner { padding: var(--py) 6vw !important; }
+  .tm .tb { font-size: clamp(36px, 10vw, 48px) !important; }
+  .lbl { font-size: 10px !important; }
+  .btn { padding: 10px 16px !important; font-size: 11px !important; }
+  
+  /* S2 */
+  #s2 { display: flex; flex-direction: column; overflow-y: auto; }
+  
+  /* S2b */
+  #s2b > div { grid-template-columns: 1fr !important; height: auto !important; overflow-y: visible; }
+  #s2b > div > div:first-child { max-width: 100% !important; margin-bottom: 20px; }
+  .dv-grid { display: flex !important; flex-direction: column !important; gap: 16px !important; height: auto !important; }
+  .dv-card { padding: 20px !important; min-height: 250px; }
+  .dv-chart { display: block !important; flex: 1; min-height: 120px; }
+  #s2 .photo-col { position: relative; width: 100%; height: 35vh; flex-shrink: 0; }
+  #s2 .photo-col::after { background: linear-gradient(to bottom, transparent 55%, var(--ng) 100%); }
+  #s2 .content-col { padding: 5vw 6vw; align-items: flex-start; justify-content: flex-start; max-width: 100%; }
+  
+  /* S3 */
+  #s3 .inner { grid-template-columns: 1fr; gap: 24px; display: flex; flex-direction: column; overflow-y: auto; }
+  /* .mg media query eliminada porque Tailwind lo gestiona */
+  
+  /* S4 */
+  #s4 { display: flex; flex-direction: column; overflow-y: auto; }
+  #s4 .photo-r { position: relative; width: 100%; height: 25vh; flex-shrink: 0; }
+  #s4 .photo-r::before { background: linear-gradient(to bottom, var(--ng) 0%, transparent 45%); }
+  #s4 .inner { max-width: 100%; padding: 5vw 6vw; }
+  /* .pg media query eliminada por Tailwind */
+  .pw { grid-column: span 1; }
+  
+  /* S5 */
+  /* .k3 se mantiene en 3 columnas siempre, gestionado arriba */
+  .kb { border-bottom: none !important; border-right: none !important; padding-bottom: 0 !important; }
+  .arc-kpi-cell .arc-svg { width: 90px !important; height: 90px !important; }
+  .arc-kpi-cell .kg { font-size: 28px !important; }
+  .arc-kpi-cell .ks { font-size: 10px !important; line-height: 1.2 !important; margin-top: 8px !important; }
+  
+  /* S6 */
+  #s6 .inner { grid-template-columns: 1fr; gap: 24px; text-align: center; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+  .rk-hero-n { font-size: clamp(60px, 15vw, 120px); }
+  
+  /* S7 */
+  #s7 .inner { overflow-y: auto; }
+  .pcard { flex-direction: row; align-items: center; }
+  .pw-img { width: 90px !important; padding-top: 0 !important; height: 90px !important; flex-shrink: 0; border-radius: 50% !important; margin: 10px; }
+  .pw-img img { object-position: center top !important; }
+  .pw-img::after { display: none !important; }
+  .pw-name { font-size: 16px !important; }
+  .pw-role { font-size: 13px !important; }
+  .pw-desc { font-size: 12px !important; display: block !important; margin-top: 4px; }
+  
+  /* S8 */
+  #s8 .inner { grid-template-columns: 1fr !important; gap: 32px !important; display: flex !important; flex-direction: column !important; justify-content: center !important; overflow-y: auto; }
+  #s8 .inner > div { max-width: 100% !important; min-height: auto !important; }
+  #demo-stats { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  
+  /* S9 */
+  #s9 .inner { overflow-y: auto; justify-content: center !important; padding-top: 0 !important; }
+  .ct-grid { grid-template-columns: 1fr !important; gap: 32px !important; max-width: 100% !important; }
+  .ct-div { display: none !important; }
+  .ct-col { padding: 0 16px !important; text-align: center !important; }
+  
+  /* Nav controls */
+  #nav { flex-wrap: wrap; justify-content: center; bottom: 10px; padding: 8px 12px; }
+  #ctr { top: 10px; right: 10px; }
+}
 
 
         </style>
@@ -2124,7 +2194,7 @@ window.renderDossierHighFidelity = function() {
   <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:42vw;bottom:-10vh;left:-10vw;opacity:.11;transform:rotate(-22deg);transform-origin:center center;" alt="">
 
   <!-- Layout: 2 columnas, ambas con altura completa del slide -->
-  <div style="position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:3vw;padding:var(--py) var(--px);align-items:stretch;">
+  <div class="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-[5vw] md:gap-[3vw] items-stretch" style="position:relative;z-index:2;height:100%;padding:var(--py) var(--px);">
 
     <!-- ── COLUMNA IZQUIERDA: encabezado + grid de módulos que llena el espacio ── -->
     <div style="display:flex;flex-direction:column;min-height:0;">
@@ -2323,7 +2393,7 @@ window.renderDossierHighFidelity = function() {
      S6 — RANKINGS (Rediseño 2-page spread folleto)
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s6" style="background:var(--grd);">
-  <div style="position:relative; z-index:2; height:100%; display:grid; grid-template-columns:1fr 1.15fr; gap:4vw; padding:var(--py) var(--px); align-items:stretch;">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_1.15fr] gap-[6vw] md:gap-[4vw] items-stretch" style="position:relative; z-index:2; height:100%; padding:var(--py) var(--px);">
     
     <!-- LEFT COLUMN -->
     <div style="display:flex; flex-direction:column; gap:1.5vh;">
@@ -2537,8 +2607,7 @@ window.renderDossierHighFidelity = function() {
 <div class="slide" id="s8">
   <!-- S8: rotación +25° — abajo-izquierda, inclinada hacia arriba -->
   <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:0;pointer-events:none;user-select:none;width:36vw;bottom:-8vh;left:-9vw;opacity:.065;transform:rotate(25deg);transform-origin:center center;" alt="">
-  <div class="inner">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;height:100%;">
+  <div class="inner grid grid-cols-1 md:grid-cols-2 gap-[8vw] md:gap-[5vw] items-center" style="min-height:100%;">
       <!-- Izquierda: Perfil del alumno -->
       <div>
         <span class="ey" data-a>¿A quién va dirigido?</span>
@@ -2600,7 +2669,6 @@ window.renderDossierHighFidelity = function() {
           </div><div><div style="font-family:var(--fb);font-weight:700;font-size:var(--t-lg);color:#fff;">¡Admisión confirmada!</div><div style="font-family:var(--fb);font-weight:300;font-size:var(--t-sm);color:rgba(255,255,255,.5);">Se comunica la resolución oficial</div></div></div>
         </div>
       </div>
-    </div>
   </div>
 </div>
 

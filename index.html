@@ -6,7 +6,7 @@
   <title>Editor de Dossier — ENAE Dossiers Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
-  <style>
+  <style type="text/tailwindcss">
     @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Black.otf') format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Black.woff') format('woff'); font-weight:900; }
 
     :root {
@@ -172,6 +172,12 @@
 
     @media (max-width:640px) { .c2,.c3{grid-template-columns:1fr;} .kpi-grid{grid-template-columns:1fr;} .mod-item{grid-template-columns:28px 1fr 28px;} .mod-item input:first-of-type{display:none;} .prof-fields{grid-template-columns:1fr;} }
   </style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    corePlugins: { preflight: false }
+  }
+</script>
 </head>
 <body>
 

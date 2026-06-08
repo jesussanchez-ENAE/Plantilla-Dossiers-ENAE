@@ -26,12 +26,30 @@ body { font-family: var(--font-body); background: #111; color: var(--blanco); }
 
 /* ─── Página: contenedor A4 ──────────────────────────────────── */
 .page {
-  width: 794px;
-  min-height: 1123px;
+  max-width: 794px;
+  width: 100%;
   margin: 0 auto 4px;
   position: relative;
   overflow: hidden;
   background: var(--negro);
+}
+
+@media (min-width: 795px) {
+  .page { min-height: 1123px; }
+}
+
+@media (max-width: 768px) {
+  .page { height: auto; padding-bottom: 40px; }
+  .grid-2 { display: flex !important; flex-direction: column !important; gap: 20px !important; }
+  .fchain { flex-direction: column !important; }
+  .fchain-node { border-right: 1px solid rgba(169,24,49,0.24) !important; border-bottom: none !important; }
+  .fchain-node::after { left: 50% !important; top: auto !important; bottom: -12px !important; transform: translateX(-50%) rotate(90deg) !important; }
+  div[style*="display:grid;grid-template-columns:1fr 1fr"] { display: flex !important; flex-direction: column !important; }
+  div[style*="grid-template-columns:3fr 2fr"] { display: flex !important; flex-direction: column !important; }
+  div[style*="grid-template-columns:repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
+  div[style*="grid-template-columns:2fr 3fr"] { display: flex !important; flex-direction: column !important; }
+  div[style*="padding:48px 60px"] { padding: 32px 24px !important; }
+  div[style*="padding:54px 60px"] { padding: 32px 24px !important; }
 }
 
 /* ─── Brand pattern "E" watermark ───────────────────────────── */
