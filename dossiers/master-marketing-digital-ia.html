@@ -141,10 +141,10 @@
 
   /* Padding de slide — más aire en los bordes */
   --px: clamp(40px, 5.6vw, 96px);
-  --py: clamp(42px, 5.8vh, 82px);
+  --py: clamp(62px, 8.8vh, 110px);
 
   /* Padding del contenedor .inner — vertical generoso · horizontal con más aire en bordes */
-  --in-py: clamp(46px, 6.2vh, 86px);
+  --in-py: clamp(66px, 9.2vh, 115px);
   --in-px: clamp(34px, 5vw,  78px);
 }
 
@@ -506,7 +506,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 .dv-card.lt .dv-desc { color: rgba(32,34,33,.65); }
 .dv-card.dk .dv-desc { color: rgba(255,255,255,.62); }
 /* Gráfica — más altura, espacio respirable arriba */
-.dv-chart { flex: 1; min-height: clamp(70px,12vh,160px); position: relative; margin-top: clamp(14px,1.8vh,24px); }
+.dv-chart { flex: 1; min-height: clamp(70px,12vh,160px); position: relative; margin-top: clamp(14px,1.8vh,24px); display: flex; align-items: center; justify-content: center; }
 .dv-chart svg { width: 100%; height: 100%; display: block; }
 /* Anotación serif al margen del chart */
 .dv-note { position: absolute; bottom: 4px; right: 0; font-family: var(--fs); font-style: italic; font-size: clamp(9px,.6vw,11px); letter-spacing: .2px; }
@@ -535,7 +535,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   border: 1px solid rgba(255,255,255,.1);
   border-left: 2.5px solid var(--gr);
   border-radius: clamp(6px,.55vw,10px);
-  padding: clamp(11px,1.2vw,19px) clamp(13px,1.38vw,22px);
+  padding: clamp(6px, 0.75vh, 11px) clamp(10px, 1.0vw, 15px);
   display: flex; flex-direction: column;
   gap: 0;
   min-height: 0; max-height: 100%;   /* respeta la fila del grid */
@@ -544,11 +544,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 }
 .mcd:hover { background: rgba(255,255,255,.07); border-left-color: rgba(255,255,255,.6); }
 /* cabecera: número + área */
-.mcd-head { display: flex; align-items: center; gap: clamp(7px,.7vw,12px); margin-bottom: clamp(5px,.6vh,9px); }
+.mcd-head { display: flex; align-items: center; gap: clamp(7px,.7vw,12px); margin-bottom: clamp(3px, .4vh, 6px); }
 .mcd-num  { font-family: var(--fd); font-weight: 900; font-size: clamp(18px,1.6vw,28px); color: var(--gr); line-height: 1; flex-shrink: 0; }
 .mcd-area { font-family: var(--fb); font-weight: 800; font-size: clamp(8px,.55vw,10px); letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,.4); }
 /* nombre del módulo — protagonista de la tarjeta */
-.mcd-name { font-family: var(--fb); font-weight: 700; font-size: clamp(12px,.88vw,15px); color: #fff; line-height: 1.28; margin-bottom: clamp(6px,.7vh,10px); }
+.mcd-name { font-family: var(--fb); font-weight: 700; font-size: clamp(12px,.88vw,15px); color: #fff; line-height: 1.28; margin-bottom: clamp(4px, .5vh, 7px); }
 /* descripción — soporte de lectura (máx 2 líneas, se corta limpiamente) */
 .mcd-desc {
   font-family: var(--fb); font-weight: 300;
@@ -796,19 +796,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   .slide {
     width: 210mm !important;
     min-height: 297mm !important;
-    height: 297mm !important;
-    overflow: hidden !important;
+    height: auto !important;
+    overflow: visible !important;
     page-break-after: always !important;
     break-after: page !important;
+  }
+  .slide:last-child { page-break-after: auto !important; break-after: auto !important; }
+  
+  /* Anular alturas fijadas en contenedores internos para permitir crecimiento fluido */
+  .slide > div {
+    height: auto !important;
+  }
+
+  /* Evitar que tarjetas y bloques se corten por la mitad entre dos páginas */
+  .mcd, .pcard, .step, .kb, .dv-card, .iat-row, .pc, .mr, .tl-item, .fchain-node, .ia-box, .cg, .cw {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
-  .slide:last-child { page-break-after: auto !important; break-after: auto !important; }
 
   #pdf-btn, #loader { display: none !important; }
 
   /* En PDF recuperamos también las gráficas de data-viz (en móvil se ocultan) */
-  .dv-chart { display: block !important; }
+  .dv-chart { display: flex !important; }
 
   #s1 .inner, #s2 .content-col, #s4 .inner, #s7 .inner, #s8 .inner, #s9 .inner,
   #s2b > div, #s3 > div, #s3b > div, #s5 > div, #s6 > div {
@@ -826,10 +835,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
     --sp-sm: 16px !important;
   }
   
-  /* Llenar espacios vacíos y más aire */
-  #modulos-grid { gap: 18px !important; }
-  .mcd { padding: 16px !important; }
-  #s3 > div { padding-top: 60px !important; padding-bottom: 60px !important; }
+  /* Restaurar layouts de varias columnas en A4 print (evitando el apilamiento de móvil que desborda el alto de página) */
+  #s2b > div { grid-template-columns: 1fr !important; height: 100% !important; }
+  .dv-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; grid-template-rows: 1fr 1fr !important; gap: 14px !important; height: auto !important; }
+  .dv-card { padding: 16px 20px !important; min-height: 0 !important; }
+  
+  #modulos-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
+  .mcd { padding: 10px !important; }
+  .mcd-desc { display: -webkit-box !important; } /* Mostrar descripciones en PDF */
+  #s3 > div { padding-top: 50px !important; padding-bottom: 50px !important; }
+  
+  .k3 { grid-template-columns: repeat(3, 1fr) !important; }
+  .kb { border-right: 1px solid rgba(255,255,255,.07) !important; border-bottom: none !important; padding-bottom: 0 !important; }
+  .kb:last-child { border-right: none !important; }
+  
+  #s8 .inner { grid-template-columns: repeat(3, 1fr) !important; display: grid !important; align-items: start !important; }
   
   .fchain-node { padding: 14px 16px !important; }
   .fchain { gap: 8px !important; }
@@ -1102,7 +1122,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
         <div class="dv-num" id="dv-eng">+56,42%</div>
         <div class="dv-desc">Crecimiento de interacción en canales digitales respecto al periodo anterior.</div>
         <div class="dv-chart">
-          <svg viewBox="0 0 200 80" preserveAspectRatio="none">
+          <svg viewBox="0 0 200 80">
             <!-- Línea de referencia media -->
             <line x1="0" y1="22" x2="200" y2="22" stroke="rgba(255,255,255,.25)" stroke-width=".6" stroke-dasharray="4 3"/>
             <!-- Barras -->
@@ -1127,7 +1147,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
         <div class="dv-num" id="dv-gro">+24,15%</div>
         <div class="dv-desc">Tasa de crecimiento de alumnos en programas de marketing digital e IA.</div>
         <div class="dv-chart">
-          <svg viewBox="0 0 220 90" preserveAspectRatio="none">
+          <svg viewBox="0 0 220 90">
             <!-- Barras verticales de fondo -->
             <g opacity=".12">
               <rect x="10"  y="10" width="18" height="70" rx="2" fill="#a91831"/>
@@ -1154,7 +1174,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
         <div class="dv-num" id="dv-pos">+29,33%</div>
         <div class="dv-desc">Mejora en empleabilidad de graduados frente a perfiles sin especialización en IA.</div>
         <div class="dv-chart">
-          <svg viewBox="0 0 200 80" preserveAspectRatio="none">
+          <svg viewBox="0 0 200 80">
             <!-- Barra "Con máster" -->
             <rect class="dv-bar" id="bar-p1" x="8" width="80" y="80" height="0" rx="4" fill="var(--gr)"/>
             <!-- Barra "Sin máster" -->
@@ -1180,7 +1200,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
         <div class="dv-num" id="dv-ret">+41,87%</div>
         <div class="dv-desc">Tasa de retención de talento formado en programas de IA y automatización.</div>
         <div class="dv-chart">
-          <svg viewBox="0 0 220 80" preserveAspectRatio="none">
+          <svg viewBox="0 0 220 80">
             <!-- Grid horizontal -->
             <line x1="20" y1="65" x2="200" y2="65" stroke="rgba(255,255,255,.08)" stroke-width=".5"/>
             <line x1="20" y1="45" x2="200" y2="45" stroke="rgba(255,255,255,.08)" stroke-width=".5"/>

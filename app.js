@@ -1737,7 +1737,7 @@ window.renderDossierHighFidelity = function() {
 
   /* Padding de slide */
   --px: clamp(36px,5.2vw,88px);
-  --py: clamp(28px,4.4vh,64px);
+  --py: clamp(48px,6.8vh,88px);
 }
 
 /* ── Reset ───────────────────────────────────────────────── */
@@ -1859,7 +1859,7 @@ window.renderDossierHighFidelity = function() {
   border:1px solid rgba(255,255,255,.14);
   border-left:2px solid rgba(255,255,255,.22); /* acento lateral sutil */
   border-radius:clamp(5px,.5vw,9px);
-  padding:clamp(8px,.9vw,15px);
+  padding:clamp(5px,.6vw,10px);
 }
 .mt{font-family:var(--fb);font-weight:800;font-size:var(--t-xs);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:4px;}
 .mn{font-family:var(--fb);font-weight:700;font-size:var(--t-sm);color:#fff;line-height:1.3;}
