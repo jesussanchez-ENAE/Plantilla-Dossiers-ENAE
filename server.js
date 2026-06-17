@@ -337,37 +337,57 @@ function buildMixedTitle(data, fileName) {
         .replace(/\b\w/g, c => c.toUpperCase());
 }
 
-// List all dossiers (enriched with embedded dossier-data)
+// Per-file cache keyed by mtime, so unchanged dossiers are never re-read/re-parsed.
+const dossierMetaCache = new Map(); // fileName -> { mtimeMs, entry }
+
+function getDossierEntry(file) {
+    const filePath = path.join(DOSSIERS_DIR, file);
+    const stats = fs.statSync(filePath);
+
+    const cached = dossierMetaCache.get(file);
+    if (cached && cached.mtimeMs === stats.mtimeMs) {
+        return cached.entry;
+    }
+
+    // Try to read the embedded dossier-data JSON for rich metadata
+    let data = null;
+    try {
+        const html = fs.readFileSync(filePath, 'utf-8');
+        const m = html.match(/<script id="dossier-data"[^>]*>([\s\S]*?)<\/script>/);
+        if (m) data = JSON.parse(m[1]);
+    } catch (e) { /* non-fatal — fall back to filename */ }
+
+    const descripcion = data && data.descripcion
+        ? data.descripcion.replace(/<\/?[^>]+(>|$)/g, '').trim()
+        : '';
+
+    const entry = {
+        fileName: file,
+        url: `/dossiers/${file}`,
+        createdAt: stats.birthtime,
+        updatedAt: stats.mtime,
+        programa: (data && data.programa) || file.replace('.html', '').replace(/-/g, ' '),
+        titleHtml: buildMixedTitle(data, file),
+        categoria: deriveCategoria(data, file),
+        descripcion: descripcion
+    };
+
+    dossierMetaCache.set(file, { mtimeMs: stats.mtimeMs, entry });
+    return entry;
+}
+
+// List all dossiers (enriched with embedded dossier-data, cached by mtime)
 app.get('/api/dossiers', (req, res) => {
     try {
         const files = fs.readdirSync(DOSSIERS_DIR).filter(f => f.endsWith('.html'));
-        const dossiers = files.map(file => {
-            const filePath = path.join(DOSSIERS_DIR, file);
-            const stats = fs.statSync(filePath);
+        const liveFiles = new Set(files);
 
-            // Try to read the embedded dossier-data JSON for rich metadata
-            let data = null;
-            try {
-                const html = fs.readFileSync(filePath, 'utf-8');
-                const m = html.match(/<script id="dossier-data"[^>]*>([\s\S]*?)<\/script>/);
-                if (m) data = JSON.parse(m[1]);
-            } catch (e) { /* non-fatal — fall back to filename */ }
+        // Drop cache entries for files that no longer exist
+        for (const cachedFile of dossierMetaCache.keys()) {
+            if (!liveFiles.has(cachedFile)) dossierMetaCache.delete(cachedFile);
+        }
 
-            const descripcion = data && data.descripcion
-                ? data.descripcion.replace(/<\/?[^>]+(>|$)/g, '').trim()
-                : '';
-
-            return {
-                fileName: file,
-                url: `/dossiers/${file}`,
-                createdAt: stats.birthtime,
-                updatedAt: stats.mtime,
-                programa: (data && data.programa) || file.replace('.html', '').replace(/-/g, ' '),
-                titleHtml: buildMixedTitle(data, file),
-                categoria: deriveCategoria(data, file),
-                descripcion: descripcion
-            };
-        });
+        const dossiers = files.map(getDossierEntry);
 
         // Sort by newest first
         dossiers.sort((a, b) => b.updatedAt - a.updatedAt);
