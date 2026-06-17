@@ -976,9 +976,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 /* ===== ENAE · Pase de coherencia PDF/A4 (diseño senior) — inyectado ===== */
 @media print{
 /* A · Quitar el centrado vertical que generaba bandas vacías: contenido alineado arriba */
-#s2 .content-col,#s3>div,#s3b>div,#s4 .inner,#s6>div,#s7 .inner,#s8 .inner{min-height:auto!important;justify-content:flex-start!important}
+#s2 .content-col,#s3b>div,#s4 .inner,#s6>div,#s7 .inner,#s8 .inner{min-height:auto!important;justify-content:flex-start!important}
 /* S5 llena la pagina y centra el cluster (igual que 16:9) */
-#s5>div{min-height:297mm!important;justify-content:center!important}
+#s3>div,#s5>div{min-height:297mm!important;justify-content:center!important}
 /* portada y cierre conservan el centrado */
 #s1 .inner,#s9 .inner{justify-content:center!important}
 /* B · S2 — recuperar la fotografía como banda superior (antes display:none) */
