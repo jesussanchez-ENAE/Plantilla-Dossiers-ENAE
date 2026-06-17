@@ -972,6 +972,32 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
   #ctr { top: 10px; right: 10px; }
 }
 
+
+/* ===== ENAE · Pase de coherencia PDF/A4 (diseño senior) — inyectado ===== */
+@media print{
+/* A · Quitar el centrado vertical que generaba bandas vacías: contenido alineado arriba */
+#s2 .content-col,#s3>div,#s3b>div,#s4 .inner,#s6>div,#s7 .inner,#s8 .inner{min-height:auto!important;justify-content:flex-start!important}
+/* S5 llena la pagina y centra el cluster (igual que 16:9) */
+#s5>div{min-height:297mm!important;justify-content:center!important}
+/* portada y cierre conservan el centrado */
+#s1 .inner,#s9 .inner{justify-content:center!important}
+/* B · S2 — recuperar la fotografía como banda superior (antes display:none) */
+#s2 .photo-col{display:block!important;position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;width:100%!important;height:60mm!important;margin-bottom:10mm!important;border-radius:4px!important;overflow:hidden!important}
+#s2 .photo-col img{width:100%!important;height:100%!important;-o-object-fit:cover!important;object-fit:cover!important;-o-object-position:center 25%!important;object-position:center 25%!important}
+#s2 .content-col{padding-top:0!important}
+/* C · S5 — KPIs circulares en una fila limpia que cabe en A4 */
+#s5 .k3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6mm!important;align-items:center!important}
+#s5 .arc-kpi-cell .arc-svg{width:33mm!important;height:33mm!important}
+#s5 .arc-kpi-cell .kg{font-size:34px!important}
+#s5 .arc-kpi-cell .ks{font-size:11px!important;line-height:1.25!important;margin-top:6px!important}
+#s5 .kb:last-child{grid-column:auto!important;border-top:none!important}
+#s5 .arc-kpi-cell{border-top:none!important}
+/* D · S8 — Perfil + Admisión en una sola columna, alineado arriba */
+#s8 .inner{display:flex!important;flex-direction:column!important;grid-template-columns:1fr!important;gap:12mm!important;align-items:stretch!important}
+#s8 .inner>div{max-width:100%!important}
+/* E · S7 — clip de las fotos del claustro */
+#s7 .pcard{overflow:hidden!important}
+}
 </style>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
