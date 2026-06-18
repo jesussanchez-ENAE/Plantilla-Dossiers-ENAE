@@ -978,7 +978,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 /* A · Quitar el centrado vertical que generaba bandas vacías: contenido alineado arriba */
 #s2 .content-col,#s3b>div,#s4 .inner,#s6>div,#s7 .inner,#s8 .inner{min-height:auto!important;justify-content:flex-start!important}
 /* S5 llena la pagina y centra el cluster (igual que 16:9) */
-#s3>div,#s5>div{min-height:297mm!important;justify-content:center!important}
+#s3>div{min-height:297mm!important;justify-content:center!important}
+#s5>div{min-height:297mm!important;justify-content:flex-start!important;padding-bottom:126mm!important}
 /* portada y cierre conservan el centrado */
 #s1 .inner,#s9 .inner{justify-content:center!important}
 /* B · S2 — recuperar la fotografía como banda superior (antes display:none) */
@@ -997,8 +998,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
 #s8 .inner>div{max-width:100%!important}
 /* E · S7 — clip de las fotos del claustro */
 #s7 .pcard{overflow:hidden!important}
-}
-</style>
+/* F - Rankings QS en bloque de 2 columnas (igual que en pantalla) */
+#s6 .s6-qsr-grid{grid-template-columns:1fr 1fr!important}
+/* G - Banda fotografica a sangre para rellenar el hueco inferior */
+#s5 .pdf-band{display:block!important;position:absolute!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;height:122mm!important;min-height:0!important;max-height:122mm!important;background-size:cover!important;background-repeat:no-repeat!important;filter:brightness(1.06) saturate(1.05)!important;z-index:2!important}
+.pdf-band::after{content:""!important;position:absolute!important;inset:0!important;background:linear-gradient(180deg,var(--ng) 0%,rgba(32,34,33,.55) 7%,transparent 22%,transparent 100%)!important}
+}</style>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -1564,6 +1569,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:
       </div>
     </div>
   </div>
+  <div class="pdf-band" aria-hidden="true" style="display:none;background-position:center 30%;background-image:url('../doc/Marketing Digital/Sesion_innegociable_-111.jpg')"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
