@@ -156,7 +156,62 @@
 /* G - Banda fotografica a sangre para rellenar el hueco inferior */
 #s5 .pdf-band{display:block!important;position:absolute!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;height:122mm!important;min-height:0!important;max-height:122mm!important;background-size:cover!important;background-repeat:no-repeat!important;filter:brightness(1.06) saturate(1.05)!important;z-index:2!important}
 .pdf-band::after{content:""!important;position:absolute!important;inset:0!important;background:linear-gradient(180deg,var(--ng) 0%,rgba(32,34,33,.55) 7%,transparent 22%,transparent 100%)!important}
-}</style>
+}
+/* ===== REDISEÑO S5 (variante A · mega-numero + foto) ===== */
+#s5{background:var(--ng)}
+#s5 .rd5{position:relative;z-index:1;height:100%;display:grid;grid-template-columns:1.04fr .96fr}
+#s5 .rd5-left{padding:var(--py) var(--px);display:flex;flex-direction:column;justify-content:center;gap:clamp(12px,2.2vh,26px);position:relative;z-index:2}
+#s5 .rd5-photo{position:relative;overflow:hidden}
+#s5 .rd5-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 38%}
+#s5 .rd5-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ng) 0%,rgba(32,34,33,.0) 24%,rgba(32,34,33,0) 70%,rgba(169,24,49,.42) 100%)}
+#s5 .rd5-hero .rd5-num{font-family:var(--fd);font-weight:900;font-size:clamp(86px,14.5vw,224px);line-height:.8;letter-spacing:-.04em;color:#fff}
+#s5 .rd5-hero .rd5-num span{font-size:.4em;color:var(--gr);font-weight:900;margin-left:.02em}
+#s5 .rd5-cap{font-family:var(--fs);font-style:italic;font-size:var(--t-sub);color:rgba(255,255,255,.85);line-height:1.1;margin-top:4px}
+#s5 .rd5-secs{display:flex;gap:clamp(26px,3.4vw,52px)}
+#s5 .rd5-sn{font-family:var(--fd);font-weight:900;font-size:clamp(30px,3.3vw,50px);color:var(--gr);line-height:1}
+#s5 .rd5-sn span{font-size:.5em}
+#s5 .rd5-sl{font-size:var(--t-md);color:rgba(255,255,255,.62);max-width:180px;margin-top:3px}
+#s5 .rd5-strip{display:flex;flex-wrap:wrap;gap:clamp(5px,.5vw,8px);margin-top:8px}
+@media print{
+  #s5 .rd5{display:flex!important;flex-direction:column!important;min-height:297mm!important;justify-content:flex-start!important;padding:0!important}
+  #s5 .rd5-left{padding:20mm var(--px) 12mm!important;gap:9mm!important;justify-content:flex-start!important}
+  #s5 .rd5-hero .rd5-num{font-size:150px!important}
+  #s5 .rd5-cap{font-size:20px!important}
+  #s5 .rd5-secs{gap:40px!important}
+  #s5 .rd5-sn{font-size:44px!important}
+  #s5 .rd5-photo{width:100%!important;height:100mm!important;margin-top:auto!important}
+  #s5 .rd5-photo img{object-position:50% 34%!important}
+  #s5 .rd5-photo::after{background:linear-gradient(180deg,var(--ng) 0%,rgba(32,34,33,.55) 7%,transparent 24%,transparent 100%)!important}
+}
+
+/* ===== REDISEÑO S8 (variante A · perfil + timeline) ===== */
+#s8 .rd8{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(22px,3.6vw,60px);align-items:stretch;padding:var(--py) var(--px)}
+#s8 .rd8-left{display:flex;flex-direction:column;justify-content:center;gap:clamp(13px,2vh,24px)}
+#s8 .rd8-statbar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
+#s8 .rd8-st{padding:clamp(12px,1.7vh,18px) 6px;border-right:1px solid rgba(255,255,255,.1)}
+#s8 .rd8-st:last-child{border-right:none}
+#s8 .rd8-st .sm-n{font-family:var(--fd);font-weight:900;font-size:clamp(26px,2.9vw,44px);color:#fff;line-height:1}
+#s8 .rd8-st .sm-n span{font-size:.48em;color:var(--gr)}
+#s8 .rd8-st .sm-l{font-family:var(--fb);font-style:italic;font-size:var(--t-sm);color:rgba(255,255,255,.62);margin-top:3px}
+#s8 .rd8-plist{display:flex;flex-direction:column;gap:clamp(8px,1.2vh,14px)}
+#s8 .rd8-right{background:linear-gradient(158deg,#181919,#0d0e0e);border:1px solid rgba(255,255,255,.06);border-radius:clamp(10px,1vw,16px);padding:clamp(26px,2.8vw,48px) clamp(22px,2.2vw,40px);display:flex;flex-direction:column;justify-content:center}
+#s8 .rd8-tl{position:relative;padding-left:50px;margin-top:clamp(14px,2vh,26px)}
+#s8 .rd8-tl::before{content:"";position:absolute;left:18px;top:4px;bottom:18px;width:2px;background:linear-gradient(var(--gr),rgba(169,24,49,.16))}
+#s8 .rd8-node{position:relative;margin-bottom:clamp(13px,1.9vh,22px);min-height:38px}
+#s8 .rd8-node:last-child{margin-bottom:0}
+#s8 .rd8-dot{position:absolute;left:-50px;top:-3px;width:38px;height:38px;border-radius:50%;background:var(--gr);color:#fff;font-family:var(--fd);font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
+#s8 .rd8-node.done .rd8-dot{background:#fff;color:var(--gr)}
+#s8 .rd8-nt{font-family:var(--fb);font-weight:800;font-size:clamp(14px,1vw,17px);color:#fff}
+#s8 .rd8-nd{font-family:var(--fb);font-weight:300;font-size:clamp(11px,.78vw,14px);color:rgba(255,255,255,.55);margin-top:1px}
+@media print{
+  #s8 .rd8{display:flex!important;flex-direction:column!important;gap:12mm!important;min-height:297mm!important;justify-content:flex-start!important;padding:18mm var(--px) 14mm!important}
+  #s8 .rd8-left{gap:7mm!important}
+  #s8 .rd8-st .sm-n{font-size:40px!important}
+  #s8 .rd8-right{padding:12mm 10mm!important}
+  #s8 .rd8-tl{padding-left:48px!important}
+  #s8 .rd8-dot{left:-48px!important}
+}
+</style>
 <style media="print">
   /* ── Reflow fino de impresión (sobrescribe al @media print compilado) ── */
   /* s2 «Qué es»: distribuir contenido para eliminar el hueco vertical central */
@@ -682,70 +737,31 @@
      S5 — EMPLEABILIDAD
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s5">
-  <!-- Fondo imagen: graduación ENAE, atmosférica -->
-  <img src="../doc/Marketing Digital/entrega diplomas enae gnfoto2022 (49).jpg"
-       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.1;z-index:0;filter:grayscale(.5) blur(1.5px);" alt="">
-  <!-- Overlay oscuro con toque granate sutil -->
-  <div style="position:absolute;inset:0;z-index:1;background:
-    radial-gradient(ellipse 55% 60% at 85% 20%, rgba(169,24,49,.18) 0%, transparent 60%),
-    linear-gradient(148deg, rgba(16,18,17,.94) 0%, rgba(0,0,0,.96) 100%);"></div>
-  <!-- Ghost number masivo como en p-06 -->
-  <div class="gh" style="font-size:clamp(120px,16vw,300px);top:-2%;right:-1%;opacity:.055;z-index:2;">91</div>
-
-  <div style="position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);gap:var(--sp-lg);">
-    <div>
-      <span class="ey" data-a>Prácticas &amp; Empleo</span>
+  <div class="rd5">
+    <div class="rd5-left">
+      <span class="ey" data-a>Pr&aacute;cticas &amp; Empleo</span>
       <div class="tm" data-a>
-        <span class="tb" style="font-size:var(--t-hero);">Tu carrera</span>
-        <span class="ti" style="font-size:var(--t-hero);">empieza aquí.</span>
+        <span class="tb" style="font-size:var(--t-hero)">Tu carrera</span>
+        <span class="ti" style="font-size:var(--t-hero)">empieza aqu&iacute;.</span>
       </div>
       <div class="rule" data-a></div>
-    </div>
-
-    <!-- Tres KPIs masivos – Open Sans ExtraBold (estándar corporativo) -->
-    <div class="k3" data-a>
-      <div class="kb arc-kpi-cell">
-        <!-- Arco SVG 91%: circunferencia 2π·88 ≈ 553 -->
-        <svg class="arc-svg" viewBox="0 0 200 200" aria-hidden="true">
-          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"/>
-          <circle id="arc1-fill" cx="100" cy="100" r="88" fill="none" stroke="#a91831" stroke-width="5" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553"/>
-        </svg>
-        <div class="kg" id="kpi1">0<span>%</span></div>
-        <div id="ks-kpi1" class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">trabajando<br>al terminar</div>
+      <div class="rd5-hero" data-a>
+        <div class="rd5-num" id="kpi1">0<span>%</span></div>
+        <div class="rd5-cap" id="ks-kpi1">trabajando<br>al terminar</div>
       </div>
-      <div class="kb arc-kpi-cell">
-        <!-- Arco SVG 82%: mismo radio -->
-        <svg class="arc-svg" viewBox="0 0 200 200" aria-hidden="true">
-          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"/>
-          <circle id="arc2-fill" cx="100" cy="100" r="88" fill="none" stroke="#a91831" stroke-width="5" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553"/>
-        </svg>
-        <div class="kg" id="kpi2">0<span>%</span></div>
-        <div id="ks-kpi2" class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">mejora profesional<br>demostrada</div>
+      <div class="rd5-secs" data-a>
+        <div class="rd5-sec"><div class="rd5-sn" id="kpi2">0<span>%</span></div><div class="rd5-sl" id="ks-kpi2">mejora profesional demostrada</div></div>
+        <div class="rd5-sec"><div class="rd5-sn r">+1K</div><div class="rd5-sl">ofertas gestionadas al a&ntilde;o</div></div>
       </div>
-      <div class="kb arc-kpi-cell">
-        <!-- Arco estático decorativo para +1K -->
-        <svg class="arc-svg" viewBox="0 0 200 200" aria-hidden="true">
-          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(169,24,49,.15)" stroke-width="5"/>
-          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(169,24,49,.35)" stroke-width="5" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="110"/>
-        </svg>
-        <div class="kg r">+1K</div>
-        <div class="ks" style="font-size:var(--t-md);margin-top:var(--sp-xs);">ofertas gestionadas<br>al año</div>
+      <div class="rd5-emp" data-a>
+        <div class="lbl">Empresas donde han hecho pr&aacute;cticas nuestros alumnos</div>
+        <div id="empresas-strip" class="rd5-strip">
+          <span class="ctag">Hero Espa&ntilde;a</span><span class="ctag">IKEA Ib&eacute;rica</span><span class="ctag">Grupo HEFAME</span><span class="ctag">PC Componentes</span><span class="ctag">Himoinsa</span><span class="ctag">El Pozo</span><span class="ctag">Rapsodia</span><span class="ctag" style="opacity:.4">+ muchas m&aacute;s</span>
+        </div>
       </div>
     </div>
-
-    <!-- Empresas -->
-    <div data-a>
-      <div class="lbl" style="margin-bottom:var(--sp-xs);">Empresas donde han hecho prácticas nuestros alumnos</div>
-      <div id="empresas-strip" style="display:flex;flex-wrap:wrap;gap:clamp(5px,.5vw,8px);margin-top:8px;">
-        <span class="ctag">Hero España</span><span class="ctag">IKEA Ibérica</span>
-        <span class="ctag">Grupo HEFAME</span><span class="ctag">PC Componentes</span>
-        <span class="ctag">Himoinsa</span><span class="ctag">El Pozo</span>
-        <span class="ctag">Rapsodia</span><span class="ctag">Medina Artigas</span>
-        <span class="ctag" style="opacity:.4;">+ muchas más</span>
-      </div>
-    </div>
+    <div class="rd5-photo" data-a><img src="../doc/Marketing Digital/10042023-317A7711.jpg" alt=""></div>
   </div>
-  <div class="pdf-band" aria-hidden="true" style="display:none;background-position:center 30%;background-image:url('../doc/Marketing Digital/Sesion_innegociable_-111.jpg')"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -972,124 +988,31 @@
      S8 — PERFIL + ADMISIÓN
      ════════════════════════════════════════════════════════ -->
 <div class="slide" id="s8">
-  <!-- Fondo: graduación ENAE, atmosférica -->
-  <img src="../doc/Marketing Digital/entrega diplomas enae gnfoto2022 (76).jpg"
-       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;opacity:.08;z-index:0;filter:grayscale(.5) blur(1px);" alt="">
-  <div style="position:absolute;inset:0;z-index:1;background:
-    radial-gradient(ellipse 50% 60% at 80% 85%, rgba(169,24,49,.16) 0%, transparent 55%),
-    linear-gradient(145deg, rgba(10,12,14,.96) 0%, rgba(18,8,12,.97) 100%);"></div>
-  <!-- Watermark E -->
-  <img src="../assets/logos/SIMBOLO-ENAE-BLANCO.png" style="position:absolute;z-index:1;pointer-events:none;width:34vw;bottom:-7vh;left:-8vw;opacity:.05;transform:rotate(25deg);" alt="">
-
-  <!-- Layout: 3 columnas — perfil | stats | admisión -->
-  <div class="inner grid grid-cols-1 md:grid-cols-3 gap-[clamp(16px,2vw,36px)] items-stretch" style="position:relative;z-index:2;min-height:100%;height:auto;padding:var(--py) var(--px);overflow-y:visible;">
-
-    <!-- ── COL 1: Perfil del alumno ── -->
-    <div style="display:flex;flex-direction:column;justify-content:center;min-height:0;">
-      <span class="ey" data-a>¿A quién va dirigido?</span>
-      <div class="tm" data-a>
-        <span class="tb" style="font-size:var(--t-title);">Perfil del</span>
-        <span class="ti" style="font-size:var(--t-title);">alumno.</span>
-      </div>
+  <div class="rd8">
+    <div class="rd8-left">
+      <span class="ey" data-a>&iquest;A qui&eacute;n va dirigido?</span>
+      <div class="tm" data-a><span class="tb" style="font-size:var(--t-title)">Perfil del</span> <span class="ti" style="font-size:var(--t-title)">alumno.</span></div>
       <div class="rule" data-a></div>
-
-      <!-- Bullets con iconos Material Symbols -->
-      <div id="perfil-bullets" data-a style="display:flex;flex-direction:column;gap:clamp(10px,1.3vh,18px);">
-        <div style="display:flex;gap:clamp(10px,1vw,16px);align-items:flex-start;">
-          <span class="msym" style="color:var(--gr);font-size:clamp(16px,1.3vw,22px);flex-shrink:0;margin-top:1px;">trending_up</span>
-          <span style="font-family:var(--fb);font-weight:400;font-size:clamp(12px,.84vw,15px);color:rgba(255,255,255,.78);line-height:1.5;">Directivos y ejecutivos de Marketing, Ventas y Agencias</span>
-        </div>
-        <div style="display:flex;gap:clamp(10px,1vw,16px);align-items:flex-start;">
-          <span class="msym" style="color:var(--gr);font-size:clamp(16px,1.3vw,22px);flex-shrink:0;margin-top:1px;">lightbulb</span>
-          <span style="font-family:var(--fb);font-weight:400;font-size:clamp(12px,.84vw,15px);color:rgba(255,255,255,.78);line-height:1.5;">Profesionales de Innovación, I+D y Operaciones</span>
-        </div>
-        <div style="display:flex;gap:clamp(10px,1vw,16px);align-items:flex-start;">
-          <span class="msym" style="color:var(--gr);font-size:clamp(16px,1.3vw,22px);flex-shrink:0;margin-top:1px;">rocket_launch</span>
-          <span style="font-family:var(--fb);font-weight:400;font-size:clamp(12px,.84vw,15px);color:rgba(255,255,255,.78);line-height:1.5;">Emprendedores en fase de desarrollo comercial</span>
-        </div>
-        <div style="display:flex;gap:clamp(10px,1vw,16px);align-items:flex-start;">
-          <span class="msym" style="color:var(--gr);font-size:clamp(16px,1.3vw,22px);flex-shrink:0;margin-top:1px;">sync_alt</span>
-          <span style="font-family:var(--fb);font-weight:400;font-size:clamp(12px,.84vw,15px);color:rgba(255,255,255,.78);line-height:1.5;">Profesionales en reciclaje hacia el entorno digital</span>
-        </div>
-        <div style="display:flex;gap:clamp(10px,1vw,16px);align-items:flex-start;">
-          <span class="msym" style="color:var(--gr);font-size:clamp(16px,1.3vw,22px);flex-shrink:0;margin-top:1px;">school</span>
-          <span style="font-family:var(--fb);font-weight:400;font-size:clamp(12px,.84vw,15px);color:rgba(255,255,255,.78);line-height:1.5;">Recién graduados con vocación digital</span>
-        </div>
+      <div id="demo-stats" class="rd8-statbar" data-a>
+        <div class="rd8-st"><div class="sm-n">44<span>%</span></div><div class="sm-l">mujeres</div></div>
+        <div class="rd8-st"><div class="sm-n">9</div><div class="sm-l">nacionalidades</div></div>
+        <div class="rd8-st"><div class="sm-n">33<span>%</span></div><div class="sm-l">21&ndash;26 a&ntilde;os</div></div>
+        <div class="rd8-st"><div class="sm-n">42<span>%</span></div><div class="sm-l">mando intermedio</div></div>
+      </div>
+      <div id="perfil-bullets" class="rd8-plist" data-a></div>
+    </div>
+    <div class="rd8-right" data-a>
+      <span class="ey">Proceso de admisi&oacute;n</span>
+      <div class="tm"><span class="tb" style="font-size:var(--t-title)">5 pasos hacia</span> <span class="ti" style="font-size:var(--t-title)">tu futuro.</span></div>
+      <div class="rule"></div>
+      <div class="rd8-tl">
+        <div class="rd8-node"><div class="rd8-dot">01</div><div class="rd8-ntx"><div class="rd8-nt">Preinscripci&oacute;n online</div><div class="rd8-nd">a trav&eacute;s de enae.es</div></div></div>
+        <div class="rd8-node"><div class="rd8-dot">02</div><div class="rd8-ntx"><div class="rd8-nt">Env&iacute;o de documentaci&oacute;n</div><div class="rd8-nd">Revisada por el equipo acad&eacute;mico</div></div></div>
+        <div class="rd8-node"><div class="rd8-dot">03</div><div class="rd8-ntx"><div class="rd8-nt">Entrevista personal</div><div class="rd8-nd">Con el equipo de admisiones</div></div></div>
+        <div class="rd8-node"><div class="rd8-dot">04</div><div class="rd8-ntx"><div class="rd8-nt">Evaluaci&oacute;n del comit&eacute;</div><div class="rd8-nd">Decisi&oacute;n del comit&eacute; acad&eacute;mico</div></div></div>
+        <div class="rd8-node done"><div class="rd8-dot">&#10003;</div><div class="rd8-ntx"><div class="rd8-nt">&iexcl;Admisi&oacute;n confirmada!</div><div class="rd8-nd">Se comunica la resoluci&oacute;n oficial</div></div></div>
       </div>
     </div>
-
-    <!-- ── COL 2: Datos de la promoción — tarjetas verticales ── -->
-    <div style="display:flex;flex-direction:column;gap:clamp(8px,1vh,14px);justify-content:center;min-height:0;">
-
-      <div class="lbl" data-a style="text-align:center;">Datos de la promoción</div>
-
-      <div id="demo-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1vh,14px);">
-        <div data-a style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:clamp(8px,.7vw,13px);padding:clamp(14px,1.6vw,24px);text-align:center;">
-          <div class="sm-n" style="font-size:clamp(28px,3.4vw,54px);">44<span>%</span></div>
-          <div class="sm-l" style="margin-top:clamp(3px,.4vh,6px);">mujeres</div>
-          <div class="dbar-track" style="margin-top:clamp(6px,.8vh,10px);"><div class="dbar-fill" data-pct="44"></div></div>
-        </div>
-        <div data-a style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:clamp(8px,.7vw,13px);padding:clamp(14px,1.6vw,24px);text-align:center;">
-          <div class="sm-n" style="font-size:clamp(28px,3.4vw,54px);">9</div>
-          <div class="sm-l" style="margin-top:clamp(3px,.4vh,6px);">nacionalidades</div>
-          <div class="dbar-track" style="margin-top:clamp(6px,.8vh,10px);"><div class="dbar-fill" data-pct="90" style="background:linear-gradient(to right,rgba(169,24,49,.8),rgba(169,24,49,.4));"></div></div>
-        </div>
-        <div data-a style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:clamp(8px,.7vw,13px);padding:clamp(14px,1.6vw,24px);text-align:center;">
-          <div class="sm-n" style="font-size:clamp(28px,3.4vw,54px);">33<span>%</span></div>
-          <div class="sm-l" style="margin-top:clamp(3px,.4vh,6px);">21–26 años</div>
-          <div class="dbar-track" style="margin-top:clamp(6px,.8vh,10px);"><div class="dbar-fill" data-pct="33"></div></div>
-        </div>
-        <div data-a style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:clamp(8px,.7vw,13px);padding:clamp(14px,1.6vw,24px);text-align:center;">
-          <div class="sm-n" style="font-size:clamp(28px,3.4vw,54px);">42<span>%</span></div>
-          <div class="sm-l" style="margin-top:clamp(3px,.4vh,6px);">mando intermedio</div>
-          <div class="dbar-track" style="margin-top:clamp(6px,.8vh,10px);"><div class="dbar-fill" data-pct="42"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── COL 3: Proceso de admisión ── -->
-    <div style="display:flex;flex-direction:column;justify-content:center;min-height:0;">
-      <span class="ey" data-a>Proceso de admisión</span>
-      <div class="tm" data-a>
-        <span class="tb" style="font-size:var(--t-title);">5 pasos hacia</span>
-        <span class="ti" style="font-size:var(--t-title);">tu futuro.</span>
-      </div>
-      <div class="rule" data-a></div>
-
-      <!-- Steps con números grandes + línea conectora -->
-      <div style="display:flex;flex-direction:column;gap:clamp(8px,1.1vh,16px);margin-top:var(--sp-xs);">
-
-        <div data-a style="display:flex;align-items:center;gap:clamp(12px,1.2vw,20px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(7px,.6vw,12px);padding:clamp(10px,1.2vh,17px) clamp(14px,1.4vw,22px);">
-          <div style="background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:clamp(12px,.88vw,16px);width:clamp(32px,2.6vw,42px);height:clamp(32px,2.6vw,42px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:clamp(6px,.5vw,9px);">01</div>
-          <div><div style="font-family:var(--fb);font-weight:700;font-size:clamp(13px,.92vw,17px);color:#fff;">Preinscripción online</div><div style="font-family:var(--fb);font-weight:300;font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.55);margin-top:2px;">a través de enae.es</div></div>
-        </div>
-
-        <div data-a style="display:flex;align-items:center;gap:clamp(12px,1.2vw,20px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(7px,.6vw,12px);padding:clamp(10px,1.2vh,17px) clamp(14px,1.4vw,22px);">
-          <div style="background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:clamp(12px,.88vw,16px);width:clamp(32px,2.6vw,42px);height:clamp(32px,2.6vw,42px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:clamp(6px,.5vw,9px);">02</div>
-          <div><div style="font-family:var(--fb);font-weight:700;font-size:clamp(13px,.92vw,17px);color:#fff;">Envío de documentación</div><div style="font-family:var(--fb);font-weight:300;font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.55);margin-top:2px;">Revisada por el equipo académico</div></div>
-        </div>
-
-        <div data-a style="display:flex;align-items:center;gap:clamp(12px,1.2vw,20px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(7px,.6vw,12px);padding:clamp(10px,1.2vh,17px) clamp(14px,1.4vw,22px);">
-          <div style="background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:clamp(12px,.88vw,16px);width:clamp(32px,2.6vw,42px);height:clamp(32px,2.6vw,42px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:clamp(6px,.5vw,9px);">03</div>
-          <div><div style="font-family:var(--fb);font-weight:700;font-size:clamp(13px,.92vw,17px);color:#fff;">Entrevista personal</div><div style="font-family:var(--fb);font-weight:300;font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.55);margin-top:2px;">Con el equipo de admisiones</div></div>
-        </div>
-
-        <div data-a style="display:flex;align-items:center;gap:clamp(12px,1.2vw,20px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:clamp(7px,.6vw,12px);padding:clamp(10px,1.2vh,17px) clamp(14px,1.4vw,22px);">
-          <div style="background:var(--gr);color:#fff;font-family:var(--fb);font-weight:800;font-size:clamp(12px,.88vw,16px);width:clamp(32px,2.6vw,42px);height:clamp(32px,2.6vw,42px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:clamp(6px,.5vw,9px);">04</div>
-          <div><div style="font-family:var(--fb);font-weight:700;font-size:clamp(13px,.92vw,17px);color:#fff;">Evaluación del comité</div><div style="font-family:var(--fb);font-weight:300;font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.55);margin-top:2px;">Decisión del comité académico</div></div>
-        </div>
-
-        <!-- Paso final destacado -->
-        <div data-a style="display:flex;align-items:center;gap:clamp(12px,1.2vw,20px);background:rgba(169,24,49,.15);border:1.5px solid rgba(169,24,49,.4);border-radius:clamp(7px,.6vw,12px);padding:clamp(10px,1.2vh,17px) clamp(14px,1.4vw,22px);box-shadow:0 4px 18px rgba(169,24,49,.15);">
-          <div style="background:var(--gr);color:#fff;width:clamp(32px,2.6vw,42px);height:clamp(32px,2.6vw,42px);display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:clamp(6px,.5vw,9px);box-shadow:0 0 12px rgba(169,24,49,.4);">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div><div style="font-family:var(--fb);font-weight:700;font-size:clamp(13px,.92vw,17px);color:#fff;">¡Admisión confirmada!</div><div style="font-family:var(--fb);font-weight:300;font-size:clamp(11px,.76vw,14px);color:rgba(255,255,255,.65);margin-top:2px;">Se comunica la resolución oficial</div></div>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 </div>
 
