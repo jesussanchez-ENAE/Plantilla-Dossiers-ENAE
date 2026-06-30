@@ -225,6 +225,21 @@
   #s8 .rd8-tl{padding-left:48px!important}
   #s8 .rd8-dot{left:-48px!important}
 }
+
+/* ===== Selector de orientacion PDF ===== */
+.pdf-menu{position:fixed;bottom:2.5vh;right:3vw;z-index:300}
+.pdf-menu #pdf-btn{position:static}
+.pdf-pop{position:absolute;bottom:calc(100% + 8px);right:0;display:none;flex-direction:column;background:#1a1c1c;border:1px solid hsla(0,0%,100%,.1);border-radius:10px;padding:6px;min-width:236px;box-shadow:0 14px 32px rgba(0,0,0,.5)}
+.pdf-menu.open .pdf-pop{display:flex}
+.pdf-opt{display:flex;align-items:center;gap:12px;padding:10px 12px;background:transparent;border:none;color:#fff;border-radius:7px;text-align:left;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:13px;letter-spacing:.2px}
+.pdf-opt:hover{background:rgba(169,24,49,.18)}
+.pdf-ic{display:inline-block;border:1.6px solid hsla(0,0%,100%,.55);flex-shrink:0;border-radius:1px;background:rgba(255,255,255,.04)}
+.pdf-ic.portrait{width:18px;height:24px}
+.pdf-ic.landscape{width:26px;height:18px}
+.pdf-opt:hover .pdf-ic{border-color:#fff;background:rgba(169,24,49,.25)}
+.pdf-tx{display:flex;flex-direction:column;line-height:1.18}
+.pdf-tx small{font-size:11px;color:hsla(0,0%,100%,.55);font-weight:400;margin-top:1px;letter-spacing:.15px}
+@media print{.pdf-menu{display:none!important}}
 </style>
 <style media="print">
   /* ── Reflow fino de impresión (sobrescribe al @media print compilado) ── */
@@ -284,9 +299,21 @@
   <div class="sig">ENAE International Business School · Murcia, España</div>
 
   <!-- Botón de exportación a PDF (abre el diálogo de impresión → Guardar como PDF) -->
-  <button id="pdf-btn" onclick="window.print()" title="Exportar el dossier a PDF (A4 vertical)">
-    <span class="msym">picture_as_pdf</span>Exportar PDF
-  </button>
+  <div id="pdf-menu" class="pdf-menu">
+    <button id="pdf-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Exportar a PDF">
+      <span class="msym">picture_as_pdf</span>Exportar PDF
+    </button>
+    <div class="pdf-pop" role="menu" aria-labelledby="pdf-btn">
+      <button type="button" class="pdf-opt" onclick="exportPdf('portrait')">
+        <span class="pdf-ic portrait" aria-hidden="true"></span>
+        <span class="pdf-tx"><b>Vertical</b><small>A4 &middot; documento</small></span>
+      </button>
+      <button type="button" class="pdf-opt" onclick="exportPdf('landscape')">
+        <span class="pdf-ic landscape" aria-hidden="true"></span>
+        <span class="pdf-tx"><b>Presentaci&oacute;n</b><small>A4 horizontal &middot; 16:9</small></span>
+      </button>
+    </div>
+  </div>
 
 <!-- ═══════════════════════════════════════════════════════════
      S1 — PORTADA
@@ -1599,6 +1626,87 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }, 180);
 });
+</script>
+
+<!-- ===== Selector orientacion PDF (export portrait/landscape) ===== -->
+<script>
+(function(){
+  var pageStyle=null;
+  var inlineBackups=[];
+
+  function setStyle(el,extra){
+    inlineBackups.push({el:el,prev:el.getAttribute('style')});
+    var prev=el.getAttribute('style')||'';
+    if(prev && !prev.trim().endsWith(';')) prev+=';';
+    el.setAttribute('style', prev+extra);
+  }
+
+  function applyLandscape(){
+    if(pageStyle) return;
+    pageStyle=document.createElement('style');
+    pageStyle.id='__print-landscape-page';
+    pageStyle.textContent='@page{size:A4 landscape;margin:0}';
+    document.head.appendChild(pageStyle);
+
+    var slides=document.querySelectorAll('.slide');
+    slides.forEach(function(s,i){
+      var last=(i===slides.length-1);
+      setStyle(s,'width:297mm !important;height:210mm !important;min-height:210mm !important;max-height:210mm !important;overflow:hidden !important;position:relative !important;inset:auto !important;left:auto !important;top:auto !important;right:auto !important;bottom:auto !important;opacity:1 !important;transform:none !important;pointer-events:auto !important;display:block !important;'+
+        (last?'break-after:auto !important;page-break-after:auto !important;':'break-after:page !important;page-break-after:always !important;')+
+        'break-inside:avoid !important;page-break-inside:avoid !important');
+    });
+
+    document.querySelectorAll('#s1 .inner,#s2 .content-col,#s2b>div,#s3>div,#s3b>div,#s4 .inner,#s5>div,#s6>div,#s7 .inner,#s8 .inner,#s9 .inner').forEach(function(e){
+      setStyle(e,'min-height:0 !important;height:100% !important;max-height:210mm !important;justify-content:initial !important;padding-bottom:0 !important;overflow:hidden !important');
+    });
+
+    var band=document.querySelector('#s5 .pdf-band');
+    if(band) setStyle(band,'display:none !important');
+
+    var ph=document.querySelector('#s2 .photo-col');
+    if(ph) setStyle(ph,'display:block !important;position:absolute !important;top:0 !important;left:0 !important;right:auto !important;bottom:0 !important;width:40% !important;height:100% !important;margin-bottom:0 !important;border-radius:0 !important');
+
+    var rd5=document.querySelector('#s5 .rd5');
+    if(rd5) setStyle(rd5,'display:grid !important;grid-template-columns:1.04fr .96fr !important;padding:0 !important;flex-direction:row !important;align-items:stretch !important;min-height:0 !important;height:100% !important');
+
+    var rd5p=document.querySelector('#s5 .rd5-photo');
+    if(rd5p) setStyle(rd5p,'width:auto !important;height:auto !important;margin-top:0 !important');
+
+    var rd8=document.querySelector('#s8 .rd8');
+    if(rd8) setStyle(rd8,'display:grid !important;grid-template-columns:1.12fr .88fr !important;padding:var(--py) var(--px) !important;flex-direction:row !important;min-height:0 !important;height:100% !important;gap:clamp(22px,3.6vw,60px) !important');
+
+    var s6=document.querySelector('#s6 .inner');
+    if(s6) setStyle(s6,'display:grid !important;grid-template-columns:1fr 1fr !important;flex-direction:row !important;text-align:left !important;overflow:hidden !important;height:100% !important;padding:var(--in-py) var(--in-px) !important;align-items:center !important');
+  }
+
+  function restore(){
+    inlineBackups.forEach(function(b){
+      if(b.prev===null||b.prev===undefined) b.el.removeAttribute('style');
+      else b.el.setAttribute('style',b.prev);
+    });
+    inlineBackups=[];
+    if(pageStyle){pageStyle.remove();pageStyle=null;}
+    document.documentElement.removeAttribute('data-print-mode');
+  }
+
+  window.exportPdf=function(mode){
+    document.documentElement.dataset.printMode=mode;
+    var pm=document.getElementById('pdf-menu');if(pm) pm.classList.remove('open');
+    if(mode==='landscape') applyLandscape();
+    setTimeout(function(){
+      window.print();
+      setTimeout(function(){ if(mode==='landscape') restore(); },1500);
+    },100);
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('pdf-btn'); var menu=document.getElementById('pdf-menu');
+    if(!btn||!menu) return;
+    btn.addEventListener('click',function(e){e.stopPropagation(); menu.classList.toggle('open');});
+    document.addEventListener('click',function(e){ if(!menu.contains(e.target)) menu.classList.remove('open'); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') menu.classList.remove('open'); });
+  });
+})();
 </script>
 </body>
 </html>
