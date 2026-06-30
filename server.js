@@ -263,16 +263,17 @@ app.post('/api/dossiers', (req, res) => {
         const fileName = slugify(dossierData.nombre) + '.html';
         const filePath = path.join(DOSSIERS_DIR, fileName);
 
-        // ── Usar el dossier de marketing como template maestro ──
-        const masterTemplatePath = path.join(DOSSIERS_DIR, 'master-marketing-digital-ia.html');
-        const legacyTemplatePath = path.join(__dirname, 'template.html');
+        // ── Plantilla oficial: _PLANTILLA-BASE.html (fuente de verdad del diseño) ──
+        // Si por error se borra, caemos al dossier de Marketing como respaldo (misma estructura).
+        const basePath     = path.join(DOSSIERS_DIR, '_PLANTILLA-BASE.html');
+        const fallbackPath = path.join(DOSSIERS_DIR, 'master-marketing-digital-ia.html');
 
-        let templatePath = fs.existsSync(masterTemplatePath)
-            ? masterTemplatePath
-            : legacyTemplatePath;
+        let templatePath = fs.existsSync(basePath) ? basePath
+                         : fs.existsSync(fallbackPath) ? fallbackPath
+                         : null;
 
-        if (!fs.existsSync(templatePath)) {
-            return res.status(500).json({ error: "No se encuentra el template maestro." });
+        if (!templatePath) {
+            return res.status(500).json({ error: "No se encuentra la plantilla base (_PLANTILLA-BASE.html)." });
         }
 
         let htmlContent = fs.readFileSync(templatePath, 'utf-8');

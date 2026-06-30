@@ -1,9 +1,22 @@
 # _archive
 
-Archivos retirados de uso activo. Conservados por historial/referencia.
+Archivos retirados de uso activo. Conservados por historial / referencia.
 
-- `marketing-digital.html` — versión **antigua** del dossier de Marketing Digital
-  (2378 líneas, CSS sin minificar). Superada por
-  `dossiers/master-marketing-digital-ia.html`, que es la única que usa
-  `server.js`. No estaba enlazada en ningún sitio. Tenía desbordes en A4
-  (S6/S7/S8 ocupaban más de una página). Archivada el 2026-06-19.
+## Plantillas vestigiales (archivadas 2026-06-30)
+
+- **`template.html`** — plantilla muy temprana (1346 bytes) del sistema antiguo
+  con `app.js` + `dossier-preview-mount`. `server.js` la usaba como
+  `legacyTemplatePath` (fallback de segundo nivel). Tras el refactor, la
+  plantilla oficial es `dossiers/_PLANTILLA-BASE.html` y el fallback secundario
+  es `master-marketing-digital-ia.html`. Esta ya no se referencia.
+
+- **`dossier_ejemplo_base.html`** — declaración antigua de variables CSS
+  (`--granate`, `--font-body`, etc.). No referenciada por ningún
+  archivo del proyecto. Vestigio del diseño previo.
+
+## Dossiers archivados
+
+- **`marketing-digital.html`** (archivada 2026-06-19) — duplicado antiguo del
+  programa de Marketing, superada por
+  `dossiers/master-marketing-digital-ia.html`. No estaba enlazada en ningún
+  sitio. Tenía desbordes en A4 (S6 342mm, S7 505mm, S8 309mm). Reversible.
