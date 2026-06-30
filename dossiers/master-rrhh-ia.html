@@ -202,6 +202,13 @@
 .pdf-tx{display:flex;flex-direction:column;line-height:1.18}
 .pdf-tx small{font-size:11px;color:hsla(0,0%,100%,.55);font-weight:400;margin-top:1px;letter-spacing:.15px}
 @media print{.pdf-menu{display:none!important}}
+
+/* ===== Paginacion automatica de slides ===== */
+.ey-page-tag{position:absolute;top:clamp(20px,3vh,46px);right:clamp(20px,3vw,46px);
+  font-family:var(--fs);font-style:italic;font-size:var(--t-sm);
+  color:hsla(0,0%,100%,.5);letter-spacing:.08em;
+  z-index:5;pointer-events:none}
+.ey-page-tag .ey-page-cur{color:hsla(0,0%,100%,.85);font-weight:600}
 </style>
 <style media="print">
   /* ── Reflow fino de impresión (sobrescribe al @media print compilado) ── */
@@ -1113,6 +1120,37 @@
      ╚══════════════════════════════════════════════════════════════╝ -->
 <script>
 (function hydrateProgram() {
+    /* ---- paginateGrid: si items > perPage, clona la slide y reparte ---- */
+    function paginateGrid(opts){
+      var items=opts.items||[],orig=document.getElementById(opts.slideId);
+      if(!orig) return;
+      var perPage=opts.perPage||8;
+      if(!items.length){ if(opts.fill) opts.fill(orig,items,0); return; }
+      var totalPages=Math.ceil(items.length/perPage),lastRef=orig;
+      for(var p=0;p<totalPages;p++){
+        var slide;
+        if(p===0){slide=orig;}
+        else{
+          slide=orig.cloneNode(true);
+          slide.id=opts.slideId+'-p'+(p+1);
+          slide.querySelectorAll('[id]').forEach(function(el){el.id=el.id+'-p'+(p+1);});
+          slide.querySelectorAll('[data-a]').forEach(function(el){el.style.opacity='';el.style.transform='';});
+          var oldTag=slide.querySelector('.ey-page-tag'); if(oldTag) oldTag.remove();
+          lastRef.parentNode.insertBefore(slide,lastRef.nextSibling);
+          lastRef=slide;
+        }
+        var startIdx=p*perPage,pageItems=items.slice(startIdx,startIdx+perPage);
+        if(opts.fill) opts.fill(slide,pageItems,startIdx);
+        if(totalPages>1){
+          var tag=document.createElement('div');
+          tag.className='ey-page-tag';
+          tag.innerHTML='<span class="ey-page-cur">'+(p+1)+'</span> / '+totalPages;
+          slide.appendChild(tag);
+        }
+      }
+    }
+    /* ---- /paginateGrid ---- */
+
   var ds = document.getElementById('dossier-data');
   if (!ds) return;
   var d;
@@ -1169,33 +1207,42 @@
   }
 
   /* ── S3 Programa — tarjetas .mcd con descripción ──── */
-  if (d.modulos) {
-    var mcdCards = $$('#modulos-grid .mcd');
-    // Si hay más módulos que tarjetas, clonar la última como plantilla
-    var template = mcdCards[mcdCards.length - 1];
-    d.modulos.forEach(function(m, i) {
-      var mc = mcdCards[i];
-      if (!mc && template) { mc = template.cloneNode(true); document.getElementById('modulos-grid').appendChild(mc); }
-      if (!mc) return;
-      var num  = mc.querySelector('.mcd-num');  if (num)  num.textContent  = m.num || String(i+1).padStart(2,'0');
-      var area = mc.querySelector('.mcd-area'); if (area) area.textContent = m.area || '';
-      var nom  = mc.querySelector('.mcd-name'); if (nom)  nom.textContent  = m.nombre || '';
-      var desc = mc.querySelector('.mcd-desc'); if (desc) desc.textContent = m.desc || '';
-    });
-    // Resumen en cabecera
-    var res = document.getElementById('prog-resumen');
-    if (res) res.textContent = d.modulos.length + ' módulos · ' + (d.ects||60) + ' ECTS · ' + (d.meses||12) + ' meses';
-  }
+  paginateGrid({
+    items:d.modulos||[],slideId:'s3',perPage:8,
+    fill:function(slide,items,startIdx){
+      var grid=slide.querySelector('[id^="modulos-grid"]'); if(!grid) return;
+      var cards=grid.querySelectorAll('.mcd'); if(!cards.length) return;
+      var template=cards[0];
+      for(var i=cards.length-1;i>0;i--) cards[i].remove();
+      items.forEach(function(m,i){
+        var mc=(i===0)?template:template.cloneNode(true);
+        if(i>0) grid.appendChild(mc);
+        var num=mc.querySelector('.mcd-num');  if(num)  num.textContent  = m.num || String(startIdx+i+1).padStart(2,'0');
+        var area=mc.querySelector('.mcd-area'); if(area) area.textContent = m.area || '';
+        var nom=mc.querySelector('.mcd-name'); if(nom)  nom.textContent  = m.nombre || '';
+        var desc=mc.querySelector('.mcd-desc'); if(desc) desc.textContent = m.desc || '';
+      });
+    }
+  });
+    var res=document.getElementById('prog-resumen');
+    if(res && d.modulos) res.textContent=d.modulos.length+' m\u00f3dulos \u00b7 '+(d.ects||60)+' ECTS \u00b7 '+(d.meses||12)+' meses';
   /* ── S3b Temario IA ─────────────────────────────────── */
-  if (d.ia_temario) {
-    var iatItems = $$('#ia-temario-grid .iat-row');
-    d.ia_temario.forEach(function(t, i) {
-      var it = iatItems[i]; if (!it) return;
-      var num  = it.querySelector('.iat-n-big'); if (num)  num.textContent  = String(i+1).padStart(2,'0');
-      var nom  = it.querySelector('.iat-name');  if (nom)  nom.textContent  = t.nombre || '';
-      var desc = it.querySelector('.iat-desc');  if (desc) desc.textContent = t.desc   || '';
-    });
-  }
+  paginateGrid({
+    items:d.ia_temario||[],slideId:'s3b',perPage:8,
+    fill:function(slide,items,startIdx){
+      var grid=slide.querySelector('[id^="ia-temario-grid"]'); if(!grid) return;
+      var rows=grid.querySelectorAll('.iat-row'); if(!rows.length) return;
+      var template=rows[0];
+      for(var i=rows.length-1;i>0;i--) rows[i].remove();
+      items.forEach(function(t,i){
+        var it=(i===0)?template:template.cloneNode(true);
+        if(i>0) grid.appendChild(it);
+        var num=it.querySelector('.iat-n-big'); if(num)  num.textContent  = String(startIdx+i+1).padStart(2,'0');
+        var nom=it.querySelector('.iat-name');  if(nom)  nom.textContent  = t.nombre || '';
+        var desc=it.querySelector('.iat-desc'); if(desc) desc.textContent = t.desc   || '';
+      });
+    }
+  })
   if (d.ects)  set('#prog-ects',  d.ects);
   if (d.meses) set('#prog-meses', d.meses);
 
@@ -1213,42 +1260,39 @@
   }
 
   /* ── S7 Claustro — regenera filas según nº de profesores ── */
-  if (d.profesores && d.profesores.length) {
-    var rowsWrap = $('#claustro-rows');
-    if (rowsWrap) {
-      var profs = d.profesores;
-      // Distribución equilibrada en filas (máx 4 por fila)
-      var n = profs.length, rows;
-      if (n <= 4) rows = [n];
-      else if (n <= 8) { var top = Math.ceil(n/2); rows = [top, n-top]; }
-      else { rows = [4, 4, n-8]; }
-
-      var html = '', idx = 0;
-      var radius = 'clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0';
-      // Ancho de columna uniforme: las filas incompletas se estrechan y centran
-      var maxCols = Math.max.apply(null, rows);
-      rows.forEach(function(count) {
-        var rowStyle = 'flex:1;display:grid;grid-template-columns:repeat(' + count + ',1fr);gap:clamp(6px,.7vw,12px);min-height:0;';
-        if (count < maxCols) { rowStyle += 'width:' + (count / maxCols * 100).toFixed(2) + '%;margin-left:auto;margin-right:auto;'; }
-        html += '<div class="claustro-row" style="' + rowStyle + '">';
-        for (var k = 0; k < count; k++) {
-          var p = profs[idx++]; if (!p) continue;
-          html += '<div class="pcard" data-a style="display:flex;flex-direction:column;">' +
-            '<div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:' + radius + ';">' +
-              '<img src="' + (p.foto || '') + '" alt="' + (p.nombre || '') + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:' + (p.obj_pos || '50% 24%') + ';">' +
-            '</div>' +
-            '<div class="pinfo">' +
-              '<div class="pname">' + (p.nombre || '') + '</div>' +
-              '<div class="prole">' + (p.rol || '') + '</div>' +
-              (p.area ? '<span class="parea">' + p.area + '</span>' : '') +
-            '</div>' +
+  paginateGrid({
+    items:(d.profesores||[]),slideId:'s7',perPage:8,
+    fill:function(slide,items,startIdx){
+      var wrap=slide.querySelector('[id^="claustro-rows"]'); if(!wrap) return;
+      if(!items.length){ wrap.innerHTML=''; return; }
+      var n=items.length,rows;
+      if(n<=4) rows=[n];
+      else if(n<=8){ var top=Math.ceil(n/2); rows=[top,n-top]; }
+      else rows=[4,4,n-8];
+      var html='',idx=0,radius='clamp(6px,.6vw,12px) clamp(6px,.6vw,12px) 0 0';
+      var maxCols=Math.max.apply(null,rows);
+      rows.forEach(function(count){
+        var rowStyle='flex:1;display:grid;grid-template-columns:repeat('+count+',1fr);gap:clamp(6px,.7vw,12px);min-height:0;';
+        if(count<maxCols){ rowStyle+='width:'+(count/maxCols*100).toFixed(2)+'%;margin-left:auto;margin-right:auto;'; }
+        html+='<div class="claustro-row" style="'+rowStyle+'">';
+        for(var k=0;k<count;k++){
+          var p=items[idx++]; if(!p) continue;
+          html+='<div class="pcard" data-a style="display:flex;flex-direction:column;">'+
+            '<div class="pw-img" style="flex:1;min-height:0;padding-top:0;border-radius:'+radius+';">'+
+              '<img src="'+(p.foto||'')+'" alt="'+(p.nombre||'')+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:'+(p.obj_pos||'50% 24%')+';">'+
+            '</div>'+
+            '<div class="pinfo">'+
+              '<div class="pname">'+(p.nombre||'')+'</div>'+
+              '<div class="prole">'+(p.rol||'')+'</div>'+
+              (p.area?'<span class="parea">'+p.area+'</span>':'')+
+            '</div>'+
           '</div>';
         }
-        html += '</div>';
+        html+='</div>';
       });
-      rowsWrap.innerHTML = html;
+      wrap.innerHTML=html;
     }
-  }
+  })
 
   /* ── S8 Perfil ─────────────────────────────────────── */
   if (d.perfil_bullets) {
