@@ -247,6 +247,26 @@
   color:hsla(0,0%,100%,.5);letter-spacing:.08em;
   z-index:5;pointer-events:none}
 .ey-page-tag .ey-page-cur{color:hsla(0,0%,100%,.85);font-weight:600}
+
+/* ===== S5: fix overflow vertical (contenido elástico, max 2 filas empresas) ===== */
+#s5 .rd5-left{justify-content:flex-start!important;gap:0!important;
+  padding:clamp(38px,5vh,68px) var(--px) clamp(30px,4vh,52px)!important;
+  min-height:0!important;overflow:hidden!important}
+#s5 .rd5-left > *{flex:0 0 auto}
+#s5 .rd5-left > .tm{margin-top:clamp(6px,.8vh,12px)!important}
+#s5 .rd5-left > .rule{margin-top:clamp(12px,1.6vh,20px)!important;margin-bottom:clamp(12px,1.8vh,22px)!important}
+#s5 .rd5-hero{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important;margin:0!important}
+#s5 .rd5-hero .rd5-num{font-size:clamp(74px,min(13vw,22vh),200px)!important;line-height:.82!important}
+#s5 .rd5-cap{font-size:clamp(15px,1.8vw,28px)!important;line-height:1.1!important}
+#s5 .rd5-secs{margin-top:clamp(10px,1.5vh,18px)!important;margin-bottom:clamp(16px,2.2vh,28px)!important;gap:clamp(20px,2.8vw,44px)!important}
+#s5 .rd5-emp{flex:0 0 auto!important}
+#s5 .rd5-strip{display:flex!important;flex-wrap:wrap!important;align-content:flex-start!important;
+  max-height:calc(2 * 2.4em)!important;overflow:hidden!important;
+  margin-top:clamp(6px,.8vh,10px)!important}
+/* S5 chip empresas: compacto para que las 9 quepan en 2 filas reales */
+#s5 .rd5-strip .ctag{padding:clamp(4px,.45vh,7px) clamp(8px,.7vw,12px)!important;font-size:clamp(10px,.72vw,13px)!important;line-height:1.1!important}
+#s5 .rd5-strip{gap:clamp(4px,.4vw,7px)!important;max-height:calc(2 * 2.2em)!important}
+
 </style>
 <style media="print">
   /* ── Reflow fino de impresión (sobrescribe al @media print compilado) ── */
