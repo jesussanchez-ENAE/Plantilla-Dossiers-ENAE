@@ -499,7 +499,7 @@
       </div>
       <div class="rule" data-a></div>
       <div id="prog-dt-block" data-a style="display:inline-flex;align-items:center;gap:clamp(10px,1.1vw,18px);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:8px;padding:clamp(8px,1vh,14px) clamp(14px,1.4vw,24px);width:fit-content;">
-        <span class="lbl" style="margin-bottom:0;">Doble título con</span>
+        <span id="prog-dt-label" class="lbl" style="margin-bottom:0;">Doble título con</span>
         <span style="width:1px;height:clamp(18px,2.4vh,32px);background:rgba(255,255,255,.2);flex-shrink:0;"></span>
         <img id="prog-dt-logo" src="../src/logos/Panamerican-University-W-T.png" alt="Panamerican University"
              style="height:clamp(30px,4.5vh,60px);width:auto;object-fit:contain;">
@@ -1364,6 +1364,11 @@
   if (d.doble_titulo) {
     set('#prog-dt-nombre', d.doble_titulo.nombre);
     set('#prog-dt-pais',   d.doble_titulo.pais);
+    if (d.doble_titulo.label) set('#prog-dt-label', d.doble_titulo.label);
+    if (d.doble_titulo.logo) {
+      var __dtLogo = document.getElementById('prog-dt-logo');
+      if (__dtLogo) { __dtLogo.src = d.doble_titulo.logo; __dtLogo.alt = d.doble_titulo.nombre || ''; }
+    }
   } else {
     if (dtBlock) dtBlock.style.display = 'none';
   }

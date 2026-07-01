@@ -370,7 +370,8 @@ function getDossierEntry(file) {
         programa: (data && data.programa) || file.replace('.html', '').replace(/-/g, ' '),
         titleHtml: buildMixedTitle(data, file),
         categoria: deriveCategoria(data, file),
-        descripcion: descripcion
+        descripcion: descripcion,
+        tituloOficial: data && data.doble_titulo && data.doble_titulo.tipo ? data.doble_titulo.tipo : null,
     };
 
     dossierMetaCache.set(file, { mtimeMs: stats.mtimeMs, entry });
@@ -418,6 +419,65 @@ app.delete('/api/dossiers/:fileName', (req, res) => {
     } catch (error) {
         console.error("Error al eliminar dossier:", error);
         res.status(500).json({ error: "Error al eliminar el archivo." });
+    }
+});
+
+// ─── Cambiar título oficial de un dossier (UMU / UPCT / Panamerican / Título propio ENAE)
+const TITULOS_OFICIALES = {
+    umu: {
+        nombre: 'Universidad de Murcia',
+        pais: 'Murcia, España',
+        logo: '../src/logos/Logo UMU@2x.png',
+        label: 'Título oficial',
+    },
+    upct: {
+        nombre: 'Universidad Politécnica de Cartagena',
+        pais: 'Cartagena, España',
+        logo: '../src/logos/Logo UPCT@2x.png',
+        label: 'Título oficial',
+    },
+    panamerican: {
+        nombre: 'Panamerican University',
+        pais: 'Florida, EE.UU.',
+        logo: '../src/logos/Panamerican-University-W-T.png',
+        label: 'Doble título con',
+    },
+    enae: {
+        nombre: 'ENAE Business School',
+        pais: 'Título propio',
+        logo: '../src/logos/LOGO_ENAE_HORIZONTAL.svg',
+        label: 'Título propio de',
+    },
+};
+
+app.get('/api/titulos-oficiales', (_req, res) => res.json(TITULOS_OFICIALES));
+
+app.post('/api/dossiers/:fileName/titulo-oficial', (req, res) => {
+    try {
+        const { fileName } = req.params;
+        const { tipo } = req.body;
+        if (fileName.includes('/') || fileName.includes('\\') || !fileName.endsWith('.html')) {
+            return res.status(400).json({ error: 'Nombre de archivo inválido.' });
+        }
+        if (!TITULOS_OFICIALES[tipo]) {
+            return res.status(400).json({ error: 'Tipo de título desconocido. Valores válidos: ' + Object.keys(TITULOS_OFICIALES).join(', ') });
+        }
+        const filePath = path.join(DOSSIERS_DIR, fileName);
+        if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Dossier no encontrado.' });
+
+        let html = fs.readFileSync(filePath, 'utf-8');
+        const dataMatch = html.match(/<script id="dossier-data" type="application\/json">([\s\S]*?)<\/script>/);
+        if (!dataMatch) return res.status(500).json({ error: 'Bloque dossier-data no encontrado.' });
+
+        const data = JSON.parse(dataMatch[1]);
+        data.doble_titulo = { ...TITULOS_OFICIALES[tipo], tipo };
+        const newBlock = `<script id="dossier-data" type="application/json">\n${JSON.stringify(data, null, 2)}\n</script>`;
+        html = html.replace(/<script id="dossier-data" type="application\/json">[\s\S]*?<\/script>/, newBlock);
+        fs.writeFileSync(filePath, html);
+        res.json({ success: true, tipo, doble_titulo: data.doble_titulo });
+    } catch (e) {
+        console.error('titulo-oficial:', e);
+        res.status(500).json({ error: e.message });
     }
 });
 

@@ -84,6 +84,12 @@
     .saved-actions { display:flex; gap:8px; margin-top:auto; }
     .saved-actions .btn { flex:1; padding:8px; }
     .saved-actions .btn span { font-size:.78rem; }
+    .titulo-oficial { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+    .titulo-oficial-lbl { font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-secondary); }
+    .titulo-oficial select { width:100%; padding:9px 34px 9px 12px; border:1px solid #d0d4dc; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%237a1020' stroke-width='2'><path d='M1 1l5 5 5-5'/></svg>") no-repeat right 12px center/12px 8px; border-radius:6px; font-size:.82rem; font-family:inherit; color:var(--enae-black,#202221); appearance:none; -webkit-appearance:none; cursor:pointer; transition:border-color .15s, box-shadow .15s; }
+    .titulo-oficial select:hover { border-color:var(--enae-red); }
+    .titulo-oficial select:focus { outline:none; border-color:var(--enae-red); box-shadow:0 0 0 3px rgba(169,24,49,.15); }
+    .titulo-oficial select:disabled { opacity:.5; cursor:wait; }
 
     /* ── Empty / loading ── */
     .empty-state { grid-column:1/-1; background:var(--panel-bg); border:2px dashed var(--panel-border); border-radius:var(--r-lg); padding:56px; text-align:center; display:flex; flex-direction:column; align-items:center; }
@@ -192,6 +198,21 @@ async function loadDossiers() {
     grid.innerHTML = data.map(function(d) {
       var date = new Date(d.createdAt).toLocaleDateString('es-ES', { year:'numeric', month:'short', day:'numeric' });
       var desc = d.descripcion || 'Dossier corporativo ENAE.';
+      var current = d.tituloOficial || '';
+      function opt(val, txt) {
+        return '<option value="' + val + '"' + (val === current ? ' selected' : '') + '>' + txt + '</option>';
+      }
+      var tituloSelect =
+        '<label class="titulo-oficial" title="Titulación con la que se emite el diploma">' +
+          '<span class="titulo-oficial-lbl">Titulación oficial</span>' +
+          '<select onchange="setTituloOficial(\'' + d.fileName + '\', this.value, this)">' +
+            '<option value="" disabled' + (current ? '' : ' selected') + '>— sin definir —</option>' +
+            opt('umu', 'Universidad de Murcia') +
+            opt('upct', 'Universidad Politécnica de Cartagena') +
+            opt('panamerican', 'Panamerican University (doble título)') +
+            opt('enae', 'Título propio de ENAE') +
+          '</select>' +
+        '</label>';
       return '' +
         '<div class="saved-card">' +
           '<div class="saved-thumbnail">' +
@@ -201,6 +222,7 @@ async function loadDossiers() {
           '</div>' +
           '<div class="saved-body">' +
             '<p class="saved-desc">' + esc(desc) + '</p>' +
+            tituloSelect +
             '<div class="saved-actions">' +
               '<a href="' + d.url + '" target="_blank" class="btn btn-secondary" title="Ver dossier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>Ver</span></a>' +
               '<a href="/index.html?edit=' + encodeURIComponent(d.fileName) + '" class="btn btn-secondary" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Editar</span></a>' +
@@ -213,6 +235,32 @@ async function loadDossiers() {
   } catch(e) {
     console.error(e);
     grid.innerHTML = '<div class="loading" style="color:#ef4444;">Error al cargar los dossiers. ¿Está el servidor activo?</div>';
+  }
+}
+
+async function setTituloOficial(fileName, tipo, selectEl) {
+  if (!tipo) return;
+  var prev = selectEl && selectEl.dataset.prev ? selectEl.dataset.prev : '';
+  if (selectEl) selectEl.disabled = true;
+  try {
+    var res = await fetch('/api/dossiers/' + encodeURIComponent(fileName) + '/titulo-oficial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tipo: tipo })
+    });
+    if (res.ok) {
+      toast('Titulación oficial actualizada');
+      if (selectEl) selectEl.dataset.prev = tipo;
+    } else {
+      var err = await res.json().catch(function(){return{};});
+      toast(err.error || 'No se pudo actualizar la titulación', true);
+      if (selectEl && prev) selectEl.value = prev;
+    }
+  } catch (e) {
+    toast('Error de conexión.', true);
+    if (selectEl && prev) selectEl.value = prev;
+  } finally {
+    if (selectEl) selectEl.disabled = false;
   }
 }
 
