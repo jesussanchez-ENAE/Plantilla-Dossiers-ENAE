@@ -29,85 +29,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plantilla Base · Dossier ENAE Business School</title>
+<title>Master in Artificial Intelligence and Data Science — ENAE Business School</title>
 <!-- ╔══════════════════════════════════════════════════════════════╗
      ║  DOSSIER DATA — edita este bloque para cambiar el programa  ║
      ║  El script de hydratación lo leerá y actualizará el DOM.    ║
      ╚══════════════════════════════════════════════════════════════╝ -->
 <script id="dossier-data" type="application/json">
 {
-  "programa":    "Máster Internacional en Marketing Digital e IA",
-  "titulo_l":    "Máster en",
-  "titulo_b1":   "Marketing",
-  "titulo_b2":   "Digital.",
-  "subtitulo":   "Mención en Inteligencia Artificial Aplicada",
-  "categoria":   "Programa de Posgrado · Máster Internacional",
-  "doble_titulo": { "nombre": "Panamerican University", "pais": "Florida, EE.UU." },
-
-  "foto_portada":    "../doc/Marketing Digital/10042023-317A7390.jpg",
-  "foto_que_es":     "../doc/Marketing Digital/Sesion_innegociable_-61.jpg",
-  "foto_metodologia":"../doc/Marketing Digital/10042023-317A8264.jpg",
-
+  "programa": "Master in Artificial Intelligence and Data Science",
+  "titulo_l": "Master in",
+  "titulo_b1": "AI & Data",
+  "titulo_b2": "Science.",
+  "subtitulo": "International program — English edition",
+  "categoria": "Programa de Posgrado · Máster Internacional",
+  "doble_titulo": {
+    "nombre": "Panamerican University",
+    "pais": "Florida, EE.UU."
+  },
+  "foto_portada": "../doc/Marketing Digital/10042023-317A7390.jpg",
+  "foto_que_es": "../doc/Marketing Digital/Sesion_innegociable_-61.jpg",
+  "foto_metodologia": "../doc/Marketing Digital/10042023-317A8264.jpg",
   "kpis_portada": [
-    { "n": "#9",   "l": "QS España 2025" },
-    { "n": "91%",  "l": "empleabilidad" },
-    { "n": "+37",  "l": "años formando líderes" },
-    { "n": "1988", "l": "fundación ENAE" }
+    {
+      "n": "#9",
+      "l": "QS España 2025"
+    },
+    {
+      "n": "91%",
+      "l": "empleabilidad"
+    },
+    {
+      "n": "+37",
+      "l": "años formando líderes"
+    },
+    {
+      "n": "1988",
+      "l": "fundación ENAE"
+    }
   ],
-
   "descripcion": "El mercado busca profesionales que dominen tanto la <strong style=\"color:#fff;font-weight:700;\">estrategia digital</strong> como la <strong style=\"color:#fff;font-weight:700;\">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.",
-
   "cadena_valor": [
-    { "label": "Investigación", "sub": "Insights & datos" },
-    { "label": "Captación",     "sub": "SEO / SEM / Ads" },
-    { "label": "Venta",         "sub": "E-commerce" },
-    { "label": "Fidelización",  "sub": "CRM & Email" },
-    { "label": "Analítica IA",  "sub": "Data-driven" }
+    {
+      "label": "Investigación",
+      "sub": "Insights & datos"
+    },
+    {
+      "label": "Captación",
+      "sub": "SEO / SEM / Ads"
+    },
+    {
+      "label": "Venta",
+      "sub": "E-commerce"
+    },
+    {
+      "label": "Fidelización",
+      "sub": "CRM & Email"
+    },
+    {
+      "label": "Analítica IA",
+      "sub": "Data-driven"
+    }
   ],
-
   "modulos": [
-    { "num": "01", "area": "E-Commerce",  "nombre": "E-Commerce & Trade Marketing", "desc": "El comercio digital es una exigencia para cualquier marca competitiva; el reto está en diseñar estrategias que conecten canales, puntos de venta y comportamientos reales del consumidor." },
-    { "num": "02", "area": "Inteligencia Artificial", "nombre": "Fundamentos de IA y Aplicaciones · Inbound Marketing", "desc": "Si no entiendes cómo funciona la inteligencia artificial, estarás compitiendo con profesionales que sí lo hacen… y perderás." },
-    { "num": "03", "area": "Automation",  "nombre": "Marketing Automation con IA y Flujos Inteligentes Multicanal", "desc": "La automatización ya no es opción: marca la diferencia entre marcas que solo comunican y marcas que convierten, retienen y crecen en piloto automático." },
-    { "num": "04", "area": "SEO / SEM",   "nombre": "Posicionamiento Web y Herramientas Digitales", "desc": "Compites por visibilidad en un mercado donde el que no aparece, no existe. Y el que no sabe por qué aparece, está condenado a desaparecer." },
-    { "num": "05", "area": "Data Science","nombre": "Estadística y Data Science Marketing", "desc": "La intuición ya no basta. Si no sabes leer los datos, estás adivinando. Si no sabes analizarlos, estás tomando decisiones a ciegas." },
-    { "num": "06", "area": "Analítica",   "nombre": "Analítica Digital y Dashboards", "desc": "Si no mides bien, no sabes qué funciona. Y si no sabes qué funciona, estás perdiendo tiempo, dinero y oportunidades." },
-    { "num": "07", "area": "Consumidor",  "nombre": "Análisis del Mercado y Comportamiento del Consumidor", "desc": "Ninguna estrategia de marketing puede ser efectiva sin una comprensión profunda del mercado y de las personas que lo conforman." },
-    { "num": "08", "area": "Comunicación","nombre": "Comunicaciones de Marketing Integradas", "desc": "La saturación de mensajes y canales cambió las reglas: hoy solo las marcas que comunican con coherencia, intención y foco logran conectar." },
-    { "num": "09", "area": "Estrategia",  "nombre": "Dirección de Marketing Estratégico", "desc": "Asume una visión estratégica del marketing, integrándolo como motor de crecimiento, diferenciación y posicionamiento dentro de la organización." },
-    { "num": "10", "area": "Global",      "nombre": "Estrategias de Negocios Internacionales", "desc": "En un mercado globalizado, pensar en clave local ya no basta. Aprende a analizar, planificar y ejecutar estrategias de expansión internacional con criterio y visión." },
-    { "num": "11", "area": "Social Media","nombre": "Marketing y Publicidad en Redes Sociales para Diferentes Mercados y Culturas", "desc": "Domina estrategias de marketing digital que expanden tu alcance global y conectan con audiencias internacionales de forma auténtica y efectiva." }
+    {
+      "num": "01",
+      "area": "Data Science",
+      "nombre": "Foundations of Data Science",
+      "desc": "Provides theoretical and methodological foundations in data science, including statistics, linear algebra, and data structures:."
+    },
+    {
+      "num": "02",
+      "area": "Programa",
+      "nombre": "Python Foundations",
+      "desc": "Introductory course to Python programming for data analysis and task automation:."
+    },
+    {
+      "num": "03",
+      "area": "Programa",
+      "nombre": "Data Analysis and Visualization",
+      "desc": "Explores exploratory analysis and data visualization methods using Tableau and libraries like pandas, seaborn, and matplotlib:."
+    },
+    {
+      "num": "04",
+      "area": "Dirección",
+      "nombre": "Artificial Intelligence and Business",
+      "desc": "Covers practical applications of AI in business functions: marketing, finance, operations, and HR:."
+    },
+    {
+      "num": "05",
+      "area": "IA",
+      "nombre": "Machine Learning",
+      "desc": "Introduces key supervised and unsupervised learning algorithms, including regression, classification, and clustering:."
+    },
+    {
+      "num": "06",
+      "area": "Dirección",
+      "nombre": "Business Analytics and Intelligence Systems",
+      "desc": "Focuses on tools and systems that turn data into strategic decisions, including BI tools like Power."
+    },
+    {
+      "num": "07",
+      "area": "IA",
+      "nombre": "Deep Learning",
+      "desc": "Introduction to deep neural networks, including architectures such as CNNs, RNNs, and."
+    },
+    {
+      "num": "08",
+      "area": "Data Science",
+      "nombre": "Data Science and Artificial Intelligence for Decision-Making",
+      "desc": "Focus on business process automation through the combination of RPA, AI, and the development of autonomous agents capable of making decisions and executing complex tasks.:."
+    },
+    {
+      "num": "09",
+      "area": "Programa",
+      "nombre": "Artificial Intelligence and Organizations",
+      "desc": "ntroduces artificial intelligence techniques for analyzing and interpreting unstructured data such as images, video, and sound, and their application in generating competitive advantages for…"
+    },
+    {
+      "num": "10",
+      "area": "Programa",
+      "nombre": "Large Language Models (llms) and Generative AI",
+      "desc": "Explore the ecosystem of LLMs by analyzing the architectures, capabilities, and applications of models such as ChatGPT (OpenAI), Gemini (Google), Llama (Meta), Grok, among others."
+    },
+    {
+      "num": "11",
+      "area": "IA",
+      "nombre": "IA Business Cases",
+      "desc": "A highly practical course that analyzes, through real case studies, how AI is implemented to solve problems and generate value in the main functional areas of a company."
+    },
+    {
+      "num": "12",
+      "area": "Programa",
+      "nombre": "Capstone Project",
+      "desc": "An integrative project in which students apply acquired knowledge to a high-impact practical case."
+    }
   ],
-
   "ia_temario": [
-    { "nombre": "Introducción a la Inteligencia Artificial", "desc": "Conceptos clave y aplicaciones de la inteligencia artificial en el ámbito del marketing digital." },
-    { "nombre": "Inteligencia Artificial Aplicada al Marketing", "desc": "Uso de IA para la automatización, personalización y optimización de estrategias de marketing." },
-    { "nombre": "Potenciando las Relaciones con el Cliente a través de la IA", "desc": "Mejoras en la experiencia del cliente mediante chatbots, asistentes virtuales y análisis predictivo." },
-    { "nombre": "Publicidad Programática", "desc": "Automatización de la compra de anuncios basada en datos y segmentación avanzada." },
-    { "nombre": "Analítica y Data Driven", "desc": "Toma de decisiones estratégicas en marketing basada en datos y modelos de analítica avanzada." }
+    {
+      "nombre": "Introducción a la Inteligencia Artificial",
+      "desc": "Conceptos clave y aplicaciones de la inteligencia artificial en el ámbito del marketing digital."
+    },
+    {
+      "nombre": "Inteligencia Artificial Aplicada al Marketing",
+      "desc": "Uso de IA para la automatización, personalización y optimización de estrategias de marketing."
+    },
+    {
+      "nombre": "Potenciando las Relaciones con el Cliente a través de la IA",
+      "desc": "Mejoras en la experiencia del cliente mediante chatbots, asistentes virtuales y análisis predictivo."
+    },
+    {
+      "nombre": "Publicidad Programática",
+      "desc": "Automatización de la compra de anuncios basada en datos y segmentación avanzada."
+    },
+    {
+      "nombre": "Analítica y Data Driven",
+      "desc": "Toma de decisiones estratégicas en marketing basada en datos y modelos de analítica avanzada."
+    }
   ],
-
   "ects": 60,
   "meses": 12,
-
-  "kpi1": { "valor": 91, "label": "trabajando<br>al terminar" },
-  "kpi2": { "valor": 82, "label": "mejora profesional<br>demostrada" },
-
+  "kpi1": {
+    "valor": 91,
+    "label": "trabajando<br>al terminar"
+  },
+  "kpi2": {
+    "valor": 82,
+    "label": "mejora profesional<br>demostrada"
+  },
   "empresas": [
-    "Hero España", "IKEA Ibérica", "Grupo HEFAME", "PC Componentes",
-    "Himoinsa", "El Pozo", "Rapsodia", "Medina Artigas"
+    "Hero España",
+    "IKEA Ibérica",
+    "Grupo HEFAME",
+    "PC Componentes",
+    "Himoinsa",
+    "El Pozo",
+    "Rapsodia",
+    "Medina Artigas"
   ],
-
   "profesores": [
-    { "foto": "../doc/Marketing Digital/Profesores/Pablo_Ferreiros_1500.jpg",                        "obj_pos": "50% 24%", "nombre": "Pablo Ferreiros",         "rol": "Director de Marketing Digital",  "area": "Estrategia Digital" },
-    { "foto": "../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg",                  "obj_pos": "50% 24%", "nombre": "Félix Manuel Ros Espín",  "rol": "Experto en E-Commerce",          "area": "E-Commerce" },
-    { "foto": "../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg",                          "obj_pos": "50% 24%", "nombre": "Inmaculada Reinosa",      "rol": "Directora de Contenidos",        "area": "Content & SEO" },
-    { "foto": "../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg",                           "obj_pos": "50% 24%", "nombre": "Rocío González",          "rol": "Social Media Strategy",          "area": "Social Media" },
-    { "foto": "../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg",                       "obj_pos": "50% 24%", "nombre": "Santiago Foulquié",       "rol": "Analítica & Data Science",       "area": "Analytics" },
-    { "foto": "../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg",         "obj_pos": "50% 24%", "nombre": "José Martín Bernado",     "rol": "Negocios Internacionales",       "area": "Internacional" },
-    { "foto": "../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg",                              "obj_pos": "50% 24%", "nombre": "Lauren Kressler",         "rol": "Global Marketing",               "area": "Global Marketing" }
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Pablo_Ferreiros_1500.jpg",
+      "obj_pos": "50% 24%",
+      "nombre": "Pablo Ferreiros",
+      "rol": "Director de Marketing Digital",
+      "area": "Estrategia Digital"
+    },
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg",
+      "obj_pos": "50% 24%",
+      "nombre": "Félix Manuel Ros Espín",
+      "rol": "Experto en E-Commerce",
+      "area": "E-Commerce"
+    },
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg",
+      "obj_pos": "50% 24%",
+      "nombre": "Inmaculada Reinosa",
+      "rol": "Directora de Contenidos",
+      "area": "Content & SEO"
+    },
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg",
+      "obj_pos": "50% 24%",
+      "nombre": "Rocío González",
+      "rol": "Social Media Strategy",
+      "area": "Social Media"
+    },
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg",
+      "obj_pos": "50% 24%",
+      "nombre": "Santiago Foulquié",
+      "rol": "Analítica & Data Science",
+      "area": "Analytics"
+    },
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg",
+      "obj_pos": "50% 24%",
+      "nombre": "José Martín Bernado",
+      "rol": "Negocios Internacionales",
+      "area": "Internacional"
+    },
+    {
+      "foto": "../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg",
+      "obj_pos": "50% 24%",
+      "nombre": "Lauren Kressler",
+      "rol": "Global Marketing",
+      "area": "Global Marketing"
+    }
   ],
-
   "perfil_bullets": [
     "Directivos y ejecutivos de Marketing, Ventas y Agencias",
     "Profesionales de Innovación, I+D y Operaciones",
@@ -115,13 +264,29 @@
     "Profesionales en reciclaje hacia el entorno digital",
     "Recién graduados con vocación digital"
   ],
-
   "demo_stats": [
-    { "n": "44<span>%</span>", "l": "mujeres",          "pct": 44 },
-    { "n": "9",                "l": "nacionalidades",    "pct": 90 },
-    { "n": "33<span>%</span>", "l": "21–26 años",       "pct": 33 },
-    { "n": "42<span>%</span>", "l": "mando intermedio", "pct": 42 }
-  ]
+    {
+      "n": "44<span>%</span>",
+      "l": "mujeres",
+      "pct": 44
+    },
+    {
+      "n": "9",
+      "l": "nacionalidades",
+      "pct": 90
+    },
+    {
+      "n": "33<span>%</span>",
+      "l": "21–26 años",
+      "pct": 33
+    },
+    {
+      "n": "42<span>%</span>",
+      "l": "mando intermedio",
+      "pct": 42
+    }
+  ],
+  "nombre": "master-artificial-intelligence-data-science"
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
