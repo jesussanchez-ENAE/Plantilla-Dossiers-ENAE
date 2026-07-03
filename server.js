@@ -481,6 +481,120 @@ app.post('/api/dossiers/:fileName/titulo-oficial', (req, res) => {
     }
 });
 
+// --- Endpoint: exportar PDF usando Puppeteer headless ---
+app.get('/api/dossiers/:fileName/pdf', async (req, res) => {
+    let browser;
+    try {
+        const { fileName } = req.params;
+        const mode = req.query.mode === 'landscape' ? 'landscape' : 'portrait';
+
+        // Basic security check
+        if (fileName.includes('/') || fileName.includes('\\') || !fileName.endsWith('.html')) {
+            return res.status(400).json({ error: "Nombre de archivo inválido." });
+        }
+
+        const filePath = path.join(DOSSIERS_DIR, fileName);
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: "Dossier no encontrado." });
+        }
+
+        // Importar Puppeteer dinámicamente (módulo ESM en CommonJS)
+        const { default: puppeteer } = await import('puppeteer');
+
+        // Lanzar Puppeteer
+        browser = await puppeteer.launch({
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+
+        const page = await browser.newPage();
+
+        // Configurar viewport inicial según el modo
+        const width = mode === 'landscape' ? 1123 : 794;
+        const height = mode === 'landscape' ? 794 : 1123;
+        await page.setViewport({ width, height, deviceScaleFactor: 2 });
+
+        // Determinar URL del dossier
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+        const host = req.get('host');
+        const targetUrl = `${protocol}://${host}/dossiers/${fileName}?headless=true&mode=${mode}`;
+
+        console.log(`[PDF Generator] Cargando URL: ${targetUrl}`);
+
+        await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 45000 });
+        
+        // Esperar un momento a que terminen las transiciones/animaciones y el loader se oculte
+        await new Promise(r => setTimeout(r, 1200));
+
+        // Preparar DOM para la exportación headless
+        await page.evaluate((printMode) => {
+            // Ocultar preloader si existe
+            const loader = document.getElementById('loader');
+            if (loader) loader.style.display = 'none';
+
+            // Ocultar botón PDF y otros elementos interactivos
+            const pdfBtn = document.getElementById('pdf-menu');
+            if (pdfBtn) pdfBtn.style.display = 'none';
+
+            // Mostrar todas las slides para que no queden ocultas por anime.js
+            document.querySelectorAll('.slide').forEach(s => {
+                s.style.display = 'block';
+                s.style.opacity = '1';
+                s.classList.add('on');
+            });
+
+            // Forzar los valores finales de contadores, arcos y barras
+            if (typeof window.finalizeForPrint === 'function') {
+                window.finalizeForPrint();
+            }
+            if (typeof window.fitSlidesToPage === 'function') {
+                window.fitSlidesToPage();
+            }
+
+            // Si es landscape, forzar el modo en el documento
+            if (printMode === 'landscape') {
+                document.documentElement.dataset.printMode = 'landscape';
+                if (typeof window.exportPdf === 'function') {
+                    window.exportPdf('landscape');
+                }
+            } else {
+                document.documentElement.dataset.printMode = 'portrait';
+                if (typeof window.exportPdf === 'function') {
+                    window.exportPdf('portrait');
+                }
+            }
+        }, mode);
+
+        // Pequeño delay adicional tras el layout swap
+        await new Promise(r => setTimeout(r, 500));
+
+        // Generar PDF
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            landscape: mode === 'landscape',
+            printBackground: true,
+            margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
+            preferCSSPageSize: true
+        });
+
+        await browser.close();
+        browser = null;
+
+        // Nombre limpio para la descarga
+        const cleanName = fileName.replace('.html', '');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${cleanName}-${mode}.pdf"`);
+        res.send(pdfBuffer);
+
+    } catch (err) {
+        console.error("Error al generar PDF con Puppeteer:", err);
+        if (browser) {
+            await browser.close();
+        }
+        res.status(500).json({ error: "Error al exportar el dossier a PDF en el servidor." });
+    }
+});
+
 // Serve the dossiers directory directly so they can be viewed
 app.use('/dossiers', express.static(DOSSIERS_DIR));
 

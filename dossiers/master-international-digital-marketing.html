@@ -461,6 +461,19 @@
 }
 </style>
 <style media="print">
+  /* Ajustes para la exportación horizontal (A4 landscape) para evitar recortes */
+  html[data-print-mode="landscape"],
+  html[data-print-mode="landscape"] body,
+  html[data-print-mode="landscape"] #app {
+    width: 297mm !important;
+    height: 210mm !important;
+    min-width: 297mm !important;
+    max-width: 297mm !important;
+    min-height: 210mm !important;
+    max-height: 210mm !important;
+    overflow: hidden !important;
+  }
+
   /* ── Reflow fino de impresión (sobrescribe al @media print compilado) ── */
   /* s2 «Qué es»: distribuir contenido para eliminar el hueco vertical central */
   #s2 .content-col {
@@ -1820,7 +1833,9 @@ window.finalizeForPrint = function() {
    slide ocupe una página sin partirse ni desbordar. Solo reduce. */
 window.fitSlidesToPage = function() {
   try {
-    var PAGE_H = 1122, SAFE = 1108;
+    var isLandscape = document.documentElement.dataset.printMode === 'landscape';
+    var PAGE_H = isLandscape ? 794 : 1122;
+    var SAFE = isLandscape ? 780 : 1108;
     document.querySelectorAll('.slide').forEach(function(slide) {
       var inner = slide.querySelector(':scope > .inner');
       if (!inner) {
@@ -1842,6 +1857,10 @@ window.fitSlidesToPage = function() {
         var scale = SAFE / h;
         inner.style.transformOrigin = 'top center';
         inner.style.transform = 'scale(' + scale + ')';
+        slide.style.setProperty('overflow', 'hidden', 'important');
+        slide.style.setProperty('height', PAGE_H + 'px', 'important');
+        slide.style.setProperty('min-height', PAGE_H + 'px', 'important');
+      } else if (isLandscape) {
         slide.style.setProperty('overflow', 'hidden', 'important');
         slide.style.setProperty('height', PAGE_H + 'px', 'important');
         slide.style.setProperty('min-height', PAGE_H + 'px', 'important');
@@ -1943,13 +1962,37 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   window.exportPdf=function(mode){
+    var isHeadless = window.location.search.includes('headless=true') || window.location.hash.includes('headless=true');
+    
     document.documentElement.dataset.printMode=mode;
     var pm=document.getElementById('pdf-menu');if(pm) pm.classList.remove('open');
     if(mode==='landscape') applyLandscape();
+    
+    if (isHeadless) {
+      if (typeof window.finalizeForPrint === 'function') window.finalizeForPrint();
+      if (typeof window.fitSlidesToPage === 'function') window.fitSlidesToPage();
+      return;
+    }
+    
+    var fileName = window.location.pathname.split('/').pop() || '_PLANTILLA-BASE.html';
+    var btn = document.getElementById('pdf-btn');
+    var originalHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.innerHTML = '<span class="msym animate-spin" style="margin-right: 4px;">sync</span>Generando...';
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.7';
+    }
+    
+    window.location.href = '/api/dossiers/' + fileName + '/pdf?mode=' + mode;
+    
     setTimeout(function(){
-      window.print();
-      setTimeout(function(){ if(mode==='landscape') restore(); },1500);
-    },100);
+      if (btn) {
+        btn.innerHTML = originalHtml;
+        btn.style.pointerEvents = '';
+        btn.style.opacity = '';
+      }
+      if (mode==='landscape') restore();
+    }, 5000);
   };
 
   document.addEventListener('DOMContentLoaded',function(){
