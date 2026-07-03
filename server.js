@@ -584,7 +584,7 @@ app.get('/api/dossiers/:fileName/pdf', async (req, res) => {
         const cleanName = fileName.replace('.html', '');
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="${cleanName}-${mode}.pdf"`);
-        res.send(pdfBuffer);
+        res.send(Buffer.from(pdfBuffer));
 
     } catch (err) {
         console.error("Error al generar PDF con Puppeteer:", err);
