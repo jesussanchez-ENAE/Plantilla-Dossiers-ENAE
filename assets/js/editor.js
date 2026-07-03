@@ -230,8 +230,8 @@ async function saveDossier(){
       nombre:el.querySelector('[data-f="nombre"]').value.trim(),
       rol:el.querySelector('[data-f="rol"]').value.trim(),
       area:el.querySelector('[data-f="area"]').value.trim(),
-      linkedin:el.querySelector('[data-f="linkedin"]').value.trim(),
-      biografia:el.querySelector('[data-f="biografia"]').value.trim(),
+      linkedin:el.querySelector('[data-f="linkedin"]') ? el.querySelector('[data-f="linkedin"]').value.trim() : '',
+      biografia:el.querySelector('[data-f="biografia"]') ? el.querySelector('[data-f="biografia"]').value.trim() : '',
       foto:el.dataset.foto || '',
       obj_pos:'50% 18%'
     };
