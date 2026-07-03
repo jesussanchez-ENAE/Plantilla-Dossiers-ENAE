@@ -6,112 +6,7 @@
   <title>ENAE Dossiers — Panel de Gestión</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Black.otf') format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Black.woff') format('woff'); font-weight:900; }
-    @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Bold.otf')  format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Bold.woff')  format('woff'); font-weight:700; }
-
-    :root {
-      --enae-red: #a91831; --enae-red-hover: #8f1227; --enae-negro: #202221;
-      --app-bg: #0B0D0F; --panel-bg: #12161A; --panel-border: #1E232A;
-      --input-bg: #181D23; --input-border: #262E37;
-      --text-primary: #FFFFFF; --text-secondary: #94A3B8; --text-muted: #64748B;
-      --font-display: 'SFUIDisplay', sans-serif;
-      --font-body: 'Open Sans', sans-serif;
-      --font-serif: 'Playfair Display', Georgia, serif;
-      --r-md: 10px; --r-lg: 16px;
-      --shadow-soft: 0 10px 30px rgba(0,0,0,.2);
-      --tr: all .3s cubic-bezier(.4,0,.2,1);
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:var(--font-body); background:var(--app-bg); color:var(--text-primary); -webkit-font-smoothing:antialiased; min-height:100vh; }
-    h1,h2,h3,h4,h5 { font-family:var(--font-display); font-weight:700; }
-
-    .mt-accent { font-family:var(--font-serif); font-style:italic; font-weight:normal; text-transform:none; letter-spacing:0; }
-    .mt-light  { font-weight:300; font-family:var(--font-body); }
-
-    /* ── Header ── */
-    .app-header { height:70px; background:var(--panel-bg); border-bottom:1px solid var(--panel-border); display:flex; justify-content:space-between; align-items:center; padding:0 24px; position:fixed; top:0; left:0; right:0; z-index:100; }
-    .logo-container { display:flex; align-items:center; gap:12px; }
-    .brand-badge { background:linear-gradient(135deg,var(--enae-red),var(--enae-negro)); width:38px; height:38px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-weight:900; font-family:var(--font-display); font-size:1.15rem; color:#fff; box-shadow:0 4px 12px rgba(169,24,49,.3); }
-    .brand-title h1 { font-size:1.15rem; font-weight:900; letter-spacing:-.5px; color:var(--text-primary); line-height:1.1; }
-    .brand-title span { font-size:.72rem; color:var(--enae-red); font-weight:700; text-transform:uppercase; letter-spacing:1px; }
-    .header-actions { display:flex; align-items:center; gap:12px; }
-
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 18px; border-radius:var(--r-md); font-size:.9rem; font-weight:600; cursor:pointer; transition:var(--tr); border:none; outline:none; text-decoration:none; }
-    .btn svg { width:17px; height:17px; }
-    .btn-primary { background:var(--enae-red); color:#fff; }
-    .btn-primary:hover { background:var(--enae-red-hover); transform:translateY(-1px); box-shadow:0 4px 12px rgba(169,24,49,.4); }
-    .btn-secondary { background:var(--input-bg); border:1px solid var(--input-border); color:var(--text-secondary); }
-    .btn-secondary:hover { background:var(--input-border); color:var(--text-primary); }
-    .btn-accent { background:linear-gradient(135deg,var(--enae-red),#cf2844); color:#fff; }
-    .btn-accent:hover { box-shadow:0 4px 12px rgba(169,24,49,.3); transform:translateY(-1px); }
-    .btn-danger { background:rgba(239,68,68,.15); color:#ef4444; }
-    .btn-danger:hover { background:#ef4444; color:#fff; }
-    .btn-icon-only { padding:10px; border-radius:var(--r-md); }
-
-    /* ── Layout ── */
-    .main-content { margin-top:70px; min-height:calc(100vh - 70px); }
-    .dashboard-view { max-width:1200px; margin:0 auto; padding:40px 24px; }
-
-    /* ── Welcome banner ── */
-    .welcome-banner { background:linear-gradient(135deg,rgba(32,34,33,.95) 0%,rgba(15,18,21,.98) 100%), radial-gradient(circle at top right,rgba(169,24,49,.25),transparent 400px); border:1px solid var(--panel-border); border-radius:var(--r-lg); padding:48px; margin-bottom:40px; position:relative; overflow:hidden; box-shadow:var(--shadow-soft); }
-    .welcome-banner::before { content:''; position:absolute; top:0; right:0; width:300px; height:100%; background:linear-gradient(90deg,transparent,rgba(169,24,49,.03)); pointer-events:none; }
-    .welcome-banner h2 { font-size:2.2rem; font-weight:800; margin-bottom:12px; background:linear-gradient(135deg,#fff 60%,#e2e8f0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .welcome-banner p { color:var(--text-secondary); font-size:1.05rem; max-width:620px; line-height:1.6; margin-bottom:24px; }
-    .welcome-banner p strong { color:#cbd5e1; font-weight:700; }
-    .welcome-banner p code { background:rgba(169,24,49,.18); color:#f1a8b4; padding:1px 7px; border-radius:5px; font-size:.92em; }
-
-    /* ── Sections ── */
-    .dashboard-section { margin-bottom:48px; }
-    .section-header-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-    .section-header-row h3 { font-size:1.4rem; font-weight:700; position:relative; padding-left:14px; }
-    .section-header-row h3::before { content:''; position:absolute; left:0; top:4px; bottom:4px; width:4px; background:var(--enae-red); border-radius:2px; }
-    .section-count { font-size:.8rem; color:var(--text-muted); font-weight:600; }
-
-    /* ── Grid & cards ── */
-    .saved-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
-    .saved-card { background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:var(--r-lg); overflow:hidden; transition:var(--tr); display:flex; flex-direction:column; }
-    .saved-card:hover { transform:translateY(-6px); border-color:rgba(169,24,49,.4); box-shadow:0 12px 24px rgba(0,0,0,.3); }
-
-    .saved-thumbnail { height:140px; background:var(--input-bg); border-top:4px solid var(--enae-red); border-bottom:1px solid var(--panel-border); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 18px; text-align:center; position:relative; }
-    .saved-thumbnail::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 70% 20%,rgba(169,24,49,.08),transparent 60%); pointer-events:none; }
-    .dossier-tag { position:absolute; top:12px; right:12px; background:var(--enae-red); color:#fff; font-size:.62rem; font-weight:800; padding:4px 9px; border-radius:20px; text-transform:uppercase; letter-spacing:.5px; z-index:1; }
-    .saved-thumbnail h5 { font-size:1.05rem; color:var(--text-primary); margin-bottom:6px; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; z-index:1; }
-    .saved-thumbnail .date { font-size:.72rem; color:var(--text-secondary); z-index:1; }
-
-    .saved-body { padding:16px 18px 18px; display:flex; flex-direction:column; flex-grow:1; }
-    .saved-desc { font-size:.8rem; color:var(--text-secondary); line-height:1.5; margin-bottom:16px; min-height:36px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .saved-actions { display:flex; gap:8px; margin-top:auto; }
-    .saved-actions .btn { flex:1; padding:8px; }
-    .saved-actions .btn span { font-size:.78rem; }
-    .titulo-oficial { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
-    .titulo-oficial-lbl { font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-secondary); }
-    .titulo-oficial select { width:100%; padding:9px 34px 9px 12px; border:1px solid #d0d4dc; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%237a1020' stroke-width='2'><path d='M1 1l5 5 5-5'/></svg>") no-repeat right 12px center/12px 8px; border-radius:6px; font-size:.82rem; font-family:inherit; color:var(--enae-black,#202221); appearance:none; -webkit-appearance:none; cursor:pointer; transition:border-color .15s, box-shadow .15s; }
-    .titulo-oficial select:hover { border-color:var(--enae-red); }
-    .titulo-oficial select:focus { outline:none; border-color:var(--enae-red); box-shadow:0 0 0 3px rgba(169,24,49,.15); }
-    .titulo-oficial select:disabled { opacity:.5; cursor:wait; }
-
-    /* ── Empty / loading ── */
-    .empty-state { grid-column:1/-1; background:var(--panel-bg); border:2px dashed var(--panel-border); border-radius:var(--r-lg); padding:56px; text-align:center; display:flex; flex-direction:column; align-items:center; }
-    .empty-state svg { width:46px; height:46px; color:var(--text-muted); margin-bottom:16px; }
-    .empty-state h4 { font-size:1.2rem; margin-bottom:8px; }
-    .empty-state p { color:var(--text-secondary); max-width:380px; margin-bottom:22px; font-size:.9rem; line-height:1.55; }
-    .loading { grid-column:1/-1; text-align:center; color:var(--text-muted); padding:48px; font-size:.9rem; }
-    .spin { display:inline-block; width:18px; height:18px; border:2px solid var(--panel-border); border-top-color:var(--enae-red); border-radius:50%; animation:sp .6s linear infinite; vertical-align:middle; margin-right:8px; }
-    @keyframes sp { to { transform:rotate(360deg); } }
-
-    /* ── Toast ── */
-    .toast { position:fixed; bottom:22px; right:22px; background:var(--enae-negro); border:1px solid var(--panel-border); color:#fff; padding:12px 18px; border-radius:var(--r-md); font-size:.85rem; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,.4); transform:translateY(70px); opacity:0; transition:var(--tr); z-index:999; }
-    .toast.on { transform:translateY(0); opacity:1; }
-    .toast.err { border-color:var(--enae-red); }
-
-    @media (max-width:600px) {
-      .welcome-banner { padding:30px 22px; }
-      .welcome-banner h2 { font-size:1.6rem; }
-      .header-actions .btn span { display:none; }
-      .dashboard-view { padding:28px 16px; }
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/css/admin.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -130,8 +25,8 @@
     </div>
   </div>
   <div class="header-actions">
-    <a href="/index.html" class="btn btn-primary">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <a href="/index.html" class="btn btn-primary" aria-label="Crear Nuevo Dossier">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       <span>Crear Nuevo Dossier</span>
     </a>
   </div>
@@ -144,146 +39,38 @@
     <div class="welcome-banner">
       <h2>Generador de Dossiers Académicos Interactivos ENAE</h2>
       <p>Diseña catálogos corporativos interactivos alineados al <strong>Manual de Identidad Oficial de ENAE Business School</strong> — utilizando el Rojo Granate corporativo <code>#a91831</code>, tipografía editorial mixta didone y fuentes Open Sans locales.</p>
-      <a href="/index.html" class="btn btn-accent">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <a href="/index.html" class="btn btn-accent" aria-label="Diseñar desde Cero">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Diseñar desde Cero
       </a>
     </div>
 
     <!-- Created dossiers -->
-    <div class="dashboard-section">
+    <section class="dashboard-section" aria-labelledby="dossiers-heading">
       <div class="section-header-row">
-        <h3>Tus Dossiers Creados</h3>
+        <h3 id="dossiers-heading">Tus Dossiers Creados</h3>
         <span class="section-count" id="count"></span>
       </div>
-      <div class="saved-grid" id="grid">
-        <div class="loading"><span class="spin"></span>Cargando dossiers…</div>
+
+      <!-- Buscador -->
+      <div style="margin-bottom: 24px;">
+        <label for="search-dossiers" class="sr-only" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Buscar dossier</label>
+        <div style="position: relative; max-width: 400px;">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; pointer-events: none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="search-dossiers" placeholder="Buscar dossier por nombre..." style="width: 100%; padding: 12px 14px 12px 40px; border-radius: var(--r-md); background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem; outline: none; transition: var(--tr);">
+        </div>
       </div>
-    </div>
+
+      <div class="saved-grid" id="grid">
+        <div class="loading"><span class="spin" aria-hidden="true"></span>Cargando dossiers…</div>
+      </div>
+    </section>
 
   </div>
 </main>
 
 <div class="toast" id="toast"></div>
 
-<script>
-function toast(msg, isErr) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast on' + (isErr ? ' err' : '');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(function() { el.classList.remove('on'); }, 3500);
-}
-
-async function loadDossiers() {
-  var grid = document.getElementById('grid');
-  try {
-    var res  = await fetch('/api/dossiers');
-    var data = await res.json();
-
-    document.getElementById('count').textContent =
-      data.length + (data.length === 1 ? ' dossier' : ' dossiers');
-
-    if (!data.length) {
-      grid.innerHTML =
-        '<div class="empty-state">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' +
-        '<h4>No hay dossiers creados aún</h4>' +
-        '<p>Crea tu primer dossier interactivo con la identidad corporativa de ENAE.</p>' +
-        '<a href="/index.html" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Crear Nuevo Dossier</a>' +
-        '</div>';
-      return;
-    }
-
-    grid.innerHTML = data.map(function(d) {
-      var date = new Date(d.createdAt).toLocaleDateString('es-ES', { year:'numeric', month:'short', day:'numeric' });
-      var desc = d.descripcion || 'Dossier corporativo ENAE.';
-      var current = d.tituloOficial || '';
-      function opt(val, txt) {
-        return '<option value="' + val + '"' + (val === current ? ' selected' : '') + '>' + txt + '</option>';
-      }
-      var tituloSelect =
-        '<label class="titulo-oficial" title="Titulación con la que se emite el diploma">' +
-          '<span class="titulo-oficial-lbl">Titulación oficial</span>' +
-          '<select onchange="setTituloOficial(\'' + d.fileName + '\', this.value, this)">' +
-            '<option value="" disabled' + (current ? '' : ' selected') + '>— sin definir —</option>' +
-            opt('umu', 'Universidad de Murcia') +
-            opt('upct', 'Universidad Politécnica de Cartagena') +
-            opt('panamerican', 'Panamerican University (doble título)') +
-            opt('enae', 'Título propio de ENAE') +
-          '</select>' +
-        '</label>';
-      return '' +
-        '<div class="saved-card">' +
-          '<div class="saved-thumbnail">' +
-            '<span class="dossier-tag">' + esc(d.categoria) + '</span>' +
-            '<h5 class="mixed-title">' + (d.titleHtml || esc(d.programa)) + '</h5>' +
-            '<span class="date">Creado: ' + date + '</span>' +
-          '</div>' +
-          '<div class="saved-body">' +
-            '<p class="saved-desc">' + esc(desc) + '</p>' +
-            tituloSelect +
-            '<div class="saved-actions">' +
-              '<a href="' + d.url + '" target="_blank" class="btn btn-secondary" title="Ver dossier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>Ver</span></a>' +
-              '<a href="/index.html?edit=' + encodeURIComponent(d.fileName) + '" class="btn btn-secondary" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Editar</span></a>' +
-              '<button onclick="delDossier(\'' + d.fileName + '\')" class="btn btn-danger btn-icon-only" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
-            '</div>' +
-            '<div class="saved-actions" style="margin-top: 8px;">' +
-              '<a href="/api/dossiers/' + encodeURIComponent(d.fileName) + '/pdf?mode=portrait" class="btn btn-secondary" style="font-size: 0.78rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px;" title="Descargar PDF Vertical (A4)">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>PDF A4</span>' +
-              '</a>' +
-              '<a href="/api/dossiers/' + encodeURIComponent(d.fileName) + '/pdf?mode=landscape" class="btn btn-secondary" style="font-size: 0.78rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px;" title="Descargar PDF Horizontal (Presentación)">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span>PDF Slide</span>' +
-              '</a>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-    }).join('');
-
-  } catch(e) {
-    console.error(e);
-    grid.innerHTML = '<div class="loading" style="color:#ef4444;">Error al cargar los dossiers. ¿Está el servidor activo?</div>';
-  }
-}
-
-async function setTituloOficial(fileName, tipo, selectEl) {
-  if (!tipo) return;
-  var prev = selectEl && selectEl.dataset.prev ? selectEl.dataset.prev : '';
-  if (selectEl) selectEl.disabled = true;
-  try {
-    var res = await fetch('/api/dossiers/' + encodeURIComponent(fileName) + '/titulo-oficial', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tipo: tipo })
-    });
-    if (res.ok) {
-      toast('Titulación oficial actualizada');
-      if (selectEl) selectEl.dataset.prev = tipo;
-    } else {
-      var err = await res.json().catch(function(){return{};});
-      toast(err.error || 'No se pudo actualizar la titulación', true);
-      if (selectEl && prev) selectEl.value = prev;
-    }
-  } catch (e) {
-    toast('Error de conexión.', true);
-    if (selectEl && prev) selectEl.value = prev;
-  } finally {
-    if (selectEl) selectEl.disabled = false;
-  }
-}
-
-async function delDossier(fileName) {
-  if (!confirm('¿Eliminar "' + fileName + '" de forma permanente?')) return;
-  try {
-    var res = await fetch('/api/dossiers/' + encodeURIComponent(fileName), { method:'DELETE' });
-    if (res.ok) { toast('Dossier eliminado'); loadDossiers(); }
-    else toast('No se pudo eliminar el archivo.', true);
-  } catch(e) { toast('Error de conexión.', true); }
-}
-
-function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-loadDossiers();
-</script>
+<script src="/assets/js/dashboard.js"></script>
 </body>
 </html>
