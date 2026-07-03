@@ -1276,6 +1276,45 @@
     if (attr) { el[attr] = val; } else { el.innerHTML = val; }
   };
 
+  /* ── Traducción al Inglés ──────────────────────────── */
+  if (d.idioma === 'en') {
+    var enDict = {
+      'Portada': 'Cover',
+      'Introducción': 'Introduction',
+      'Por qué este Máster': 'Why this Master',
+      'Programa Académico': 'Academic Program',
+      'Mención · Inteligencia Artificial': 'Specialization · AI',
+      'Metodología': 'Methodology',
+      'Empleabilidad': 'Employability',
+      'Reconocimientos': 'Recognitions',
+      'Claustro Docente': 'Faculty',
+      'Perfil & Admisión': 'Profile & Admission',
+      'Contacto': 'Contact',
+      'Doble título con': 'Dual Degree with',
+      'Título oficial': 'Official Degree',
+      'Título propio de': 'Own Degree by',
+      'ENAE International Business School · Murcia, España': 'ENAE International Business School · Murcia, Spain',
+      'Introducción al programa': 'Program Introduction',
+      'Cómo aprenderás': 'How you will learn',
+      'Prácticas & Empleo': 'Internships & Careers',
+      'Empresas donde han hecho prácticas nuestros alumnos': 'Companies where our students have interned',
+      '+150 profesores': '+150 professors',
+      '¿A quién va dirigido?': 'Who is it for?',
+      'Proceso de admisión': 'Admission Process',
+      'Modalidades disponibles': 'Available formats',
+      'Meses': 'Months',
+      'QS España 2025': 'QS Spain 2025',
+      'empleabilidad': 'employability',
+      'años formando líderes': 'years shaping leaders',
+      'fundación ENAE': 'ENAE founded'
+    };
+    for (var k in CHAPTERS) { if (enDict[CHAPTERS[k]]) CHAPTERS[k] = enDict[CHAPTERS[k]]; }
+    document.querySelectorAll('.ey, .lbl, .sig, .chap-name, .kv-l').forEach(function(el){
+      var txt = el.textContent.trim();
+      if (enDict[txt]) el.textContent = enDict[txt];
+    });
+  }
+
   /* ── Metadatos ─────────────────────────────────────── */
   if (d.programa) document.title = d.programa + ' — ENAE Business School';
 
@@ -1342,7 +1381,11 @@
     }
   });
     var res=document.getElementById('prog-resumen');
-    if(res && d.modulos) res.textContent=d.modulos.length+' m\u00f3dulos \u00b7 '+(d.ects||60)+' ECTS \u00b7 '+(d.meses||12)+' meses';
+    if(res && d.modulos) {
+      var lblMod = d.idioma === 'en' ? 'modules' : 'módulos';
+      var lblMes = d.idioma === 'en' ? 'months' : 'meses';
+      res.textContent=d.modulos.length+' '+lblMod+' · '+(d.ects||60)+' ECTS · '+(d.meses||12)+' '+lblMes;
+    }
   /* ── S3b Temario IA ─────────────────────────────────── */
   paginateGrid({
     items:d.ia_temario||[],slideId:'s3b',perPage:8,
