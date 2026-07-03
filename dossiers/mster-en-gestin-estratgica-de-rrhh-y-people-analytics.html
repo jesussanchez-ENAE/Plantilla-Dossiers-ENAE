@@ -506,6 +506,13 @@
       margin-right: auto !important;
     }
   }
+  @media print {
+    html, body, #app {
+      height: auto !important;
+      min-height: 100% !important;
+      overflow: visible !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1375,17 +1382,7 @@
 <!-- NAVEGACIÓN -->
 <nav id="nav" aria-label="Navegación del dossier">
   <button class="arr" onclick="go(cur-1)" aria-label="Diapositiva anterior">‹</button>
-  <button class="dot on"  onclick="go(0)"></button>
-  <button class="dot"     onclick="go(1)"></button>
-  <button class="dot"     onclick="go(2)"></button>
-  <button class="dot"     onclick="go(3)"></button>
-  <button class="dot"     onclick="go(4)"></button>
-  <button class="dot"     onclick="go(5)"></button>
-  <button class="dot"     onclick="go(6)"></button>
-  <button class="dot"     onclick="go(7)"></button>
-  <button class="dot"     onclick="go(8)"></button>
-  <button class="dot"     onclick="go(9)"></button>
-  <button class="dot"     onclick="go(10)"></button>
+  <!-- Los dots se inyectan dinámicamente -->
   <button class="arr" onclick="go(cur+1)" aria-label="Siguiente diapositiva">›</button>
 </nav>
 </main><!-- #app -->
@@ -1396,6 +1393,20 @@
      ║  HYDRATION SCRIPT — lee dossier-data y actualiza el DOM    ║
      ╚══════════════════════════════════════════════════════════════╝ -->
 <script>
+/* Mapeo de nombre de capítulo por id de slide */
+var CHAPTERS = {
+  s1:  'Portada',
+  s2:  'Introducción',
+  s2b: 'Por qué este Máster',
+  s3:  'Programa Académico',
+  s3b: 'Mención · Inteligencia Artificial',
+  s4:  'Metodología',
+  s5:  'Empleabilidad',
+  s6:  'Reconocimientos',
+  s7:  'Claustro Docente',
+  s8:  'Perfil & Admisión',
+  s9:  'Contacto'
+};
 (function hydrateProgram() {
     /* ---- paginateGrid: si items > perPage, clona la slide y reparte ---- */
     function paginateGrid(opts){
@@ -1603,14 +1614,16 @@
         for(var k=0;k<count;k++){
           var p=items[idx++]; if(!p) continue;
           html+='<div class="pcard" data-a style="display:flex;flex-direction:column;">'+
-            '<div class="pw-img" style="position:relative;padding-top:90%;border-radius:'+radius+';flex-shrink:0;">'+
+            '<div class="pw-img" style="position:relative;flex:1;min-height:0;padding-top:0;border-radius:'+radius+';">'+
               '<img src="'+(p.foto||'')+'" alt="'+(p.nombre||'')+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:'+(p.obj_pos||'50% 24%')+';">'+
             '</div>'+
             '<div class="pinfo" style="flex:1;display:flex;flex-direction:column;justify-content:center;">'+
               '<div>'+
                 '<div class="pname">'+(p.nombre||'')+'</div>'+
                 '<div class="prole">'+(p.rol||'')+'</div>'+
-                (p.area?'<span class="parea">'+p.area+'</span>':'')+
+                (p.area?'<div style="margin-bottom:4px;"><span class="parea">'+p.area+'</span></div>':'')+
+                (p.biografia?'<div class="pbio" style="font-size:clamp(9.5px, .66vw, 12px);color:hsla(0,0%,100%,.65);line-height:1.45;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--fb);">'+p.biografia+'</div>':'')+
+                (p.linkedin?'<div style="margin-top:8px;"><a href="'+p.linkedin+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;color:var(--gr);text-decoration:none;font-size:clamp(9.5px, .66vw, 12px);font-weight:700;font-family:var(--fb);"><span class="msym" style="font-size:1.3em;">link</span>LinkedIn</a></div>':'')+
               '</div>'+
             '</div>'+
           '</div>';
@@ -1643,10 +1656,50 @@
 </script>
 
 <script>
-const SL = document.querySelectorAll('.slide');
-const DT = document.querySelectorAll('.dot');
-const N = SL.length;
-let cur = 0, busy = false;
+var SL = document.querySelectorAll('.slide');
+var N = SL.length;
+var cur = 0, busy = false;
+
+// Generar dots dinámicamente
+(function generateDots(){
+  var nav = document.getElementById('nav');
+  if(!nav) return;
+  var nextBtn = nav.querySelector('button[aria-label="Siguiente diapositiva"]');
+  var frag = document.createDocumentFragment();
+  SL.forEach(function(s, i) {
+    var baseId = s.id.split('-')[0];
+    var title = CHAPTERS[baseId] || '';
+    var btn = document.createElement('button');
+    btn.className = 'dot' + (i === 0 ? ' on' : '');
+    btn.setAttribute('data-title', title);
+    btn.onclick = function() { go(i); };
+    frag.appendChild(btn);
+  });
+  nav.insertBefore(frag, nextBtn);
+})();
+
+var DT = document.querySelectorAll('.dot');
+
+// Actualizar tooltip interactivo
+(function initTooltips(){
+  var tt = document.getElementById('nav-tooltip');
+  if(!tt) return;
+  DT.forEach(function(d){
+    d.addEventListener('mouseenter', function(){
+      var title = d.getAttribute('data-title');
+      if (!title) return;
+      tt.textContent = title;
+      var rect = d.getBoundingClientRect();
+      tt.style.left = (rect.left + rect.width/2) + 'px';
+      tt.style.opacity = '1';
+      tt.style.transform = 'translate(-50%, 0)';
+    });
+    d.addEventListener('mouseleave', function(){
+      tt.style.opacity = '0';
+      tt.style.transform = 'translate(-50%, 4px)';
+    });
+  });
+})();
 
 function go(n) {
   if (busy || n < 0 || n >= N || n === cur) return;
@@ -1676,20 +1729,7 @@ function go(n) {
   });
 }
 
-/* Mapeo de nombre de capítulo por id de slide */
-const CHAPTERS = {
-  s1:  'Portada',
-  s2:  'Introducción',
-  s2b: 'Por qué este Máster',
-  s3:  'Programa Académico',
-  s3b: 'Mención · Inteligencia Artificial',
-  s4:  'Metodología',
-  s5:  'Empleabilidad',
-  s6:  'Reconocimientos',
-  s7:  'Claustro Docente',
-  s8:  'Perfil & Admisión',
-  s9:  'Contacto'
-};
+
 
 function ui() {
   document.getElementById('ctr').textContent = String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
@@ -2063,5 +2103,8 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 })();
 </script>
+
+<!-- Tooltip de navegación -->
+<div id="nav-tooltip" style="position:fixed; bottom: 8.5vh; left: 50%; transform: translateX(-50%) translateY(4px); background:rgba(0,0,0,0.85); color:#fff; padding:6px 12px; border-radius:6px; font-family:var(--fb); font-size:11px; font-weight:700; opacity:0; pointer-events:none; transition:opacity 0.25s, transform 0.25s; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:210;"></div>
 </body>
 </html>
