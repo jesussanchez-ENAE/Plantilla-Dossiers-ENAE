@@ -29,85 +29,233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plantilla Base · Dossier ENAE Business School</title>
+<title>Máster en Gestión Estratégica de RR.HH. y People Analytics — ENAE Business School</title>
 <!-- ╔══════════════════════════════════════════════════════════════╗
      ║  DOSSIER DATA — edita este bloque para cambiar el programa  ║
      ║  El script de hydratación lo leerá y actualizará el DOM.    ║
      ╚══════════════════════════════════════════════════════════════╝ -->
 <script id="dossier-data" type="application/json">
 {
-  "programa":    "Máster Internacional en Marketing Digital e IA",
-  "titulo_l":    "Máster en",
-  "titulo_b1":   "Marketing",
-  "titulo_b2":   "Digital.",
-  "subtitulo":   "Mención en Inteligencia Artificial Aplicada",
-  "categoria":   "Programa de Posgrado · Máster Internacional",
-  "doble_titulo": { "nombre": "Panamerican University", "pais": "Florida, EE.UU." },
-
-  "foto_portada":    "../doc/Marketing Digital/10042023-317A7390.jpg",
-  "foto_que_es":     "../doc/Marketing Digital/Sesion_innegociable_-61.jpg",
-  "foto_metodologia":"../doc/Marketing Digital/10042023-317A8264.jpg",
-
+  "idioma": "es",
+  "nombre": "Máster en Gestión Estratégica de RR.HH. y People Analytics",
+  "programa": "Máster en Gestión Estratégica de RR.HH. y People Analytics",
+  "titulo_l": "Máster en",
+  "titulo_b1": "Gestión Estratégica de RR.HH.",
+  "titulo_b2": "y People Analytics.",
+  "subtitulo": "Mención en Inteligencia Artificial",
+  "categoria": "Programa de Posgrado · Máster Internacional",
+  "doble_titulo": {
+    "tipo": "panamerican",
+    "nombre": "Panamerican University",
+    "pais": "Florida, EE.UU.",
+    "logo": "../src/logos/Panamerican-University-W-T.png",
+    "label": "Doble título con"
+  },
+  "foto_portada": "../doc/Marketing Digital/10042023-317A7390.jpg",
+  "foto_que_es": "../doc/Marketing Digital/Sesion_innegociable_-61.jpg",
+  "foto_metodologia": "../doc/Marketing Digital/10042023-317A8264.jpg",
   "kpis_portada": [
-    { "n": "#9",   "l": "QS España 2025" },
-    { "n": "91%",  "l": "empleabilidad" },
-    { "n": "+37",  "l": "años formando líderes" },
-    { "n": "1988", "l": "fundación ENAE" }
+    {
+      "n": "#9",
+      "l": "QS España 2025"
+    },
+    {
+      "n": "91%",
+      "l": "empleabilidad"
+    },
+    {
+      "n": "+37",
+      "l": "años formando líderes"
+    },
+    {
+      "n": "1988",
+      "l": "fundación ENAE"
+    }
   ],
-
-  "descripcion": "El mercado busca profesionales que dominen tanto la <strong style=\"color:#fff;font-weight:700;\">estrategia digital</strong> como la <strong style=\"color:#fff;font-weight:700;\">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.",
-
+  "descripcion": "El mercado busca profesionales que dominen tanto la estrategia digital como la inteligencia artificial aplicada. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.",
   "cadena_valor": [
-    { "label": "Investigación", "sub": "Insights & datos" },
-    { "label": "Captación",     "sub": "SEO / SEM / Ads" },
-    { "label": "Venta",         "sub": "E-commerce" },
-    { "label": "Fidelización",  "sub": "CRM & Email" },
-    { "label": "Analítica IA",  "sub": "Data-driven" }
+    {
+      "label": "Fase 1",
+      "sub": "Fundamentos"
+    },
+    {
+      "label": "Fase 2",
+      "sub": "Especialización"
+    },
+    {
+      "label": "Fase 3",
+      "sub": "Práctica"
+    },
+    {
+      "label": "Fase 4",
+      "sub": "Proyecto"
+    },
+    {
+      "label": "Fase 5",
+      "sub": "Inserción"
+    }
   ],
-
   "modulos": [
-    { "num": "01", "area": "E-Commerce",  "nombre": "E-Commerce & Trade Marketing", "desc": "El comercio digital es una exigencia para cualquier marca competitiva; el reto está en diseñar estrategias que conecten canales, puntos de venta y comportamientos reales del consumidor." },
-    { "num": "02", "area": "Inteligencia Artificial", "nombre": "Fundamentos de IA y Aplicaciones · Inbound Marketing", "desc": "Si no entiendes cómo funciona la inteligencia artificial, estarás compitiendo con profesionales que sí lo hacen… y perderás." },
-    { "num": "03", "area": "Automation",  "nombre": "Marketing Automation con IA y Flujos Inteligentes Multicanal", "desc": "La automatización ya no es opción: marca la diferencia entre marcas que solo comunican y marcas que convierten, retienen y crecen en piloto automático." },
-    { "num": "04", "area": "SEO / SEM",   "nombre": "Posicionamiento Web y Herramientas Digitales", "desc": "Compites por visibilidad en un mercado donde el que no aparece, no existe. Y el que no sabe por qué aparece, está condenado a desaparecer." },
-    { "num": "05", "area": "Data Science","nombre": "Estadística y Data Science Marketing", "desc": "La intuición ya no basta. Si no sabes leer los datos, estás adivinando. Si no sabes analizarlos, estás tomando decisiones a ciegas." },
-    { "num": "06", "area": "Analítica",   "nombre": "Analítica Digital y Dashboards", "desc": "Si no mides bien, no sabes qué funciona. Y si no sabes qué funciona, estás perdiendo tiempo, dinero y oportunidades." },
-    { "num": "07", "area": "Consumidor",  "nombre": "Análisis del Mercado y Comportamiento del Consumidor", "desc": "Ninguna estrategia de marketing puede ser efectiva sin una comprensión profunda del mercado y de las personas que lo conforman." },
-    { "num": "08", "area": "Comunicación","nombre": "Comunicaciones de Marketing Integradas", "desc": "La saturación de mensajes y canales cambió las reglas: hoy solo las marcas que comunican con coherencia, intención y foco logran conectar." },
-    { "num": "09", "area": "Estrategia",  "nombre": "Dirección de Marketing Estratégico", "desc": "Asume una visión estratégica del marketing, integrándolo como motor de crecimiento, diferenciación y posicionamiento dentro de la organización." },
-    { "num": "10", "area": "Global",      "nombre": "Estrategias de Negocios Internacionales", "desc": "En un mercado globalizado, pensar en clave local ya no basta. Aprende a analizar, planificar y ejecutar estrategias de expansión internacional con criterio y visión." },
-    { "num": "11", "area": "Social Media","nombre": "Marketing y Publicidad en Redes Sociales para Diferentes Mercados y Culturas", "desc": "Domina estrategias de marketing digital que expanden tu alcance global y conectan con audiencias internacionales de forma auténtica y efectiva." }
+    {
+      "num": "01",
+      "area": "Programa",
+      "nombre": "Fundamentos de Ciencias Humanas",
+      "desc": "Ofrece bases de psicología, sociología y antropología aplicadas al comportamiento humano y la dinámica organizacional. Incluye formación de tribus, grupos pequeños, arquetipos y motivaciones…"
+    },
+    {
+      "num": "02",
+      "area": "Marketing",
+      "nombre": "Desarrollo de Personas, Bienestar y Desempeño",
+      "desc": "Analiza estrategias para mejorar desarrollo, bienestar y desempeño de los colaboradores. Incluye gestión del talento, aprendizaje y desarrollo, bienestar laboral, evaluación de desempeño y uso…"
+    },
+    {
+      "num": "03",
+      "area": "Programa",
+      "nombre": "Comportamiento y Dinámica Organizacional",
+      "desc": "Explora aspectos psicológicos y sociológicos del comportamiento en organizaciones a nivel individual, grupal y organizacional. Incluye motivación, liderazgo, colaboración, cultura y cambio, con…"
+    },
+    {
+      "num": "04",
+      "area": "Programa",
+      "nombre": "Desarrollo Organizacional, Cultura y Cambio",
+      "desc": "Examina principios y prácticas de desarrollo organizacional con énfasis en cultura y gestión del cambio. Incluye diagnóstico organizacional, modelos de cambio, transformación cultural e…"
+    },
+    {
+      "num": "05",
+      "area": "Estrategia",
+      "nombre": "Liderazgo Estratégico",
+      "desc": "Estudia principios y prácticas de liderazgo estratégico orientado al éxito organizacional. Incluye visión, toma de decisiones, influencia, inteligencia emocional y liderazgo adaptativo para…"
+    },
+    {
+      "num": "06",
+      "area": "RRHH",
+      "nombre": "Atracción, Recompensa y Compensación del Talento",
+      "desc": "Analiza estrategias para atraer, retener y motivar talento mediante planificación de fuerza laboral, reclutamiento, benchmarking salarial, diseño de beneficios y recompensas por desempeño. Usa…"
+    },
+    {
+      "num": "07",
+      "area": "RRHH",
+      "nombre": "Compromiso y Retención del Talento",
+      "desc": "Estudia estrategias para elevar engagement y retención. Incluye diseño de experiencia del colaborador, motivación, reconocimiento, desarrollo de carrera y medición analítica del compromiso para…"
+    },
+    {
+      "num": "08",
+      "area": "Programa",
+      "nombre": "Diversidad, Inclusión y Ética",
+      "desc": "Examina diversidad, equidad, inclusión y prácticas éticas en organizaciones. Aborda sesgos inconscientes, toma de decisiones éticas, diseño de políticas inclusivas y alineación de iniciativas de…"
+    },
+    {
+      "num": "09",
+      "area": "IA",
+      "nombre": "Introducción y Organización para la Inteligencia Artificial",
+      "desc": "Analiza la integración de IA en estructuras y procesos organizacionales. Incluye adquisición de talento impulsada por IA, gestión del desempeño, planificación de fuerza laboral, gestión del…"
+    },
+    {
+      "num": "10",
+      "area": "RRHH",
+      "nombre": "People Analytics y Métricas",
+      "desc": "Desarrolla enfoques basados en datos para analizar tendencias de fuerza laboral y mejorar decisiones de RR. HH. Incluye métricas clave, analítica predictiva, evaluación de desempeño,…"
+    },
+    {
+      "num": "11",
+      "area": "Estrategia",
+      "nombre": "Estrategia de Negocio para Líderes de Rr. Hh",
+      "desc": "Fortalece la capacidad estratégica de líderes de RR. HH. para alinear iniciativas de talento con objetivos organizacionales. Incluye análisis competitivo, planificación estratégica de fuerza…"
+    }
   ],
-
   "ia_temario": [
-    { "nombre": "Introducción a la Inteligencia Artificial", "desc": "Conceptos clave y aplicaciones de la inteligencia artificial en el ámbito del marketing digital." },
-    { "nombre": "Inteligencia Artificial Aplicada al Marketing", "desc": "Uso de IA para la automatización, personalización y optimización de estrategias de marketing." },
-    { "nombre": "Potenciando las Relaciones con el Cliente a través de la IA", "desc": "Mejoras en la experiencia del cliente mediante chatbots, asistentes virtuales y análisis predictivo." },
-    { "nombre": "Publicidad Programática", "desc": "Automatización de la compra de anuncios basada en datos y segmentación avanzada." },
-    { "nombre": "Analítica y Data Driven", "desc": "Toma de decisiones estratégicas en marketing basada en datos y modelos de analítica avanzada." }
+    {
+      "nombre": "Introducción a la Inteligencia Artificial",
+      "desc": "Conceptos clave y aplicaciones de la inteligencia artificial en el ámbito del marketing digital."
+    },
+    {
+      "nombre": "Inteligencia Artificial Aplicada al Marketing",
+      "desc": "Uso de IA para la automatización, personalización y optimización de estrategias de marketing."
+    },
+    {
+      "nombre": "Potenciando las Relaciones con el Cliente a través de la IA",
+      "desc": "Mejoras en la experiencia del cliente mediante chatbots, asistentes virtuales y análisis predictivo."
+    },
+    {
+      "nombre": "Publicidad Programática",
+      "desc": "Automatización de la compra de anuncios basada en datos y segmentación avanzada."
+    },
+    {
+      "nombre": "Analítica y Data Driven",
+      "desc": "Toma de decisiones estratégicas en marketing basada en datos y modelos de analítica avanzada."
+    }
   ],
-
   "ects": 60,
   "meses": 12,
-
-  "kpi1": { "valor": 91, "label": "trabajando<br>al terminar" },
-  "kpi2": { "valor": 82, "label": "mejora profesional<br>demostrada" },
-
+  "kpi1": {
+    "valor": 91,
+    "label": "trabajando<br>al terminar"
+  },
+  "kpi2": {
+    "valor": 82,
+    "label": "mejora profesional<br>demostrada"
+  },
   "empresas": [
-    "Hero España", "IKEA Ibérica", "Grupo HEFAME", "PC Componentes",
-    "Himoinsa", "El Pozo", "Rapsodia", "Medina Artigas"
+    "Hero España",
+    "IKEA Ibérica",
+    "Grupo HEFAME",
+    "PC Componentes",
+    "Himoinsa",
+    "El Pozo",
+    "Rapsodia",
+    "Medina Artigas"
   ],
-
   "profesores": [
-    { "foto": "../doc/Marketing Digital/Profesores/Pablo_Ferreiros_1500.jpg",                        "obj_pos": "50% 24%", "nombre": "Pablo Ferreiros",         "rol": "Director de Marketing Digital",  "area": "Estrategia Digital" },
-    { "foto": "../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg",                  "obj_pos": "50% 24%", "nombre": "Félix Manuel Ros Espín",  "rol": "Experto en E-Commerce",          "area": "E-Commerce" },
-    { "foto": "../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg",                          "obj_pos": "50% 24%", "nombre": "Inmaculada Reinosa",      "rol": "Directora de Contenidos",        "area": "Content & SEO" },
-    { "foto": "../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg",                           "obj_pos": "50% 24%", "nombre": "Rocío González",          "rol": "Social Media Strategy",          "area": "Social Media" },
-    { "foto": "../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg",                       "obj_pos": "50% 24%", "nombre": "Santiago Foulquié",       "rol": "Analítica & Data Science",       "area": "Analytics" },
-    { "foto": "../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg",         "obj_pos": "50% 24%", "nombre": "José Martín Bernado",     "rol": "Negocios Internacionales",       "area": "Internacional" },
-    { "foto": "../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg",                              "obj_pos": "50% 24%", "nombre": "Lauren Kressler",         "rol": "Global Marketing",               "area": "Global Marketing" }
+    {
+      "nombre": "Pablo Ferreiros",
+      "rol": "Director de Marketing Digital",
+      "area": "Estrategia Digital",
+      "foto": "../doc/Marketing Digital/Profesores/Pablo_Ferreiros_1500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Félix Manuel Ros Espín",
+      "rol": "Experto en E-Commerce",
+      "area": "E-Commerce",
+      "foto": "../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Inmaculada Reinosa",
+      "rol": "Directora de Contenidos",
+      "area": "Content & SEO",
+      "foto": "../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Rocío González",
+      "rol": "Social Media Strategy",
+      "area": "Social Media",
+      "foto": "../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Santiago Foulquié",
+      "rol": "Analítica & Data Science",
+      "area": "Analytics",
+      "foto": "../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "José Martín Bernado",
+      "rol": "Negocios Internacionales",
+      "area": "Internacional",
+      "foto": "../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Lauren Kressler",
+      "rol": "Global Marketing",
+      "area": "Global Marketing",
+      "foto": "../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg",
+      "obj_pos": "50% 18%"
+    }
   ],
-
   "perfil_bullets": [
     "Directivos y ejecutivos de Marketing, Ventas y Agencias",
     "Profesionales de Innovación, I+D y Operaciones",
@@ -115,12 +263,27 @@
     "Profesionales en reciclaje hacia el entorno digital",
     "Recién graduados con vocación digital"
   ],
-
   "demo_stats": [
-    { "n": "44<span>%</span>", "l": "mujeres",          "pct": 44 },
-    { "n": "9",                "l": "nacionalidades",    "pct": 90 },
-    { "n": "33<span>%</span>", "l": "21–26 años",       "pct": 33 },
-    { "n": "42<span>%</span>", "l": "mando intermedio", "pct": 42 }
+    {
+      "n": "44<span>%</span>",
+      "l": "mujeres",
+      "pct": 44
+    },
+    {
+      "n": "9",
+      "l": "nacionalidades",
+      "pct": 90
+    },
+    {
+      "n": "33<span>%</span>",
+      "l": "21–26 años",
+      "pct": 33
+    },
+    {
+      "n": "42<span>%</span>",
+      "l": "mando intermedio",
+      "pct": 42
+    }
   ]
 }
 </script>
@@ -1447,9 +1610,7 @@
               '<div>'+
                 '<div class="pname">'+(p.nombre||'')+'</div>'+
                 '<div class="prole">'+(p.rol||'')+'</div>'+
-                (p.area?'<div style="margin-bottom:4px;"><span class="parea">'+p.area+'</span></div>':'')+
-                (p.biografia?'<div class="pbio" style="font-size:clamp(9.5px, .66vw, 12px);color:hsla(0,0%,100%,.65);line-height:1.45;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--fb);">'+p.biografia+'</div>':'')+
-                (p.linkedin?'<div style="margin-top:8px;"><a href="'+p.linkedin+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;color:var(--gr);text-decoration:none;font-size:clamp(9.5px, .66vw, 12px);font-weight:700;font-family:var(--fb);"><span class="msym" style="font-size:1.3em;">link</span>LinkedIn</a></div>':'')+
+                (p.area?'<span class="parea">'+p.area+'</span>':'')+
               '</div>'+
             '</div>'+
           '</div>';

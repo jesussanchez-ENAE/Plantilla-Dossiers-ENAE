@@ -29,85 +29,281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plantilla Base · Dossier ENAE Business School</title>
+<title>Máster en Dirección de Agronegocios — ENAE Business School</title>
 <!-- ╔══════════════════════════════════════════════════════════════╗
      ║  DOSSIER DATA — edita este bloque para cambiar el programa  ║
      ║  El script de hydratación lo leerá y actualizará el DOM.    ║
      ╚══════════════════════════════════════════════════════════════╝ -->
 <script id="dossier-data" type="application/json">
 {
-  "programa":    "Máster Internacional en Marketing Digital e IA",
-  "titulo_l":    "Máster en",
-  "titulo_b1":   "Marketing",
-  "titulo_b2":   "Digital.",
-  "subtitulo":   "Mención en Inteligencia Artificial Aplicada",
-  "categoria":   "Programa de Posgrado · Máster Internacional",
-  "doble_titulo": { "nombre": "Panamerican University", "pais": "Florida, EE.UU." },
-
-  "foto_portada":    "../doc/Marketing Digital/10042023-317A7390.jpg",
-  "foto_que_es":     "../doc/Marketing Digital/Sesion_innegociable_-61.jpg",
-  "foto_metodologia":"../doc/Marketing Digital/10042023-317A8264.jpg",
-
+  "idioma": "es",
+  "nombre": "Máster en Dirección de Agronegocios",
+  "programa": "Máster en Dirección de Agronegocios",
+  "titulo_l": "Máster en",
+  "titulo_b1": "Dirección de",
+  "titulo_b2": "Agronegocios.",
+  "subtitulo": "Gestión estratégica del sector agroalimentario",
+  "categoria": "Programa de Posgrado · Máster Internacional",
+  "doble_titulo": {
+    "tipo": "upct",
+    "nombre": "Universidad Politécnica de Cartagena",
+    "pais": "Cartagena, España",
+    "logo": "../src/logos/Logo UPCT@2x.png",
+    "label": "Título oficial"
+  },
+  "foto_portada": "../doc/Marketing Digital/10042023-317A7390.jpg",
+  "foto_que_es": "../doc/Marketing Digital/Sesion_innegociable_-61.jpg",
+  "foto_metodologia": "../doc/Marketing Digital/10042023-317A8264.jpg",
   "kpis_portada": [
-    { "n": "#9",   "l": "QS España 2025" },
-    { "n": "91%",  "l": "empleabilidad" },
-    { "n": "+37",  "l": "años formando líderes" },
-    { "n": "1988", "l": "fundación ENAE" }
+    {
+      "n": "#9",
+      "l": "QS España 2025"
+    },
+    {
+      "n": "91%",
+      "l": "empleabilidad"
+    },
+    {
+      "n": "+37",
+      "l": "años formando líderes"
+    },
+    {
+      "n": "1988",
+      "l": "fundación ENAE"
+    }
   ],
-
-  "descripcion": "El mercado busca profesionales que dominen tanto la <strong style=\"color:#fff;font-weight:700;\">estrategia digital</strong> como la <strong style=\"color:#fff;font-weight:700;\">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.",
-
+  "descripcion": "El mercado busca profesionales que dominen tanto la estrategia digital como la inteligencia artificial aplicada. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.",
   "cadena_valor": [
-    { "label": "Investigación", "sub": "Insights & datos" },
-    { "label": "Captación",     "sub": "SEO / SEM / Ads" },
-    { "label": "Venta",         "sub": "E-commerce" },
-    { "label": "Fidelización",  "sub": "CRM & Email" },
-    { "label": "Analítica IA",  "sub": "Data-driven" }
+    {
+      "label": "Fase 1",
+      "sub": "Fundamentos"
+    },
+    {
+      "label": "Fase 2",
+      "sub": "Especialización"
+    },
+    {
+      "label": "Fase 3",
+      "sub": "Práctica"
+    },
+    {
+      "label": "Fase 4",
+      "sub": "Proyecto"
+    },
+    {
+      "label": "Fase 5",
+      "sub": "Inserción"
+    }
   ],
-
   "modulos": [
-    { "num": "01", "area": "E-Commerce",  "nombre": "E-Commerce & Trade Marketing", "desc": "El comercio digital es una exigencia para cualquier marca competitiva; el reto está en diseñar estrategias que conecten canales, puntos de venta y comportamientos reales del consumidor." },
-    { "num": "02", "area": "Inteligencia Artificial", "nombre": "Fundamentos de IA y Aplicaciones · Inbound Marketing", "desc": "Si no entiendes cómo funciona la inteligencia artificial, estarás compitiendo con profesionales que sí lo hacen… y perderás." },
-    { "num": "03", "area": "Automation",  "nombre": "Marketing Automation con IA y Flujos Inteligentes Multicanal", "desc": "La automatización ya no es opción: marca la diferencia entre marcas que solo comunican y marcas que convierten, retienen y crecen en piloto automático." },
-    { "num": "04", "area": "SEO / SEM",   "nombre": "Posicionamiento Web y Herramientas Digitales", "desc": "Compites por visibilidad en un mercado donde el que no aparece, no existe. Y el que no sabe por qué aparece, está condenado a desaparecer." },
-    { "num": "05", "area": "Data Science","nombre": "Estadística y Data Science Marketing", "desc": "La intuición ya no basta. Si no sabes leer los datos, estás adivinando. Si no sabes analizarlos, estás tomando decisiones a ciegas." },
-    { "num": "06", "area": "Analítica",   "nombre": "Analítica Digital y Dashboards", "desc": "Si no mides bien, no sabes qué funciona. Y si no sabes qué funciona, estás perdiendo tiempo, dinero y oportunidades." },
-    { "num": "07", "area": "Consumidor",  "nombre": "Análisis del Mercado y Comportamiento del Consumidor", "desc": "Ninguna estrategia de marketing puede ser efectiva sin una comprensión profunda del mercado y de las personas que lo conforman." },
-    { "num": "08", "area": "Comunicación","nombre": "Comunicaciones de Marketing Integradas", "desc": "La saturación de mensajes y canales cambió las reglas: hoy solo las marcas que comunican con coherencia, intención y foco logran conectar." },
-    { "num": "09", "area": "Estrategia",  "nombre": "Dirección de Marketing Estratégico", "desc": "Asume una visión estratégica del marketing, integrándolo como motor de crecimiento, diferenciación y posicionamiento dentro de la organización." },
-    { "num": "10", "area": "Global",      "nombre": "Estrategias de Negocios Internacionales", "desc": "En un mercado globalizado, pensar en clave local ya no basta. Aprende a analizar, planificar y ejecutar estrategias de expansión internacional con criterio y visión." },
-    { "num": "11", "area": "Social Media","nombre": "Marketing y Publicidad en Redes Sociales para Diferentes Mercados y Culturas", "desc": "Domina estrategias de marketing digital que expanden tu alcance global y conectan con audiencias internacionales de forma auténtica y efectiva." }
+    {
+      "num": "01",
+      "area": "Agronegocios",
+      "nombre": "Fundamentos de los Sistemas Agroalimentarios (3 Ects)",
+      "desc": "Producto agroalimentario. Definición, atributos y características. Unidad de producción agroalimentaria."
+    },
+    {
+      "num": "02",
+      "area": "Agronegocios",
+      "nombre": "Gestión de Sistemas y Empresas Agroalimentarias (6 Ects)",
+      "desc": "Unidad de producción. Diseño e implantación de la unidad de producción."
+    },
+    {
+      "num": "03",
+      "area": "Agronegocios",
+      "nombre": "Organización de la Empresa Agroalimentaria (3 Ects)",
+      "desc": "Tipologías de la empresa agroalimentaria. Características. Entidades singulares del ámbito agroalimentario."
+    },
+    {
+      "num": "04",
+      "area": "Marketing",
+      "nombre": "Marketing Agroalimentario (3 Ects)",
+      "desc": "agroalimentarias."
+    },
+    {
+      "num": "05",
+      "area": "Agronegocios",
+      "nombre": "Dirección Comercial y Negociación en Empresas Agroalimentarias (3 Ects)",
+      "desc": "detallistas, de opciones y de futuros."
+    },
+    {
+      "num": "06",
+      "area": "Estrategia",
+      "nombre": "Estrategia de Negocio en la Empresa Agroalimentaria (3 Ects)",
+      "desc": "Introducción a las principales decisiones estratégicas y aplicación al ámbito. El producto mercado agroalimentario."
+    },
+    {
+      "num": "07",
+      "area": "Riesgos",
+      "nombre": "Gestión y Control Económico en la Empresa Agroalimentaria (3 Ects)",
+      "desc": "Importancia de la aplicación de un sistema de control de costes. La cuenta de explotación como herramienta de conocimiento de los costes de."
+    },
+    {
+      "num": "08",
+      "area": "Finanzas",
+      "nombre": "Viabilidad Económico-Financiera de Proyectos de Inversión en el Sector y la Empresa Agroalimentaria (3 Ects)",
+      "desc": "Concepto estratégico de las Inversiones Agrícolas y Agroalimentarias: Planificación y."
+    },
+    {
+      "num": "09",
+      "area": "Programa",
+      "nombre": "Financiación del Largo Plazo",
+      "desc": "Periodos de Maduración de Inversiones en empresas Agroalimentarias. Cash Flow y circulante en Empresas Agroalimentarias."
+    },
+    {
+      "num": "10",
+      "area": "Agronegocios",
+      "nombre": "Empresas Agroalimentarias",
+      "desc": "Criterios de selección de inversiones en ambientes de riesgo e incertidumbre propias del."
+    },
+    {
+      "num": "11",
+      "area": "Agronegocios",
+      "nombre": "Sector Agroalimentario",
+      "desc": "La homogenización y comparación de proyectos de inversión alternativos dentro del."
+    },
+    {
+      "num": "12",
+      "area": "Agronegocios",
+      "nombre": "Sector Agroalimentario",
+      "desc": "Viabilidad financiera de los proyectos de inversión Agroalimentarios."
+    },
+    {
+      "num": "13",
+      "area": "Agronegocios",
+      "nombre": "Gestión de la Innovación en la Empresa Agroalimentaria (3 Ects)",
+      "desc": "Innovación Empresarial. Introducción y conceptos específicos. Estrategias de innovación agroalimentaria."
+    },
+    {
+      "num": "14",
+      "area": "Agronegocios",
+      "nombre": "Asociacionismo Agroalimentario (3 Ects)",
+      "desc": "Asociacionismo agroalimentario. Fundamentos y formas. Las cooperativas agroalimentarias. Concepto, caracterización y tipos."
+    },
+    {
+      "num": "15",
+      "area": "Agronegocios",
+      "nombre": "La Digitalización de la Empresa Agroalimentaria (3 Ects)",
+      "desc": "Modelos de Transformación Digital. Tendencias de la innovación tecnológica en el sector agroalimentario (Agrifood y."
+    },
+    {
+      "num": "16",
+      "area": "Estrategia",
+      "nombre": "Gestión Empresarial (9 Ects) Dirección Estratégica",
+      "desc": "Conceptos relacionados con la estrategia. Análisis sectorial."
+    },
+    {
+      "num": "17",
+      "area": "Comunicación",
+      "nombre": "Habilidades Directivas",
+      "desc": "Liderazgo. Gestión de Equipos."
+    },
+    {
+      "num": "18",
+      "area": "Marketing",
+      "nombre": "Dirección de Marketing",
+      "desc": "El plan de marketing. Decisiones en marketing mix."
+    },
+    {
+      "num": "19",
+      "area": "RRHH",
+      "nombre": "Recursos Humanos",
+      "desc": "Desarrollo y evaluación del plan Dirección de RRHH. La función de dirección de personas y gestión de recursos humanos."
+    }
   ],
-
   "ia_temario": [
-    { "nombre": "Introducción a la Inteligencia Artificial", "desc": "Conceptos clave y aplicaciones de la inteligencia artificial en el ámbito del marketing digital." },
-    { "nombre": "Inteligencia Artificial Aplicada al Marketing", "desc": "Uso de IA para la automatización, personalización y optimización de estrategias de marketing." },
-    { "nombre": "Potenciando las Relaciones con el Cliente a través de la IA", "desc": "Mejoras en la experiencia del cliente mediante chatbots, asistentes virtuales y análisis predictivo." },
-    { "nombre": "Publicidad Programática", "desc": "Automatización de la compra de anuncios basada en datos y segmentación avanzada." },
-    { "nombre": "Analítica y Data Driven", "desc": "Toma de decisiones estratégicas en marketing basada en datos y modelos de analítica avanzada." }
+    {
+      "nombre": "Introducción a la Inteligencia Artificial",
+      "desc": "Conceptos clave y aplicaciones de la inteligencia artificial en el ámbito del marketing digital."
+    },
+    {
+      "nombre": "Inteligencia Artificial Aplicada al Marketing",
+      "desc": "Uso de IA para la automatización, personalización y optimización de estrategias de marketing."
+    },
+    {
+      "nombre": "Potenciando las Relaciones con el Cliente a través de la IA",
+      "desc": "Mejoras en la experiencia del cliente mediante chatbots, asistentes virtuales y análisis predictivo."
+    },
+    {
+      "nombre": "Publicidad Programática",
+      "desc": "Automatización de la compra de anuncios basada en datos y segmentación avanzada."
+    },
+    {
+      "nombre": "Analítica y Data Driven",
+      "desc": "Toma de decisiones estratégicas en marketing basada en datos y modelos de analítica avanzada."
+    }
   ],
-
   "ects": 60,
   "meses": 12,
-
-  "kpi1": { "valor": 91, "label": "trabajando<br>al terminar" },
-  "kpi2": { "valor": 82, "label": "mejora profesional<br>demostrada" },
-
+  "kpi1": {
+    "valor": 91,
+    "label": "trabajando<br>al terminar"
+  },
+  "kpi2": {
+    "valor": 82,
+    "label": "mejora profesional<br>demostrada"
+  },
   "empresas": [
-    "Hero España", "IKEA Ibérica", "Grupo HEFAME", "PC Componentes",
-    "Himoinsa", "El Pozo", "Rapsodia", "Medina Artigas"
+    "Hero España",
+    "IKEA Ibérica",
+    "Grupo HEFAME",
+    "PC Componentes",
+    "Himoinsa",
+    "El Pozo",
+    "Rapsodia",
+    "Medina Artigas"
   ],
-
   "profesores": [
-    { "foto": "../doc/Marketing Digital/Profesores/Pablo_Ferreiros_1500.jpg",                        "obj_pos": "50% 24%", "nombre": "Pablo Ferreiros",         "rol": "Director de Marketing Digital",  "area": "Estrategia Digital" },
-    { "foto": "../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg",                  "obj_pos": "50% 24%", "nombre": "Félix Manuel Ros Espín",  "rol": "Experto en E-Commerce",          "area": "E-Commerce" },
-    { "foto": "../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg",                          "obj_pos": "50% 24%", "nombre": "Inmaculada Reinosa",      "rol": "Directora de Contenidos",        "area": "Content & SEO" },
-    { "foto": "../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg",                           "obj_pos": "50% 24%", "nombre": "Rocío González",          "rol": "Social Media Strategy",          "area": "Social Media" },
-    { "foto": "../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg",                       "obj_pos": "50% 24%", "nombre": "Santiago Foulquié",       "rol": "Analítica & Data Science",       "area": "Analytics" },
-    { "foto": "../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg",         "obj_pos": "50% 24%", "nombre": "José Martín Bernado",     "rol": "Negocios Internacionales",       "area": "Internacional" },
-    { "foto": "../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg",                              "obj_pos": "50% 24%", "nombre": "Lauren Kressler",         "rol": "Global Marketing",               "area": "Global Marketing" }
+    {
+      "nombre": "Jesús Gambín",
+      "rol": "Director de l máster",
+      "area": "Estrategia Digital",
+      "foto": "../uploads/prof-1783079197373-3021.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Félix Manuel Ros Espín",
+      "rol": "Experto en E-Commerce",
+      "area": "E-Commerce",
+      "foto": "../doc/Marketing Digital/Profesores/Felix_Manuel_Ros_Espin_500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Inmaculada Reinosa",
+      "rol": "Directora de Contenidos",
+      "area": "Content & SEO",
+      "foto": "../doc/Marketing Digital/Profesores/Inmaculada_Reinosa.jpeg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Rocío González",
+      "rol": "Social Media Strategy",
+      "area": "Social Media",
+      "foto": "../doc/Marketing Digital/Profesores/Rocio_Gonzalez_500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Santiago Foulquié",
+      "rol": "Analítica & Data Science",
+      "area": "Analytics",
+      "foto": "../doc/Marketing Digital/Profesores/Santiago_Foulquie_02_C.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "José Martín Bernado",
+      "rol": "Negocios Internacionales",
+      "area": "Internacional",
+      "foto": "../doc/Marketing Digital/Profesores/Jose_Martin_Bernado_Galiana_01_c_500.jpg",
+      "obj_pos": "50% 18%"
+    },
+    {
+      "nombre": "Lauren Kressler",
+      "rol": "Global Marketing",
+      "area": "Global Marketing",
+      "foto": "../doc/Marketing Digital/Profesores/Lauren_Kressler.jpg",
+      "obj_pos": "50% 18%"
+    }
   ],
-
   "perfil_bullets": [
     "Directivos y ejecutivos de Marketing, Ventas y Agencias",
     "Profesionales de Innovación, I+D y Operaciones",
@@ -115,12 +311,27 @@
     "Profesionales en reciclaje hacia el entorno digital",
     "Recién graduados con vocación digital"
   ],
-
   "demo_stats": [
-    { "n": "44<span>%</span>", "l": "mujeres",          "pct": 44 },
-    { "n": "9",                "l": "nacionalidades",    "pct": 90 },
-    { "n": "33<span>%</span>", "l": "21–26 años",       "pct": 33 },
-    { "n": "42<span>%</span>", "l": "mando intermedio", "pct": 42 }
+    {
+      "n": "44<span>%</span>",
+      "l": "mujeres",
+      "pct": 44
+    },
+    {
+      "n": "9",
+      "l": "nacionalidades",
+      "pct": 90
+    },
+    {
+      "n": "33<span>%</span>",
+      "l": "21–26 años",
+      "pct": 33
+    },
+    {
+      "n": "42<span>%</span>",
+      "l": "mando intermedio",
+      "pct": 42
+    }
   ]
 }
 </script>
@@ -1447,9 +1658,7 @@
               '<div>'+
                 '<div class="pname">'+(p.nombre||'')+'</div>'+
                 '<div class="prole">'+(p.rol||'')+'</div>'+
-                (p.area?'<div style="margin-bottom:4px;"><span class="parea">'+p.area+'</span></div>':'')+
-                (p.biografia?'<div class="pbio" style="font-size:clamp(9.5px, .66vw, 12px);color:hsla(0,0%,100%,.65);line-height:1.45;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--fb);">'+p.biografia+'</div>':'')+
-                (p.linkedin?'<div style="margin-top:8px;"><a href="'+p.linkedin+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;color:var(--gr);text-decoration:none;font-size:clamp(9.5px, .66vw, 12px);font-weight:700;font-family:var(--fb);"><span class="msym" style="font-size:1.3em;">link</span>LinkedIn</a></div>':'')+
+                (p.area?'<span class="parea">'+p.area+'</span>':'')+
               '</div>'+
             '</div>'+
           '</div>';

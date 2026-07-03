@@ -91,7 +91,7 @@ async function uploadImage(file, slot){
 
 /* ══ Profesores ═══════════════════════════════════════════ */
 var profPhotos = []; // relPath por índice (paralelo al DOM)
-function addProfItem(nombre, rol, area, fotoUrl, fotoRel){
+function addProfItem(nombre, rol, area, fotoUrl, fotoRel, linkedin, biografia){
   var d = document.createElement('div'); d.className='prof-item';
   var bg = fotoUrl ? "background-image:url('"+fotoUrl+"');" : "";
   d.innerHTML =
@@ -103,13 +103,15 @@ function addProfItem(nombre, rol, area, fotoUrl, fotoRel){
       '<input class="full" type="text" data-f="nombre" placeholder="Nombre completo" value="'+esc(nombre)+'">'+
       '<input type="text" data-f="rol" placeholder="Cargo / rol" value="'+esc(rol)+'">'+
       '<input type="text" data-f="area" placeholder="Área (etiqueta)" value="'+esc(area)+'">'+
+      '<input class="full" type="text" data-f="linkedin" placeholder="Enlace de LinkedIn" value="'+esc(linkedin||'')+'">'+
+      '<textarea class="full" data-f="biografia" placeholder="Breve biografía..." rows="2" style="font-size:12px; resize:vertical; padding:8px; background:hsla(0,0%,100%,.04); color:#fff; border:1px solid hsla(0,0%,100%,.1); border-radius:4px; font-family:var(--font-base); line-height:1.4;">'+esc(biografia||'')+'</textarea>'+
     '</div>'+
     '<button class="prof-del" onclick="this.closest(\'.prof-item\').remove();updProfCount();" title="Eliminar">×</button>';
   d.dataset.foto = fotoRel || '';
   document.getElementById('prof-list').appendChild(d);
   updProfCount();
 }
-function addProf(){ addProfItem('','','','',''); }
+function addProf(){ addProfItem('','','','','','',''); }
 
 async function uploadProfPhoto(input){
   var file = input.files[0]; if(!file) return;
@@ -179,7 +181,7 @@ async function generateContent(){
     // Fill profesores (sin foto — el usuario las sube después)
     if(data.profesores && data.profesores.length){
       document.getElementById('prof-list').innerHTML='';
-      data.profesores.forEach(function(p){ addProfItem(p.nombre||'', p.rol||'', p.area||'', '', ''); });
+      data.profesores.forEach(function(p){ addProfItem(p.nombre||'', p.rol||'', p.area||'', '', '', p.linkedin||'', p.biografia||''); });
     }
     // Mark badges as AI-generated
     document.querySelectorAll('.badge-manual').forEach(function(b){b.className='badge badge-ai';b.textContent='IA';});
@@ -228,6 +230,8 @@ async function saveDossier(){
       nombre:el.querySelector('[data-f="nombre"]').value.trim(),
       rol:el.querySelector('[data-f="rol"]').value.trim(),
       area:el.querySelector('[data-f="area"]').value.trim(),
+      linkedin:el.querySelector('[data-f="linkedin"]').value.trim(),
+      biografia:el.querySelector('[data-f="biografia"]').value.trim(),
       foto:el.dataset.foto || '',
       obj_pos:'50% 18%'
     };
@@ -301,7 +305,7 @@ function loadDefaults(){
   // Default empresas
   addEmpItem(''); addEmpItem('');
   // Default profesores (2 vacíos para empezar)
-  addProfItem('','','','',''); addProfItem('','','','','');
+  addProfItem('','','','','','',''); addProfItem('','','','','','','');
 }
 
 async function loadExistingDossier(fileName) {
@@ -407,7 +411,7 @@ async function loadExistingDossier(fileName) {
     if (data.profesores && data.profesores.length) {
       data.profesores.forEach(function(p){
         var fotoUrl = p.foto ? (p.foto.indexOf('http') === 0 || p.foto.indexOf('/') === 0 ? p.foto : '/' + p.foto.replace(/^\.\.\//, '')) : '';
-        addProfItem(p.nombre || '', p.rol || '', p.area || '', fotoUrl, p.foto || '');
+        addProfItem(p.nombre || '', p.rol || '', p.area || '', fotoUrl, p.foto || '', p.linkedin||'', p.biografia||'');
       });
     }
 
