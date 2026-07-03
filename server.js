@@ -543,6 +543,20 @@ app.get('/api/dossiers/:fileName/pdf', async (req, res) => {
                 s.classList.add('on');
             });
 
+            // Forzar altura y overflow en html/body para exportar TODAS las páginas
+            document.documentElement.style.setProperty('height', 'auto', 'important');
+            document.documentElement.style.setProperty('min-height', '100%', 'important');
+            document.documentElement.style.setProperty('overflow', 'visible', 'important');
+            document.body.style.setProperty('height', 'auto', 'important');
+            document.body.style.setProperty('min-height', '100%', 'important');
+            document.body.style.setProperty('overflow', 'visible', 'important');
+            const appEl = document.getElementById('app');
+            if(appEl) {
+                appEl.style.setProperty('height', 'auto', 'important');
+                appEl.style.setProperty('min-height', '100%', 'important');
+                appEl.style.setProperty('overflow', 'visible', 'important');
+            }
+
             // Forzar los valores finales de contadores, arcos y barras
             if (typeof window.finalizeForPrint === 'function') {
                 window.finalizeForPrint();
@@ -569,13 +583,19 @@ app.get('/api/dossiers/:fileName/pdf', async (req, res) => {
         await new Promise(r => setTimeout(r, 500));
 
         // Generar PDF
-        const pdfBuffer = await page.pdf({
-            format: 'A4',
-            landscape: mode === 'landscape',
+        const pdfOptions = {
             printBackground: true,
             margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
             preferCSSPageSize: true
-        });
+        };
+        if (mode === 'landscape') {
+            pdfOptions.landscape = true;
+            // Omit format 'A4' for landscape so it uses 1920x1080 from CSS
+        } else {
+            pdfOptions.format = 'A4';
+        }
+
+        const pdfBuffer = await page.pdf(pdfOptions);
 
         await browser.close();
         browser = null;

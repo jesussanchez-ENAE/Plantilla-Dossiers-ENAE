@@ -92,9 +92,34 @@
       <span class="msym chevron">expand_more</span>
     </div>
     <div class="sec-body">
+      <div class="row c2">
+        <div class="fg">
+          <label class="lbl">Título Introducción (Línea 1)</label>
+          <input id="f-intro-t1" type="text" class="fc" placeholder="El Máster que">
+        </div>
+        <div class="fg">
+          <label class="lbl">Título Introducción (Línea 2)</label>
+          <input id="f-intro-t2" type="text" class="fc" placeholder="necesitas hoy.">
+        </div>
+      </div>
       <div class="fg">
         <label class="lbl">Texto descriptivo (se muestra en el slide "Qué es")</label>
         <textarea id="e-desc" class="fc" placeholder="Describe el valor diferencial del programa, su enfoque, competencias clave y por qué un alumno debería elegirlo…"></textarea>
+      </div>
+      <div class="fg" style="margin-top:16px; border-top:1px solid var(--border-light); padding-top:16px;">
+        <label class="lbl" style="font-size:14px; color:var(--text-primary); margin-bottom:12px;">Cadena de Valor del Programa (5 Fases)</label>
+        <div class="fg">
+          <label class="lbl">Título de la sección</label>
+          <input id="f-cv-label" type="text" class="fc" placeholder="Cadena de valor del marketing digital" value="Cadena de valor del programa">
+        </div>
+        <div class="row c5" style="gap:8px; margin-top:12px;" id="cv-grid">
+          <!-- 5 steps inputs -->
+          <div class="fg"><label class="lbl">Fase 1 (Corto)</label><input id="f-cv1-l" type="text" class="fc" placeholder="Investigación"><input id="f-cv1-s" type="text" class="fc" placeholder="Insights & datos" style="margin-top:4px; font-size:11px;"></div>
+          <div class="fg"><label class="lbl">Fase 2 (Corto)</label><input id="f-cv2-l" type="text" class="fc" placeholder="Captación"><input id="f-cv2-s" type="text" class="fc" placeholder="SEO / SEM / Ads" style="margin-top:4px; font-size:11px;"></div>
+          <div class="fg"><label class="lbl">Fase 3 (Corto)</label><input id="f-cv3-l" type="text" class="fc" placeholder="Venta"><input id="f-cv3-s" type="text" class="fc" placeholder="E-commerce" style="margin-top:4px; font-size:11px;"></div>
+          <div class="fg"><label class="lbl">Fase 4 (Corto)</label><input id="f-cv4-l" type="text" class="fc" placeholder="Fidelización"><input id="f-cv4-s" type="text" class="fc" placeholder="CRM & Email" style="margin-top:4px; font-size:11px;"></div>
+          <div class="fg"><label class="lbl">Fase 5 (Corto)</label><input id="f-cv5-l" type="text" class="fc" placeholder="Analítica"><input id="f-cv5-s" type="text" class="fc" placeholder="Data Science" style="margin-top:4px; font-size:11px;"></div>
+        </div>
       </div>
     </div>
   </div>

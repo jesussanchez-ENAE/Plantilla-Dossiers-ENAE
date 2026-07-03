@@ -162,7 +162,16 @@ async function generateContent(){
     if(!res.ok) throw new Error(data.error||'Error en el servidor');
     // Fill description
     var plain=function(h){var t=document.createElement('div');t.innerHTML=h||'';return t.textContent;};
+    document.getElementById('f-intro-t1').value=plain(data.intro_t1||'El Máster que');
+    document.getElementById('f-intro-t2').value=plain(data.intro_t2||'necesitas hoy.');
+    document.getElementById('f-cv-label').value=plain(data.cv_label||'Cadena de valor del marketing digital');
     document.getElementById('e-desc').value=plain(data.descripcion||'');
+    if(data.cadena_valor && data.cadena_valor.length === 5) {
+      for(var i=1; i<=5; i++) {
+        document.getElementById('f-cv'+i+'-l').value=plain(data.cadena_valor[i-1].label||'');
+        document.getElementById('f-cv'+i+'-s').value=plain(data.cadena_valor[i-1].sub||'');
+      }
+    }
     // Fill modules
     document.getElementById('mod-list').innerHTML=''; mc=0;
     (data.modulos||[]).forEach(function(m){addModItem(m.num,m.area,m.nombre,m.desc||'');});
@@ -268,7 +277,16 @@ async function saveDossier(){
     foto_portada:heroImgs.portada||DEF_PORTADA, foto_que_es:heroImgs.quees||DEF_QUEES, foto_metodologia:heroImgs.metodo||DEF_METODO,
     kpis_portada:kpis_portada,
     descripcion:document.getElementById('e-desc').value.trim(),
-    cadena_valor:[{label:'Fase 1',sub:'Fundamentos'},{label:'Fase 2',sub:'Especialización'},{label:'Fase 3',sub:'Práctica'},{label:'Fase 4',sub:'Proyecto'},{label:'Fase 5',sub:'Inserción'}],
+    intro_t1:document.getElementById('f-intro-t1').value.trim()||'El Máster que',
+    intro_t2:document.getElementById('f-intro-t2').value.trim()||'necesitas hoy.',
+    cv_label:document.getElementById('f-cv-label').value.trim()||'Cadena de valor del programa',
+    cadena_valor:[
+      {label:document.getElementById('f-cv1-l').value.trim()||'Fase 1', sub:document.getElementById('f-cv1-s').value.trim()||'Fundamentos'},
+      {label:document.getElementById('f-cv2-l').value.trim()||'Fase 2', sub:document.getElementById('f-cv2-s').value.trim()||'Especialización'},
+      {label:document.getElementById('f-cv3-l').value.trim()||'Fase 3', sub:document.getElementById('f-cv3-s').value.trim()||'Práctica'},
+      {label:document.getElementById('f-cv4-l').value.trim()||'Fase 4', sub:document.getElementById('f-cv4-s').value.trim()||'Proyecto'},
+      {label:document.getElementById('f-cv5-l').value.trim()||'Fase 5', sub:document.getElementById('f-cv5-s').value.trim()||'Inserción'}
+    ],
     modulos:modulos, ia_temario:ia_temario,
     ects:ects, meses:meses,
     kpi1:kpi1, kpi2:kpi2,
@@ -373,7 +391,16 @@ async function loadExistingDossier(fileName) {
 
     // Rellenar descripción
     var plain = function(h){var t=document.createElement('div');t.innerHTML=h||'';return t.textContent;};
+    document.getElementById('f-intro-t1').value = plain(data.intro_t1 || 'El Máster que');
+    document.getElementById('f-intro-t2').value = plain(data.intro_t2 || 'necesitas hoy.');
+    document.getElementById('f-cv-label').value = plain(data.cv_label || 'Cadena de valor del marketing digital');
     document.getElementById('e-desc').value = plain(data.descripcion || '');
+    if(data.cadena_valor && data.cadena_valor.length === 5) {
+      for(var i=1; i<=5; i++) {
+        document.getElementById('f-cv'+i+'-l').value=plain(data.cadena_valor[i-1].label||'');
+        document.getElementById('f-cv'+i+'-s').value=plain(data.cadena_valor[i-1].sub||'');
+      }
+    }
 
     // Módulos
     document.getElementById('mod-list').innerHTML = ''; mc = 0;

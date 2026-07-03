@@ -1776,43 +1776,43 @@ window.renderDossierHighFidelity = function() {
     <span class="ey" data-a>Introducción al programa</span>
 
     <div class="tm" data-a>
-      <span class="tb" style="font-size:var(--t-hero);">El Máster que</span>
-      <span class="ti" style="font-size:var(--t-hero);">necesitas hoy.</span>
+      <span class="tb" style="font-size:var(--t-hero);">${escapeHtml(d.intro_t1||'El Máster que')}</span>
+      <span class="ti" style="font-size:var(--t-hero);">${escapeHtml(d.intro_t2||'necesitas hoy.')}</span>
     </div>
     <div class="rule" data-a></div>
 
     <p data-a style="font-family:var(--fb);font-weight:300;font-size:var(--t-lg);color:rgba(255,255,255,.72);line-height:1.78;max-width:48vw;margin-bottom:var(--sp-md);">
-      El mercado busca profesionales que dominen tanto la <strong style="color:#fff;font-weight:700;">estrategia digital</strong> como la <strong style="color:#fff;font-weight:700;">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.
+      ${d.descripcion||'El mercado busca profesionales que dominen tanto la <strong style="color:#fff;font-weight:700;">estrategia digital</strong> como la <strong style="color:#fff;font-weight:700;">inteligencia artificial aplicada</strong>. Este programa forma líderes capaces de dirigir la transformación digital completa de cualquier empresa.'}
     </p>
 
     <!-- Cadena de valor -->
     <div data-a style="margin-bottom:var(--sp-md);">
-      <div class="lbl lbl-gr" style="margin-bottom:var(--sp-xs);">Cadena de valor del marketing digital</div>
+      <div class="lbl lbl-gr" style="margin-bottom:var(--sp-xs);">${escapeHtml(d.cv_label||'Cadena de valor del marketing digital')}</div>
       <div class="fchain">
         <div class="fchain-node">
           <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-          <span class="fchain-label">Investigación</span>
-          <span class="fchain-sub">Insights &amp; datos</span>
+          <span class="fchain-label">${escapeHtml(d.cadena_valor?.[0]?.label||'Investigación')}</span>
+          <span class="fchain-sub">${escapeHtml(d.cadena_valor?.[0]?.sub||'Insights & datos')}</span>
         </div>
         <div class="fchain-node">
           <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <span class="fchain-label">Captación</span>
-          <span class="fchain-sub">SEO / SEM / Ads</span>
+          <span class="fchain-label">${escapeHtml(d.cadena_valor?.[1]?.label||'Captación')}</span>
+          <span class="fchain-sub">${escapeHtml(d.cadena_valor?.[1]?.sub||'SEO / SEM / Ads')}</span>
         </div>
         <div class="fchain-node">
           <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
-          <span class="fchain-label">Venta</span>
-          <span class="fchain-sub">E-commerce</span>
+          <span class="fchain-label">${escapeHtml(d.cadena_valor?.[2]?.label||'Venta')}</span>
+          <span class="fchain-sub">${escapeHtml(d.cadena_valor?.[2]?.sub||'E-commerce')}</span>
         </div>
         <div class="fchain-node">
           <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-          <span class="fchain-label">Fidelización</span>
-          <span class="fchain-sub">CRM &amp; Email</span>
+          <span class="fchain-label">${escapeHtml(d.cadena_valor?.[3]?.label||'Fidelización')}</span>
+          <span class="fchain-sub">${escapeHtml(d.cadena_valor?.[3]?.sub||'CRM & Email')}</span>
         </div>
         <div class="fchain-node">
           <div class="fchain-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <span class="fchain-label">Analítica IA</span>
-          <span class="fchain-sub">Data-driven</span>
+          <span class="fchain-label">${escapeHtml(d.cadena_valor?.[4]?.label||'Analítica IA')}</span>
+          <span class="fchain-sub">${escapeHtml(d.cadena_valor?.[4]?.sub||'Data-driven')}</span>
         </div>
       </div>
     </div>
