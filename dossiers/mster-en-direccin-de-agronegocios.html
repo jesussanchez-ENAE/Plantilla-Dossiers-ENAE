@@ -1252,7 +1252,7 @@
   <div class="inner" style="display:flex;flex-direction:column;gap:clamp(6px,1vh,12px);padding-bottom:calc(var(--in-py) - 8px);">
 
     <!-- Encabezado compacto — sin margin-bottom extra, el gap del flex lo gestiona -->
-    <div style="flex-shrink:0;">
+    <div id="claustro-header" style="flex-shrink:0;">
       <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:clamp(4px,.5vh,8px);">
         <div>
           <span class="ey" data-a>Claustro Docente</span>
@@ -1269,8 +1269,30 @@
       <div class="rule" data-a></div>
     </div>
 
-    <!-- Contenedor de filas de profesores — el hydrator lo regenera según el nº -->
-    <div id="claustro-rows" style="flex:1;display:flex;flex-direction:column;gap:clamp(6px,1vh,12px);min-height:0;">
+    <div id="claustro-split" style="flex:1; display:flex; gap: 4vw; min-height:0; margin-top: clamp(8px, 1vh, 16px);">
+      <!-- Left Column (Stats & Text) -->
+      <div class="claustro-left" style="width: 28%; display:flex; flex-direction:column; justify-content:center; flex-shrink:0;" data-a>
+        <p style="font-family:var(--fb);font-weight:300;font-size:clamp(11px,1vw,14.5px);color:hsla(0,0%,100%,.8);line-height:1.6;margin-bottom:clamp(16px,2vh,32px);">
+          A lo largo de nuestros más de 30 años de vida, más de 100 profesores y grandes profesionales han querido compartir su experiencia y conocimientos a los alumnos de ENAE International Business School.
+        </p>
+        <div style="display:flex; flex-direction:column; gap: clamp(10px, 1.2vw, 16px);">
+          <div style="border-left: 2px solid var(--gr); padding-left: 12px;">
+            <div id="stat-profs" data-val="60" style="font-family:var(--fd); font-weight:900; font-size:clamp(20px, 2.4vw, 36px); color:#fff; line-height:1;">0</div>
+            <div style="font-family:var(--fb); font-weight:800; font-size:clamp(9px, .65vw, 11px); color:var(--gr); text-transform:uppercase; letter-spacing:1px; margin-top:3px;">profesores</div>
+          </div>
+          <div style="border-left: 2px solid var(--gr); padding-left: 12px;">
+            <div id="stat-nacs" data-val="10" style="font-family:var(--fd); font-weight:900; font-size:clamp(20px, 2.4vw, 36px); color:#fff; line-height:1;">0</div>
+            <div style="font-family:var(--fb); font-weight:800; font-size:clamp(9px, .65vw, 11px); color:var(--gr); text-transform:uppercase; letter-spacing:1px; margin-top:3px;">nacionalidades</div>
+          </div>
+          <div style="border-left: 2px solid var(--gr); padding-left: 12px;">
+            <div id="stat-emps" data-val="200" data-prefix="+" style="font-family:var(--fd); font-weight:900; font-size:clamp(20px, 2.4vw, 36px); color:#fff; line-height:1;">+0</div>
+            <div style="font-family:var(--fb); font-weight:800; font-size:clamp(9px, .65vw, 11px); color:var(--gr); text-transform:uppercase; letter-spacing:1px; margin-top:3px;">Empresas comparten su experiencia</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenedor de filas de profesores — el hydrator lo regenera según el nº -->
+      <div id="claustro-rows" style="flex:1;display:flex;flex-direction:column;gap:clamp(6px,.7vw,12px);min-height:0;">
 
     <!-- Fila 1: 4 profesores — flex:1 para llenar el espacio proporcionalmente -->
     <div class="claustro-row" style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.7vw,12px);min-height:0;">
@@ -1323,6 +1345,7 @@
     </div>
 
     </div><!-- /#claustro-rows -->
+    </div><!-- /#claustro-split -->
   </div><!-- /.inner -->
 </div><!-- /#s7 -->
 
@@ -1647,6 +1670,13 @@ var CHAPTERS = {
   paginateGrid({
     items:(d.profesores||[]),slideId:'s7',perPage:8,
     fill:function(slide,items,startIdx){
+      // Si es la página 2 en adelante, ocultar el texto de la izquierda y el título superior
+      if(startIdx > 0){
+        var leftCol = slide.querySelector('.claustro-left');
+        if(leftCol) leftCol.remove();
+        var header = slide.querySelector('#claustro-header');
+        if(header) header.style.display = 'none'; // Ocultar pero dejarlo en el DOM por si acaso
+      }
       var wrap=slide.querySelector('[id^="claustro-rows"]'); if(!wrap) return;
       if(!items.length){ wrap.innerHTML=''; return; }
       var n=items.length,rows;
@@ -1797,7 +1827,8 @@ function anim(n) {
 
   const stg = (tgts, opts={}) => anime({ targets:tgts, opacity:[0,1], translateY:[18,0], easing:'easeOutQuart', duration:480, ...opts });
 
-  switch(s.id) {
+  const baseId = s.id.split('-')[0];
+  switch(baseId) {
     case 's1': // PORTADA
       // foto entra primero, luego contenido escalonado
       anime({ targets:s.querySelector('.bg'), opacity:[0,1], scale:[1.06,1], duration:900, easing:'easeOutCubic' });
@@ -1902,7 +1933,23 @@ function anim(n) {
       break;
 
     case 's7': // CLAUSTRO
-      stg([da[0],da[1],da[2],da[3]], { delay:anime.stagger(80) });
+      var headerDa = Array.from(s.querySelectorAll('#claustro-header [data-a]'));
+      if(headerDa.length) stg(headerDa, { delay:anime.stagger(80) });
+      var cLeft = s.querySelector('.claustro-left[data-a]');
+      if(cLeft) {
+        stg([cLeft], { delay: 240, duration: 600 });
+        setTimeout(function(){
+          s.querySelectorAll('[id^="stat-"]').forEach(function(el){
+            var to = parseInt(el.dataset.val, 10);
+            var pre = el.dataset.prefix || '';
+            if(!to) return;
+            anime({
+              targets:{v:0}, v:to, duration:1600, easing:'easeOutCubic', round:1,
+              update: function(a) { el.textContent = pre + Math.round(a.animations[0].currentValue); }
+            });
+          });
+        }, 400);
+      }
       anime({ targets:s.querySelectorAll('.pcard[data-a]'), opacity:[0,1], translateY:[22,0], scale:[.95,1],
         delay:anime.stagger(52,{start:220}), duration:400, easing:'easeOutBack' });
       break;
@@ -1968,6 +2015,12 @@ window.finalizeForPrint = function() {
     setKpi('kpi2', 'arc2-fill', window._KPI2 || 82);
     document.querySelectorAll('.dbar-fill').forEach(function(bar) {
       bar.style.width = (bar.dataset.pct || 0) + '%';
+    });
+    // Stats s7
+    document.querySelectorAll('[id^="stat-"]').forEach(function(el){
+      var to = el.dataset.val;
+      var pre = el.dataset.prefix || '';
+      if(to) el.textContent = pre + to;
     });
     document.querySelectorAll('[data-a]').forEach(function(el) {
       el.style.opacity = '1';
