@@ -510,8 +510,8 @@ app.get('/api/dossiers/:fileName/pdf', async (req, res) => {
         const page = await browser.newPage();
 
         // Configurar viewport inicial según el modo
-        const width = mode === 'landscape' ? 1123 : 794;
-        const height = mode === 'landscape' ? 794 : 1123;
+        const width = mode === 'landscape' ? 1920 : 794;
+        const height = mode === 'landscape' ? 1080 : 1123;
         await page.setViewport({ width, height, deviceScaleFactor: 2 });
 
         // Determinar URL del dossier
@@ -560,9 +560,6 @@ app.get('/api/dossiers/:fileName/pdf', async (req, res) => {
             // Forzar los valores finales de contadores, arcos y barras
             if (typeof window.finalizeForPrint === 'function') {
                 window.finalizeForPrint();
-            }
-            if (typeof window.fitSlidesToPage === 'function') {
-                window.fitSlidesToPage();
             }
 
             // Si es landscape, forzar el modo en el documento

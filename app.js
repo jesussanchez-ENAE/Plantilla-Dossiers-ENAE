@@ -2019,10 +2019,13 @@ window.renderDossierHighFidelity = function() {
     <div data-a>
       <div class="lbl" style="margin-bottom:var(--sp-xs);">Empresas donde han hecho prácticas nuestros alumnos</div>
       <div style="display:flex;flex-wrap:wrap;gap:clamp(5px,.5vw,8px);margin-top:8px;">
-        <span class="ctag">Hero España</span><span class="ctag">IKEA Ibérica</span>
-        <span class="ctag">Grupo HEFAME</span><span class="ctag">PC Componentes</span>
-        <span class="ctag">Himoinsa</span><span class="ctag">El Pozo</span>
-        <span class="ctag">Rapsodia</span><span class="ctag">Medina Artigas</span>
+        ${(d.empresas||['Hero España','IKEA Ibérica','Grupo HEFAME','PC Componentes','Himoinsa','El Pozo']).map(e => {
+          if (typeof e === 'object' && e.logo) {
+            return `<div class="ctag" style="background:#fff; padding:4px 8px; display:inline-flex; align-items:center; justify-content:center;"><img src="${escapeHtml(e.logo)}" alt="${escapeHtml(e.nombre||'Empresa')}" style="height:20px; max-width:80px; object-fit:contain;"></div>`;
+          }
+          var name = typeof e === 'object' ? e.nombre : e;
+          return `<span class="ctag">${escapeHtml(name)}</span>`;
+        }).join('')}
         <span class="ctag" style="opacity:.4;">+ muchas más</span>
       </div>
     </div>

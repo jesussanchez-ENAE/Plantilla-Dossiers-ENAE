@@ -56,12 +56,45 @@ function addBulItem(text){
 function addBul(){ addBulItem(''); }
 
 /* ══ Empresas ═════════════════════════════════════════════ */
-function addEmpItem(text){
+function addEmpItem(data){
+  if(typeof data === 'string') data = { nombre: data, logo: '' };
+  data = data || { nombre: '', logo: '' };
   var d=document.createElement('div'); d.className='bul-item';
-  d.innerHTML='<div class="bul-dot"></div><input type="text" value="'+esc(text)+'" placeholder="Nombre de empresa…"><button class="bul-del" onclick="this.closest(\'.bul-item\').remove();">×</button>';
+  d.style.display = 'flex'; d.style.alignItems = 'center'; d.style.gap = '8px';
+  d.innerHTML=`
+    <div class="bul-dot"></div>
+    <input type="text" class="emp-name" value="${esc(data.nombre)}" placeholder="Nombre de empresa…" style="flex:1;">
+    <div style="position:relative; width:40px; height:40px; border:1px dashed hsla(0,0%,100%,.2); border-radius:4px; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+      <img src="${esc(data.logo)}" class="emp-logo-preview" style="max-width:100%; max-height:100%; object-fit:contain; display:${data.logo ? 'block' : 'none'};">
+      <input type="hidden" class="emp-logo-val" value="${esc(data.logo)}">
+      <input type="file" accept="image/*" title="Subir Logo" onchange="uploadEmpLogo(this)" style="position:absolute; inset:0; opacity:0; cursor:pointer;">
+      <span class="msym" style="font-size:16px; color:var(--text-muted); position:absolute; z-index:-1; display:${data.logo ? 'none' : 'block'};">add_photo_alternate</span>
+    </div>
+    <button class="bul-del" onclick="this.closest('.bul-item').remove();">×</button>
+  `;
   document.getElementById('emp-list').appendChild(d);
 }
 function addEmp(){ addEmpItem(''); }
+
+async function uploadEmpLogo(input) {
+  var file = input.files[0]; if(!file) return;
+  var container = input.closest('div');
+  var prev = container.querySelector('.emp-logo-preview');
+  var val = container.querySelector('.emp-logo-val');
+  var icon = container.querySelector('.msym');
+  var formData = new FormData();
+  formData.append('imagen', file);
+  try {
+    var res = await fetch('/api/upload-image', { method: 'POST', body: formData });
+    var data = await res.json();
+    if(data.url) {
+      prev.src = data.url;
+      prev.style.display = 'block';
+      val.value = data.url;
+      icon.style.display = 'none';
+    }
+  } catch(e) { console.error('Error uploading logo:', e); }
+}
 
 /* ══ Imágenes (portada / qué es / metodología) ════════════ */
 var heroImgs = { portada:'', quees:'', metodo:'' };
@@ -219,7 +252,14 @@ async function saveDossier(){
     return{nombre:el.querySelector('[data-field="nombre"]').value.trim(),desc:(el.querySelector('[data-field="desc"]')||{}).value||''};
   });
   var perfil_bullets=Array.from(document.querySelectorAll('#bul-list input')).map(function(el){return el.value.trim();}).filter(Boolean);
-  var empresas=Array.from(document.querySelectorAll('#emp-list input')).map(function(el){return el.value.trim();}).filter(Boolean);
+  // Empresas
+  var empresas=Array.from(document.querySelectorAll('#emp-list .bul-item')).map(function(c){
+    var n = c.querySelector('.emp-name').value.trim();
+    var l = c.querySelector('.emp-logo-val').value.trim();
+    if(!n && !l) return null;
+    if(l) return { nombre: n, logo: l };
+    return n;
+  }).filter(Boolean);
   var dobleRaw=document.getElementById('f-doble').value;
   var doble_titulo=null;
   if(dobleRaw){
