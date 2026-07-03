@@ -67,7 +67,16 @@
       </div></div>
       <div class="row c2">
         <div class="fg"><label class="lbl">Mención especial</label><input id="f-mencion" type="text" class="fc" placeholder="ej. Mención en Inteligencia Artificial"></div>
-        <div class="fg"><label class="lbl">Doble título</label><input id="f-doble" type="text" class="fc" placeholder="ej. Panamerican University, Florida"></div>
+        <div class="fg">
+          <label class="lbl">Titulación oficial / Doble título</label>
+          <select id="f-doble" class="fc">
+            <option value="">Ninguno (Nada)</option>
+            <option value="umu">Universidad de Murcia (Título oficial)</option>
+            <option value="upct">Universidad Politécnica de Cartagena (Título oficial)</option>
+            <option value="panamerican">Panamerican University (Doble título)</option>
+            <option value="enae">ENAE Business School (Título propio)</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
@@ -493,9 +502,17 @@ async function saveDossier(){
   });
   var perfil_bullets=Array.from(document.querySelectorAll('#bul-list input')).map(function(el){return el.value.trim();}).filter(Boolean);
   var empresas=Array.from(document.querySelectorAll('#emp-list input')).map(function(el){return el.value.trim();}).filter(Boolean);
-  var dobleRaw=document.getElementById('f-doble').value.trim();
+  var dobleRaw=document.getElementById('f-doble').value;
   var doble_titulo=null;
-  if(dobleRaw){var p=dobleRaw.split(',');doble_titulo={nombre:p[0].trim(),pais:(p[1]||'').trim()};}
+  if(dobleRaw){
+    var titulos = {
+      umu: { tipo: 'umu', nombre: 'Universidad de Murcia', pais: 'Murcia, España', logo: '../src/logos/Logo UMU@2x.png', label: 'Título oficial' },
+      upct: { tipo: 'upct', nombre: 'Universidad Politécnica de Cartagena', pais: 'Cartagena, España', logo: '../src/logos/Logo UPCT@2x.png', label: 'Título oficial' },
+      panamerican: { tipo: 'panamerican', nombre: 'Panamerican University', pais: 'Florida, EE.UU.', logo: '../src/logos/Panamerican-University-W-T.png', label: 'Doble título con' },
+      enae: { tipo: 'enae', nombre: 'ENAE Business School', pais: 'Título propio', logo: '../src/logos/LOGO_ENAE_HORIZONTAL.svg', label: 'Título propio de' }
+    };
+    doble_titulo = titulos[dobleRaw];
+  }
   var tipoLabels={master:'Máster en',mba:'MBA',ejecutivo:'Programa Ejecutivo en',curso:'Curso en',directivo:'Programa Directivo en'};
   var tipoCat={master:'Programa de Posgrado · Máster Internacional',mba:'Programa de Posgrado · MBA Internacional',ejecutivo:'Programa Ejecutivo · ENAE',curso:'Curso Especializado · ENAE',directivo:'Programa Directivo · ENAE'};
   // Profesores (con sus fotos subidas)
@@ -560,7 +577,7 @@ async function saveDossier(){
 }
 
 /* ══ Init: defaults or edit mode ══════════════════════════ */
-(function(){
+function loadDefaults(){
   // Default modules
   addModItem('01','Estrategia','Dirección Estratégica','');
   addModItem('02','Digital','Marketing Digital','');
@@ -577,6 +594,178 @@ async function saveDossier(){
   addEmpItem(''); addEmpItem('');
   // Default profesores (2 vacíos para empezar)
   addProfItem('','','','',''); addProfItem('','','','','');
+}
+
+async function loadExistingDossier(fileName) {
+  try {
+    var res = await fetch('/dossiers/' + fileName);
+    if (!res.ok) throw new Error('No se pudo cargar el archivo');
+    var htmlText = await res.text();
+    var match = htmlText.match(/<script id="dossier-data" type="application\/json">([\s\S]*?)<\/script>/);
+    if (!match) throw new Error('No se encontraron datos en el dossier');
+    var data = JSON.parse(match[1]);
+    
+    // Rellenar formulario
+    document.getElementById('f-nombre').value = data.programa || data.nombre || '';
+    document.getElementById('f-mencion').value = data.subtitulo || '';
+    document.getElementById('f-meses').value = data.meses || 12;
+    document.getElementById('f-ects').value = data.ects || 60;
+    
+    // Mapear f-tipo
+    if (data.titulo_l) {
+      var tipoMap = {
+        'Máster en': 'master',
+        'MBA': 'mba',
+        'Programa Ejecutivo en': 'ejecutivo',
+        'Curso en': 'curso',
+        'Programa Directivo en': 'directivo'
+      };
+      var matchingTipo = tipoMap[data.titulo_l];
+      if (matchingTipo) document.getElementById('f-tipo').value = matchingTipo;
+    }
+
+    // Mapear f-area
+    if (data.categoria) {
+      var areaOptions = Array.from(document.getElementById('f-area').options).map(function(o){ return o.value; });
+      var matchingArea = areaOptions.find(function(opt){
+        var word = opt.split(' ')[0];
+        return data.categoria.indexOf(word) !== -1 || (data.programa && data.programa.indexOf(word) !== -1);
+      });
+      if (matchingArea) document.getElementById('f-area').value = matchingArea;
+    }
+
+    // Mapear modalidad
+    if (data.modalidad) {
+      var radio = Array.from(document.querySelectorAll('input[name="mod"]')).find(function(r){ return r.value === data.modalidad; });
+      if (radio) radio.checked = true;
+    }
+
+    // Mapear precio
+    if (data.precio) {
+      document.getElementById('f-precio').value = data.precio;
+    }
+
+    // Doble título
+    if (data.doble_titulo && data.doble_titulo.tipo) {
+      document.getElementById('f-doble').value = data.doble_titulo.tipo;
+    } else if (data.doble_titulo && data.doble_titulo.nombre) {
+      var nombreLower = data.doble_titulo.nombre.toLowerCase();
+      if (nombreLower.indexOf('murcia') !== -1) document.getElementById('f-doble').value = 'umu';
+      else if (nombreLower.indexOf('cartagena') !== -1 || nombreLower.indexOf('upct') !== -1) document.getElementById('f-doble').value = 'upct';
+      else if (nombreLower.indexOf('panamerican') !== -1) document.getElementById('f-doble').value = 'panamerican';
+      else if (nombreLower.indexOf('enae') !== -1) document.getElementById('f-doble').value = 'enae';
+    } else {
+      document.getElementById('f-doble').value = '';
+    }
+
+    // Rellenar descripción
+    var plain = function(h){var t=document.createElement('div');t.innerHTML=h||'';return t.textContent;};
+    document.getElementById('e-desc').value = plain(data.descripcion || '');
+
+    // Módulos
+    document.getElementById('mod-list').innerHTML = ''; mc = 0;
+    if (data.modulos && data.modulos.length) {
+      data.modulos.forEach(function(m){ addModItem(m.num, m.area, m.nombre, m.desc || ''); });
+    } else {
+      addModItem('01','Estrategia','Dirección Estratégica','');
+    }
+
+    // Temas IA
+    document.getElementById('ia-list').innerHTML = ''; ic = 0;
+    if (data.ia_temario && data.ia_temario.length) {
+      data.ia_temario.forEach(function(t){ addIaItem(t.nombre, t.desc || ''); });
+    } else if (data.ia_asignaturas && data.ia_asignaturas.length) {
+      data.ia_asignaturas.forEach(function(t){
+        if (typeof t === 'string') addIaItem(t, '');
+        else addIaItem(t.nombre || '', t.desc || '');
+      });
+    }
+
+    // Perfil
+    document.getElementById('bul-list').innerHTML = '';
+    if (data.perfil_bullets && data.perfil_bullets.length) {
+      data.perfil_bullets.forEach(function(b){ addBulItem(b); });
+    }
+
+    // Empresas
+    document.getElementById('emp-list').innerHTML = '';
+    if (data.empresas && data.empresas.length) {
+      data.empresas.forEach(function(e){ addEmpItem(e); });
+    }
+
+    // Profesores
+    document.getElementById('prof-list').innerHTML = '';
+    if (data.profesores && data.profesores.length) {
+      data.profesores.forEach(function(p){
+        var fotoUrl = p.foto ? (p.foto.indexOf('http') === 0 || p.foto.indexOf('/') === 0 ? p.foto : '/' + p.foto.replace(/^\.\.\//, '')) : '';
+        addProfItem(p.nombre || '', p.rol || '', p.area || '', fotoUrl, p.foto || '');
+      });
+    }
+
+    // Fotos Hero/Portada
+    if (data.foto_portada) {
+      heroImgs.portada = data.foto_portada;
+      var prevP = document.getElementById('prev-portada');
+      prevP.classList.remove('empty');
+      prevP.style.backgroundImage = "url('" + (data.foto_portada.indexOf('http') === 0 || data.foto_portada.indexOf('/') === 0 ? data.foto_portada : '/' + data.foto_portada.replace(/^\.\.\//, '')) + "')";
+    }
+    if (data.foto_que_es) {
+      heroImgs.quees = data.foto_que_es;
+      var prevQ = document.getElementById('prev-quees');
+      prevQ.classList.remove('empty');
+      prevQ.style.backgroundImage = "url('" + (data.foto_que_es.indexOf('http') === 0 || data.foto_que_es.indexOf('/') === 0 ? data.foto_que_es : '/' + data.foto_que_es.replace(/^\.\.\//, '')) + "')";
+    }
+    if (data.foto_metodologia) {
+      heroImgs.metodo = data.foto_metodologia;
+      var prevM = document.getElementById('prev-metodo');
+      prevM.classList.remove('empty');
+      prevM.style.backgroundImage = "url('" + (data.foto_metodologia.indexOf('http') === 0 || data.foto_metodologia.indexOf('/') === 0 ? data.foto_metodologia : '/' + data.foto_metodologia.replace(/^\.\.\//, '')) + "')";
+    }
+
+    // KPIs de Portada
+    if (data.kpis_portada && data.kpis_portada.length) {
+      var cells = document.querySelectorAll('#kpi-portada .kpi-cell');
+      data.kpis_portada.forEach(function(k, idx) {
+        if (cells[idx]) {
+          cells[idx].querySelector('[data-f="n"]').value = k.n;
+          cells[idx].querySelector('[data-f="l"]').value = k.l;
+        }
+      });
+    }
+
+    // Datos Promoción
+    if (data.demo_stats && data.demo_stats.length) {
+      var cells = document.querySelectorAll('#demo-stats .kpi-cell');
+      data.demo_stats.forEach(function(s, idx) {
+        if (cells[idx]) {
+          var cleanN = s.n.replace(/<\/?span[^>]*>/g, '');
+          cells[idx].querySelector('[data-f="n"]').value = cleanN;
+          cells[idx].querySelector('[data-f="l"]').value = s.l;
+          cells[idx].querySelector('[data-f="pct"]').value = s.pct || 0;
+        }
+      });
+    }
+
+    // KPIs Empleabilidad
+    if (data.kpi1) {
+      document.getElementById('kpi1-val').value = data.kpi1.valor || 91;
+      document.getElementById('kpi1-lbl').value = data.kpi1.label || 'trabajando al terminar';
+    }
+    if (data.kpi2) {
+      document.getElementById('kpi2-val').value = data.kpi2.valor || 82;
+      document.getElementById('kpi2-lbl').value = data.kpi2.label || 'mejora profesional demostrada';
+    }
+
+    updCounts();
+    toast('Dossier cargado para edición ✓');
+  } catch(e) {
+    toast('Error al cargar datos del dossier: ' + e.message, true);
+    loadDefaults();
+  }
+}
+
+/* ══ Init: defaults or edit mode ══════════════════════════ */
+(function(){
   // Edit mode?
   var params=new URLSearchParams(window.location.search);
   var editFile=params.get('edit');
@@ -585,6 +774,9 @@ async function saveDossier(){
     document.querySelector('.mode-bar p').innerHTML='<strong>Modo edición.</strong> Modifica los campos y guarda. El archivo existente será sobrescrito.';
     var label=editFile.replace('.html','').replace(/-/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
     document.getElementById('f-nombre').value=label;
+    loadExistingDossier(editFile);
+  } else {
+    loadDefaults();
   }
 })();
 </script>
