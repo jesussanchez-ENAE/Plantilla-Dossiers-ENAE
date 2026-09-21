@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Ogg Text Italic';
+    src: url('../fonts/Ogg%20text%20Italic/oggtext-bookitalic-bf646c18fc59038-webfont.woff2') format('woff2'),
+         url('../fonts/Ogg%20text%20Italic/oggtext-bookitalic-bf646c18fc59038-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
 @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Black.otf') format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Black.woff') format('woff'); font-weight:900; }
     @font-face { font-family:'SFUIDisplay'; src:url('assets/fonts/SFUIDisplay-Bold.otf')  format('opentype'), url('https://fonts.cdnfonts.com/s/15011/SFUIDisplay-Bold.woff')  format('woff'); font-weight:700; }
 
@@ -8,12 +15,12 @@
       --text-primary: #FFFFFF; --text-secondary: #94A3B8; --text-muted: #64748B;
       --font-display: 'SFUIDisplay', sans-serif;
       --font-body: 'Open Sans', sans-serif;
-      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-serif: 'Ogg Text Italic', 'Playfair Display', Georgia, serif;
       --r-md: 10px; --r-lg: 16px;
       --shadow-soft: 0 10px 30px rgba(0,0,0,.2);
       --tr: all .3s cubic-bezier(.4,0,.2,1);
     }
-    *:focus-visible { outline: 2px solid var(--enae-red); outline-offset: 2px; }
+    *:focus-visible { outline: 2px solid rgba(255,255,255,0.3); outline-offset: 2px; }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:var(--font-body); background:var(--app-bg); color:var(--text-primary); -webkit-font-smoothing:antialiased; min-height:100vh; }
     h1,h2,h3,h4,h5 { font-family:var(--font-display); font-weight:700; }
@@ -22,7 +29,7 @@
     .mt-light  { font-weight:300; font-family:var(--font-body); }
 
     /* ── Header ── */
-    .app-header { height:70px; background:var(--panel-bg); border-bottom:1px solid var(--panel-border); display:flex; justify-content:space-between; align-items:center; padding:0 24px; position:fixed; top:0; left:0; right:0; z-index:100; }
+    .app-header { height:70px; background:rgba(18, 22, 26, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom:1px solid var(--panel-border); display:flex; justify-content:space-between; align-items:center; padding:0 24px; position:fixed; top:0; left:0; right:0; z-index:100; }
     .logo-container { display:flex; align-items:center; gap:12px; }
     .brand-badge { background:linear-gradient(135deg,var(--enae-red),var(--enae-negro)); width:38px; height:38px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-weight:900; font-family:var(--font-display); font-size:1.15rem; color:#fff; box-shadow:0 4px 12px rgba(169,24,49,.3); }
     .brand-title h1 { font-size:1.15rem; font-weight:900; letter-spacing:-.5px; color:var(--text-primary); line-height:1.1; }
@@ -31,8 +38,8 @@
 
     .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 18px; border-radius:var(--r-md); font-size:.9rem; font-weight:600; cursor:pointer; transition:var(--tr); border:none; outline:none; text-decoration:none; }
     .btn svg { width:17px; height:17px; }
-    .btn-primary { background:var(--enae-red); color:#fff; }
-    .btn-primary:hover { background:var(--enae-red-hover); transform:translateY(-1px); box-shadow:0 4px 12px rgba(169,24,49,.4); }
+    .btn-primary { background:var(--enae-red); color:#fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15); }
+    .btn-primary:hover { background:var(--enae-red-hover); transform:translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(169,24,49,.2); }
     .btn-secondary { background:var(--input-bg); border:1px solid var(--input-border); color:var(--text-secondary); }
     .btn-secondary:hover { background:var(--input-border); color:var(--text-primary); }
     .btn-accent { background:linear-gradient(135deg,var(--enae-red),#cf2844); color:#fff; }
