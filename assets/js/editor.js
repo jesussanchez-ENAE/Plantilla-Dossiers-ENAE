@@ -264,10 +264,10 @@ async function saveDossier(){
   var doble_titulo=null;
   if(dobleRaw){
     var titulos = {
-      umu: { tipo: 'umu', nombre: 'Universidad de Murcia', pais: isEn ? 'Murcia, Spain' : 'Murcia, España', logo: '../src/logos/Logo UMU@2x.png', label: isEn ? 'Official Degree' : 'Título oficial' },
-      upct: { tipo: 'upct', nombre: 'Universidad Politécnica de Cartagena', pais: isEn ? 'Cartagena, Spain' : 'Cartagena, España', logo: '../src/logos/Logo UPCT@2x.png', label: isEn ? 'Official Degree' : 'Título oficial' },
-      panamerican: { tipo: 'panamerican', nombre: 'Panamerican University', pais: isEn ? 'Florida, USA' : 'Florida, EE.UU.', logo: '../src/logos/Panamerican-University-W-T.png', label: isEn ? 'Dual Degree with' : 'Doble título con' },
-      enae: { tipo: 'enae', nombre: 'ENAE Business School', pais: isEn ? 'Own Degree' : 'Título propio', logo: '../src/logos/LOGO_ENAE_HORIZONTAL.svg', label: isEn ? 'Own Degree by' : 'Título propio de' }
+      umu: { tipo: 'umu', nombre: 'Universidad de Murcia', pais: isEn ? 'Murcia, Spain' : 'Murcia, España', logo: '../assets/images/logos/Logo UMU@2x.png', label: isEn ? 'Official Degree' : 'Título oficial' },
+      upct: { tipo: 'upct', nombre: 'Universidad Politécnica de Cartagena', pais: isEn ? 'Cartagena, Spain' : 'Cartagena, España', logo: '../assets/images/logos/Logo UPCT@2x.png', label: isEn ? 'Official Degree' : 'Título oficial' },
+      panamerican: { tipo: 'panamerican', nombre: 'Panamerican University', pais: isEn ? 'Florida, USA' : 'Florida, EE.UU.', logo: '../assets/images/logos/Panamerican-University-W-T.png', label: isEn ? 'Dual Degree with' : 'Doble título con' },
+      enae: { tipo: 'enae', nombre: 'ENAE Business School', pais: isEn ? 'Own Degree' : 'Título propio', logo: '../assets/images/logos/LOGO_ENAE_HORIZONTAL.svg', label: isEn ? 'Own Degree by' : 'Título propio de' }
     };
     doble_titulo = titulos[dobleRaw];
   }
@@ -286,9 +286,9 @@ async function saveDossier(){
     };
   }).filter(function(p){ return p.nombre; });
   // Imágenes — usa las subidas o las del template por defecto (existentes)
-  var DEF_PORTADA='../doc/Marketing Digital/10042023-317A7390.jpg';
-  var DEF_QUEES='../doc/Marketing Digital/Sesion_innegociable_-61.jpg';
-  var DEF_METODO='../doc/Marketing Digital/10042023-317A8264.jpg';
+  var DEF_PORTADA='../assets/images/resources/10042023-317A7390.jpg';
+  var DEF_QUEES='../assets/images/resources/Sesion_innegociable_-61.jpg';
+  var DEF_METODO='../assets/images/resources/10042023-317A8264.jpg';
   // KPIs de portada
   var kpis_portada=Array.from(document.querySelectorAll('#kpi-portada .kpi-cell')).map(function(c){
     return { n:c.querySelector('[data-f="n"]').value.trim(), l:c.querySelector('[data-f="l"]').value.trim() };

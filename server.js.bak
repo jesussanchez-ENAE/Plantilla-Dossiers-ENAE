@@ -434,25 +434,25 @@ const TITULOS_OFICIALES = {
     umu: {
         nombre: 'Universidad de Murcia',
         pais: 'Murcia, España',
-        logo: '../assets/images/logos/Logo UMU@2x.png',
+        logo: '../src/logos/Logo UMU@2x.png',
         label: 'Título oficial',
     },
     upct: {
         nombre: 'Universidad Politécnica de Cartagena',
         pais: 'Cartagena, España',
-        logo: '../assets/images/logos/Logo UPCT@2x.png',
+        logo: '../src/logos/Logo UPCT@2x.png',
         label: 'Título oficial',
     },
     panamerican: {
         nombre: 'Panamerican University',
         pais: 'Florida, EE.UU.',
-        logo: '../assets/images/logos/Panamerican-University-W-T.png',
+        logo: '../src/logos/Panamerican-University-W-T.png',
         label: 'Doble título con',
     },
     enae: {
         nombre: 'ENAE Business School',
         pais: 'Título propio',
-        logo: '../assets/images/logos/LOGO_ENAE_HORIZONTAL.svg',
+        logo: '../src/logos/LOGO_ENAE_HORIZONTAL.svg',
         label: 'Título propio de',
     },
 };
